@@ -11,12 +11,12 @@ frontend fe: ${NPM}
 	${NPM} -C frontend install
 	${NPM} -C frontend run build
 
-.PHONY: run r run-all run-backend run-frontend
-run r:
+.PHONY: dev run-backend run-frontend
+dev:
 	${MAKE} -j2 run-backend run-frontend
 
 run-backend:
-	${MVN} spring-boot:run
+	SPRING_PROFILES_ACTIVE=dev ${MVN} spring-boot:run
 
 run-frontend: ${NPM}
 	${NPM} -C frontend run dev
