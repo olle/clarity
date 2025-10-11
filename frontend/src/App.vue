@@ -1,30 +1,48 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="wrapper">
+    <nav></nav>
+    <article>
+      <h1>Welcome to <em class="highlight">Clarity!</em></h1>
+    </article>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
+<script setup></script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.wrapper {
+  border-top: 1px solid #eee;
+  height: 100%;
+  --width: 61px;
+  display: grid;
+  grid-template-columns: var(--width) calc(100vw - var(--width));
+  background: #fcfcfb;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+header {
+  border-bottom: 1px solid #eee;
+}
+
+nav {
+  background-color: white;
+  border-right: 1px solid #eee;
+  box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.1);
+}
+
+article {
+  align-self: center;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.highlight {
+  color: #15bb8c;
 }
 </style>
