@@ -3,7 +3,10 @@ MVN:=./mvnw
 NPM:=./node/npm
 
 .PHONY: verify v
-verify v: frontend
+verify v: backend frontend
+
+.PHONY: backend be
+backend be: ${MVN}
 	${MVN} verify
 
 .PHONY: frontend fe
@@ -11,22 +14,26 @@ frontend fe: ${NPM}
 	${NPM} -C frontend install
 	${NPM} -C frontend run build
 
-.PHONY: dev run-backend run-frontend
+.PHONY: dev run-backend r-be run-frontend r-fe
 dev:
 	${MAKE} -j2 run-backend run-frontend
 
-run-backend:
+run-backend r-be:
 	SPRING_PROFILES_ACTIVE=dev ${MVN} spring-boot:run
 
-run-frontend: ${NPM}
+run-frontend r-fe: ${NPM}
 	${NPM} -C frontend run dev
 
 ${NPM}:
 	${MVN} initialize
 
-.PHONY: tidy format pretty f
-tidy pretty format f:
-	${MVN} formatter:format
+${MVN}:
+	@echo "Please install the maven wrapper."
+	@exit 1
+
+.PHONY: tidy spotless pretty format f
+tidy spotless pretty format f:
+	${MVN} spotless:apply
 
 .PHONY: up
 up:
