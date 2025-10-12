@@ -16,13 +16,15 @@ frontend fe: ${NPM}
 	${NPM} -C frontend outdated
 	${NPM} -C frontend run build
 
-.PHONY: dev run-backend r-be run-frontend r-fe
-dev:
+.PHONY: run
+run:
 	${MAKE} -j2 run-backend run-frontend
 
+.PHONY: run-backend run-be r-b
 run-backend r-be:
 	SPRING_PROFILES_ACTIVE=dev ${MVN} spring-boot:run
 
+.PHONY: run-frontend run-fe r-f
 run-frontend r-fe: ${NPM}
 	${NPM} -C frontend run dev
 
