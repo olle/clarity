@@ -13,6 +13,7 @@ backend be: ${MVN}
 frontend fe: ${NPM}
 	${NPM} -C frontend install
 	${NPM} -C frontend audit
+	${NPM} -C frontend outdated
 	${NPM} -C frontend run build
 
 .PHONY: dev run-backend r-be run-frontend r-fe
