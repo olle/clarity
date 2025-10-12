@@ -11,6 +11,9 @@
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
+  --color-green: #15bb8c;
+  --color-green-dark: #129e77;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -46,11 +49,5 @@ body {
   :root {
     color: #213547;
     background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
   }
 }

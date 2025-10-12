@@ -1,20 +1,22 @@
 <template>
   <div class="wrapper">
-    <nav></nav>
-    <article>
-      <h1>Welcome to <em class="highlight">Clarity!</em></h1>
-    </article>
+    <nav>
+      <ul class="nav">
+        <RouterLink to="/"><IconHome /></RouterLink>
+        <RouterLink to="/brokers"><IconDatabase /></RouterLink>
+        <RouterLink to="/help"><IconHelpHexagon /></RouterLink>
+      </ul>
+    </nav>
+    <RouterView />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { RouterLink, RouterView } from "vue-router";
+import { IconHome, IconDatabase, IconHelpHexagon } from "@tabler/icons-vue";
+</script>
 
 <style scoped>
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
 .wrapper {
   border-top: 1px solid #eee;
   height: 100%;
@@ -24,25 +26,31 @@ h1 {
   background: #fcfcfb;
 }
 
-header {
-  border-bottom: 1px solid #eee;
-}
-
 nav {
   background-color: white;
   border-right: 1px solid #eee;
   box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.1);
 }
 
-article {
-  align-self: center;
-  justify-content: center;
+.nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  align-content: center;
-  text-align: center;
+  gap: 20px;
+  padding-top: 20px;
 }
 
-.highlight {
-  color: #15bb8c;
+.nav a {
+  color: #000;
+}
+.nav a:active,
+.nav a:hover {
+  color: var(--color-green);
+}
+.nav a.router-link-active {
+  color: var(--color-green-dark);
 }
 </style>
