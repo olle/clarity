@@ -3,6 +3,10 @@
     <Toast />
     <h2>Brokers</h2>
 
+    <ul>
+      <li v-for="broker in store.brokers">{{ broker }}</li>
+    </ul>
+
     <Panel header="Add new broker" class="add-broker-panel">
       <Form
         v-slot="$form"
@@ -82,9 +86,12 @@ import Checkbox from "primevue/checkbox";
 import Toast from "primevue/toast";
 import { valibotResolver } from "@primevue/forms/resolvers/valibot";
 import * as v from "valibot";
+import { useBrokerStore } from "../composables/useBrokerStore";
 
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
+
+const store = useBrokerStore();
 
 const initialValues = reactive({
   host: "localhost",
@@ -103,13 +110,14 @@ const resolver = valibotResolver(
   })
 );
 
-const onFormSubmit = ({ valid }) => {
+const onFormSubmit = ({ valid, values }) => {
   if (valid) {
     toast.add({
       severity: "success",
       summary: "Form is submitted.",
       life: 3000,
     });
+    store.newBroker.value = values;
   }
 };
 </script>
