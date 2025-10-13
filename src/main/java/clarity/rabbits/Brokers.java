@@ -28,7 +28,7 @@ public class Brokers {
   @GetMapping("/sse/v0/brokers")
   public SseEmitter subscribe() {
 
-    SseEmitter emitter = new SseEmitter();
+    SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
     this.emitters.add(emitter);
 
     emitter.onCompletion(() -> emitters.remove(emitter));
@@ -40,7 +40,7 @@ public class Brokers {
     return emitter;
   }
 
-  @Scheduled(fixedDelayString = "10s")
+  @Scheduled(fixedDelayString = "7s")
   public void heartbeat() {
     emit("tic-toc");
   }
@@ -58,17 +58,16 @@ public class Brokers {
   }
 
   protected void emit(String event) {
-    final List<SseEmitter> deadEmitters = new ArrayList<>();
-    emitters.forEach(
-        emitter -> {
-          try {
-            emitter.send(SseEmitter.event().name("broker").data(event));
-            LOG.info("Sent event {}", event);
-          } catch (Exception e) {
-            deadEmitters.add(emitter);
-          }
-        });
-    emitters.removeAll(deadEmitters);
+    final List<SseEmitter> removed = new ArrayList<>();
+    for (var emitter : emitters) {
+      try {
+        emitter.send(SseEmitter.event().name("broker").data(event));
+        LOG.info("Sent event {} to {}", event, emitter);
+      } catch (Exception e) {
+        removed.add(emitter);
+      }
+    }
+    emitters.removeAll(removed);
   }
 
   @GetMapping(path = "/api/v0/brokers")
