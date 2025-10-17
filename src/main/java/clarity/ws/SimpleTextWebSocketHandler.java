@@ -21,7 +21,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Component
-class WebSocketHandler extends TextWebSocketHandler implements Loggable {
+class SimpleTextWebSocketHandler extends TextWebSocketHandler implements Loggable {
 
   private Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
