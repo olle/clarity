@@ -2,6 +2,7 @@ package clarity.configuration;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import java.util.stream.Stream;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -58,10 +59,19 @@ class Production {
 class Development {
   @Bean
   public InMemoryUserDetailsManager userDetailsService() {
+
+    record UserRolePair(String userNameAndPassword, String authorities) {}
+
     return new InMemoryUserDetailsManager(
-        User.withUsername("user")
-            .password(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("user"))
-            .authorities("USER")
-            .build());
+        Stream.of(new UserRolePair("user", "USER"), new UserRolePair("admin", "ADMIN"))
+            .map(
+                val ->
+                    User.withUsername(val.userNameAndPassword)
+                        .password(
+                            PasswordEncoderFactories.createDelegatingPasswordEncoder()
+                                .encode(val.userNameAndPassword))
+                        .authorities(val.authorities)
+                        .build())
+            .toList());
   }
 }

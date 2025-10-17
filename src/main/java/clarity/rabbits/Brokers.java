@@ -1,73 +1,18 @@
 package clarity.rabbits;
 
-import java.util.ArrayList;
+import clarity.utils.Loggable;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
-public class Brokers {
-
-  private static final Logger LOG = LoggerFactory.getLogger(Brokers.class);
+public class Brokers implements Loggable {
 
   private final BrokerRepository brokerRepository;
-  private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
   public Brokers(BrokerRepository brokerRepository) {
     this.brokerRepository = brokerRepository;
-  }
-
-  @GetMapping("/sse/v0/brokers")
-  public SseEmitter subscribe() {
-
-    SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-    this.emitters.add(emitter);
-
-    emitter.onCompletion(() -> emitters.remove(emitter));
-    emitter.onTimeout(() -> emitters.remove(emitter));
-    emitter.onError((e) -> emitters.remove(emitter));
-
-    LOG.info("Added emitter {}", emitter);
-
-    return emitter;
-  }
-
-  @Scheduled(fixedDelayString = "7s")
-  public void heartbeat() {
-    emit("tic-toc");
-  }
-
-  @Async
-  @EventListener
-  public void on(BrokerAddedEvent event) {
-    emit(event.toString());
-  }
-
-  @Async
-  @EventListener
-  public void on(BrokerUpdatedEvent event) {
-    emit(event.toString());
-  }
-
-  protected void emit(String event) {
-    final List<SseEmitter> removed = new ArrayList<>();
-    for (var emitter : emitters) {
-      try {
-        emitter.send(SseEmitter.event().name("broker").data(event));
-        LOG.info("Sent event {} to {}", event, emitter);
-      } catch (Exception e) {
-        removed.add(emitter);
-      }
-    }
-    emitters.removeAll(removed);
   }
 
   @GetMapping(path = "/api/v0/brokers")
