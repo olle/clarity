@@ -42,6 +42,8 @@ class Production {
           auth.anyRequest().authenticated();
         });
 
+    http.csrf(csrf -> csrf.disable());
+
     if (isDevProfileActive()) {
       http.formLogin(withDefaults());
     }

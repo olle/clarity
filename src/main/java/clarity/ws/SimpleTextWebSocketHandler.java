@@ -8,10 +8,9 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.PingMessage;
 import org.springframework.web.socket.PongMessage;
@@ -86,8 +85,7 @@ class SimpleTextWebSocketHandler extends TextWebSocketHandler implements Loggabl
     logger().info("Received {} from {}", message, session);
   }
 
-  @Async
-  @TransactionalEventListener({BrokerAddedEvent.class, BrokerUpdatedEvent.class})
+  @EventListener({BrokerAddedEvent.class, BrokerUpdatedEvent.class})
   public void on(Object event) {
     sendToAllSessions(new TextMessage(event.toString()));
   }

@@ -12,8 +12,8 @@ backend be: ${MVN}
 .PHONY: frontend fe
 frontend fe: ${NPM}
 	${NPM} -C frontend install
-# 	${NPM} -C frontend audit
-# 	${NPM} -C frontend outdated
+	${NPM} -C frontend audit
+	${NPM} -C frontend outdated
 	${NPM} -C frontend run build
 
 .PHONY: run
@@ -21,11 +21,11 @@ run:
 	${MAKE} -j2 run-backend run-frontend
 
 .PHONY: run-backend run-be r-b
-run-backend r-be:
+run-backend run-be r-be:
 	SPRING_PROFILES_ACTIVE=dev ${MVN} spring-boot:run
 
 .PHONY: run-frontend run-fe r-f
-run-frontend r-fe: ${NPM}
+run-frontend run-fe r-fe: ${NPM}
 	${NPM} -C frontend run dev
 
 ${NPM}:

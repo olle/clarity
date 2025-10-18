@@ -9,4 +9,9 @@ public class Broker {
   public Broker(UUID id) {
     this.id = id;
   }
+
+  @Override
+  public String toString() {
+    return "Broker [id=" + id + "]";
+  }
 }

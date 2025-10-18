@@ -14,6 +14,8 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 import { IconHome, IconDatabase, IconHelpHexagon } from "@tabler/icons-vue";
+import { useWS } from "./composables/useWS"
+useWS();
 </script>
 
 <style scoped>

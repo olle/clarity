@@ -4,6 +4,7 @@ import clarity.utils.Loggable;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,15 +18,19 @@ public class Brokers implements Loggable {
 
   @GetMapping(path = "/api/v0/brokers")
   public BrokersDto fetch() {
-    return new BrokersDto(brokerRepository.findAll());
+    List<Broker> all = brokerRepository.findAll();
+    BrokersDto response = new BrokersDto(all);
+    logger().info("Response for fetch {}", response);
+    return response;
   }
 
   @PostMapping(path = "/api/v0/brokers")
-  public void save(BrokerDto broker) {
+  public void save(@RequestBody BrokerDto broker) {
+    logger().info("Received {}", broker);
     brokerRepository.save(broker);
   }
 
   record BrokersDto(List<Broker> elements) {}
 
-  record BrokerDto(String host, int port, String username, String password, boolean ssl) {}
+  record BrokerDto(String host, Integer port, String username, String password, boolean ssl) {}
 }

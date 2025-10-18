@@ -8,4 +8,10 @@ export default defineConfig({
     outDir: "../src/main/resources/static",
     emptyOutDir: true,
   },
+  server: {
+    proxy: {
+      "/api": "http://localhost:8080",
+      "/ws": { target: "http://localhost:8080", ws: true },
+    },
+  },
 });

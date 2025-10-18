@@ -117,7 +117,7 @@ const onFormSubmit = ({ valid, values }) => {
       summary: "Form is submitted.",
       life: 3000,
     });
-    store.newBroker.value = values;
+    store.addBroker(values);
   }
 };
 </script>

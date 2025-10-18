@@ -1,6 +1,7 @@
 package clarity.rabbits;
 
 import clarity.rabbits.Brokers.BrokerDto;
+import clarity.utils.Loggable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -9,7 +10,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
 
 @Repository
-class BrokerRepository {
+class BrokerRepository implements Loggable {
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -20,6 +21,8 @@ class BrokerRepository {
   }
 
   public List<Broker> findAll() {
+
+    logger().info("Fetching all from {}", entities.values());
     return entities.values().stream().map(BrokerEntity::toModel).toList();
   }
 
@@ -29,11 +32,16 @@ class BrokerRepository {
     var curr = new BrokerEntity(entity);
     var prev = entities.replace(curr.id(), curr);
 
-    if (prev != null) {
-      applicationEventPublisher.publishEvent(BrokerUpdatedEvent.from(curr, prev));
-    } else {
+    logger().info("Saving entity {} as current {} over prev {}", entity, curr, prev);
+
+    if (prev == null) {
+      entities.put(curr.id, curr);
       applicationEventPublisher.publishEvent(BrokerAddedEvent.from(curr));
+    } else {
+      applicationEventPublisher.publishEvent(BrokerUpdatedEvent.from(curr, prev));
     }
+
+    logger().info("Repository now holding {}", entities);
   }
 
   record BrokerEntity(
