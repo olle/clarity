@@ -1,5 +1,5 @@
-export function usePostJson() {
-  async function post(url, value) {
+export function usePost() {
+  async function json(url, value) {
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -12,5 +12,5 @@ export function usePostJson() {
     }
   }
 
-  return { post };
+  return { json };
 }

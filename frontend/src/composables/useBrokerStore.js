@@ -1,14 +1,14 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { usePostJson } from "./usePostJson";
+import { usePost } from "./usePost";
 
 export const useBrokerStore = defineStore("brokers", () => {
-  const { post } = usePostJson();
+  const { json } = usePost();
 
   const brokers = ref([]);
 
   const addBroker = async (values) => {
-    post("/api/v0/brokers", values);
+    await json("/api/v0/brokers", values);
   };
 
   return { brokers, addBroker };
