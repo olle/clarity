@@ -22,20 +22,20 @@ export const useBrokerStore = defineStore("brokers", () => {
     }
   }
 
-  watch(events, async (event) => {
-    if (
-      event.startsWith("BrokerUpdatedEvent") ||
-      event.startsWith("BrokerAddedEvent") ||
-      event.startsWith("BrokerRemovedEvent")
-    ) {
-      await reload();
-    }
-  });
-
   async function removeBroker(broker) {
     await brokersApi.delete(broker);
     delete brokers.value[broker.id];
   }
+
+  watch(events, async (message) => {
+    if (
+      message.event.startsWith("broker-updated") ||
+      message.event.startsWith("broker-added") ||
+      message.event.startsWith("broker-removed")
+    ) {
+      await reload();
+    }
+  });
 
   return { brokers, addBroker, removeBroker, reload };
 });

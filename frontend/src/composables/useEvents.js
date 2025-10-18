@@ -1,4 +1,4 @@
-import { watch, ref } from "vue";
+import { watch, ref, computed } from "vue";
 import { useWebSocket } from "@vueuse/core";
 
 export function useEvents() {
@@ -18,5 +18,7 @@ export function useEvents() {
 
   setInterval(() => send("MELLON"), 12345);
 
-  return { status, failed, events: data };
+  const events = computed(() => JSON.parse(data.value));
+
+  return { status, failed, events };
 }

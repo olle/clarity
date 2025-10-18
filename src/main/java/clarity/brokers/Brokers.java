@@ -1,6 +1,6 @@
 package clarity.brokers;
 
-import clarity.utils.Loggable;
+import clarity.infrastructure.utils.Loggable;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.DeleteMapping;

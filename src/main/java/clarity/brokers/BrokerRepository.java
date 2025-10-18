@@ -1,7 +1,7 @@
 package clarity.brokers;
 
 import clarity.brokers.Brokers.BrokerDto;
-import clarity.utils.Loggable;
+import clarity.infrastructure.utils.Loggable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
