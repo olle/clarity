@@ -1,4 +1,4 @@
-package clarity.rabbits;
+package clarity.brokers;
 
 import clarity.utils.Loggable;
 import java.util.List;

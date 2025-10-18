@@ -1,9 +1,9 @@
-package clarity.rabbits;
+package clarity.brokers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import clarity.rabbits.BrokerRepository.BrokerEntity;
-import clarity.rabbits.Brokers.BrokerDto;
+import clarity.brokers.BrokerRepository.BrokerEntity;
+import clarity.brokers.Brokers.BrokerDto;
 import java.util.UUID;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

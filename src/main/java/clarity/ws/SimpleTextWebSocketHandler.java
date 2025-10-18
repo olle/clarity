@@ -1,8 +1,8 @@
 package clarity.ws;
 
-import clarity.rabbits.BrokerAddedEvent;
-import clarity.rabbits.BrokerRemovedEvent;
-import clarity.rabbits.BrokerUpdatedEvent;
+import clarity.brokers.BrokerAddedEvent;
+import clarity.brokers.BrokerRemovedEvent;
+import clarity.brokers.BrokerUpdatedEvent;
 import clarity.utils.Loggable;
 import java.io.IOException;
 import java.time.Instant;

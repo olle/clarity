@@ -1,6 +1,6 @@
-package clarity.rabbits;
+package clarity.brokers;
 
-import clarity.rabbits.Brokers.BrokerDto;
+import clarity.brokers.Brokers.BrokerDto;
 import clarity.utils.Loggable;
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,6 @@
-package clarity.rabbits;
+package clarity.brokers;
 
-import clarity.rabbits.BrokerRepository.BrokerEntity;
+import clarity.brokers.BrokerRepository.BrokerEntity;
 
 public record BrokerRemovedEvent(Broker removed) {
 

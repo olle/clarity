@@ -1,4 +1,4 @@
-package clarity.rabbits;
+package clarity.brokers;
 
 import java.util.UUID;
 

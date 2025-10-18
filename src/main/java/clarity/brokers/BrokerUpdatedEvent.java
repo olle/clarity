@@ -1,6 +1,6 @@
-package clarity.rabbits;
+package clarity.brokers;
 
-import clarity.rabbits.BrokerRepository.BrokerEntity;
+import clarity.brokers.BrokerRepository.BrokerEntity;
 
 /** Emitted after the fact that a broker entity was updated and persisted. */
 public record BrokerUpdatedEvent(Broker current, Broker previous) {
