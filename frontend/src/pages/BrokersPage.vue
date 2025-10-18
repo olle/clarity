@@ -4,7 +4,16 @@
     <h2>Brokers</h2>
 
     <ul>
-      <li v-for="broker in store.brokers">{{ broker }}</li>
+      <li v-for="broker in store.brokers">
+        {{ broker }}
+        <Button
+          label="Delete"
+          severity="danger"
+          size="small"
+          variant="outlined"
+          @click="store.removeBroker(broker)"
+        />
+      </li>
     </ul>
 
     <Panel header="Add new broker" class="add-broker-panel">
@@ -73,7 +82,7 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, onMounted } from "vue";
 
 import Panel from "primevue/panel";
 import { Form } from "@primevue/forms";
@@ -87,11 +96,15 @@ import Toast from "primevue/toast";
 import { valibotResolver } from "@primevue/forms/resolvers/valibot";
 import * as v from "valibot";
 import { useBrokerStore } from "../composables/useBrokerStore";
-
 import { useToast } from "primevue/usetoast";
+
 const toast = useToast();
 
 const store = useBrokerStore();
+
+onMounted(() => {
+  store.reload();
+});
 
 const initialValues = reactive({
   host: "localhost",

@@ -1,6 +1,7 @@
 package clarity.ws;
 
 import clarity.rabbits.BrokerAddedEvent;
+import clarity.rabbits.BrokerRemovedEvent;
 import clarity.rabbits.BrokerUpdatedEvent;
 import clarity.utils.Loggable;
 import java.io.IOException;
@@ -85,7 +86,7 @@ class SimpleTextWebSocketHandler extends TextWebSocketHandler implements Loggabl
     logger().info("Received {} from {}", message, session);
   }
 
-  @EventListener({BrokerAddedEvent.class, BrokerUpdatedEvent.class})
+  @EventListener({BrokerAddedEvent.class, BrokerUpdatedEvent.class, BrokerRemovedEvent.class})
   public void on(Object event) {
     sendToAllSessions(new TextMessage(event.toString()));
   }

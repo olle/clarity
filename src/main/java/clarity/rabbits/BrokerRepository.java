@@ -21,8 +21,6 @@ class BrokerRepository implements Loggable {
   }
 
   public List<Broker> findAll() {
-
-    logger().info("Fetching all from {}", entities.values());
     return entities.values().stream().map(BrokerEntity::toModel).toList();
   }
 
@@ -32,16 +30,19 @@ class BrokerRepository implements Loggable {
     var curr = new BrokerEntity(entity);
     var prev = entities.replace(curr.id(), curr);
 
-    logger().info("Saving entity {} as current {} over prev {}", entity, curr, prev);
-
     if (prev == null) {
       entities.put(curr.id, curr);
       applicationEventPublisher.publishEvent(BrokerAddedEvent.from(curr));
     } else {
       applicationEventPublisher.publishEvent(BrokerUpdatedEvent.from(curr, prev));
     }
+  }
 
-    logger().info("Repository now holding {}", entities);
+  public void deleteById(UUID id) {
+    var removed = entities.remove(id);
+    if (removed != null) {
+      applicationEventPublisher.publishEvent(BrokerRemovedEvent.from(removed));
+    }
   }
 
   record BrokerEntity(

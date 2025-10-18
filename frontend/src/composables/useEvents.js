@@ -18,5 +18,5 @@ export function useEvents() {
 
   setInterval(() => send("MELLON"), 12345);
 
-  return { status, failed };
+  return { status, failed, events: data };
 }
