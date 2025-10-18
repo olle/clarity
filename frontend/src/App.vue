@@ -12,13 +12,8 @@
 </template>
 
 <script setup>
-import { watch } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 import { IconHome, IconDatabase, IconHelpHexagon } from "@tabler/icons-vue";
-import { useOfflineStore } from "./composables/useOfflineStore";
-
-const offlineStore = useOfflineStore();
-watch(offlineStore.offline, (v) => console.log(v));
 </script>
 
 <style scoped>

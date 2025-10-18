@@ -1,8 +1,5 @@
 package clarity.infrastructure.websocket;
 
-import clarity.brokers.BrokerAddedEvent;
-import clarity.brokers.BrokerRemovedEvent;
-import clarity.brokers.BrokerUpdatedEvent;
 import clarity.infrastructure.DomainEvent;
 import clarity.infrastructure.utils.Loggable;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -98,7 +95,7 @@ class SimpleWebSocketHandler extends TextWebSocketHandler implements Loggable {
     logger().info("Received {} from {}", message, session);
   }
 
-  @EventListener({BrokerAddedEvent.class, BrokerUpdatedEvent.class, BrokerRemovedEvent.class})
+  @EventListener
   public void on(DomainEvent event) {
     sendToAllSessions(toTextMessage(DomainEventMessage.from(event)));
   }
