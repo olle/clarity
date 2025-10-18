@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import clarity.brokers.BrokerAddedEvent;
 import clarity.brokers.FixtureBrokerAddedEvent;
 import clarity.configuration.ObjectMapperConfig;
-import clarity.infrastructure.websocket.SimpleWebSocketHandler.DomainEventMessage;
+import clarity.infrastructure.websocket.JsonTextWebSocketHandler.DomainEventMessage;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class SimpleWebSocketHandlerTest {
   @Test
   void messageIsSentAsJson() throws Exception {
 
-    var sut = new SimpleWebSocketHandler(new ObjectMapperConfig().objectMapper());
+    var sut = new JsonTextWebSocketHandler(new ObjectMapperConfig().objectMapper());
 
     when(session.getId()).thenReturn(UUID.randomUUID().toString());
     sut.afterConnectionEstablished(session);

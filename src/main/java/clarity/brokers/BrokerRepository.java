@@ -1,6 +1,6 @@
 package clarity.brokers;
 
-import clarity.brokers.Brokers.BrokerDto;
+import clarity.brokers.BrokerController.BrokerDto;
 import clarity.infrastructure.utils.Loggable;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +24,16 @@ class BrokerRepository implements Loggable {
     return entities.values().stream().map(BrokerEntity::toModel).toList();
   }
 
-  public void save(BrokerDto dto) {
+  public void save(UUID id, BrokerDto dto) {
+    save(BrokerEntity.from(dto).withId(id));
+  }
 
-    var entity = BrokerEntity.from(dto);
+  public void save(BrokerDto dto) {
+    save(BrokerEntity.from(dto));
+  }
+
+  private void save(BrokerEntity entity) {
+
     var curr = new BrokerEntity(entity);
     var prev = entities.replace(curr.id(), curr);
 
@@ -57,13 +64,25 @@ class BrokerRepository implements Loggable {
           createId(dto), dto.host(), dto.port(), dto.username(), dto.password(), dto.ssl());
     }
 
+    public BrokerEntity withId(UUID id) {
+      return new BrokerEntity(id, this.host, this.port, this.username, this.password, this.ssl);
+    }
+
     static UUID createId(BrokerDto dto) {
       return UUID.nameUUIDFromBytes(
           "%s@%s:%d".formatted(dto.username(), dto.host(), dto.port()).getBytes());
     }
 
     public Broker toModel() {
-      return new Broker(this.id);
+      return new Broker(this.id)
+          .withProperties(
+              properties ->
+                  properties
+                      .withHost(host)
+                      .withPort(port)
+                      .withUsername(username)
+                      .withPassword(password)
+                      .withSSL(ssl));
     }
   }
 }

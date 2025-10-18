@@ -23,13 +23,13 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Component
-class SimpleWebSocketHandler extends TextWebSocketHandler implements Loggable {
+class JsonTextWebSocketHandler extends TextWebSocketHandler implements Loggable {
 
   private final ObjectMapper objectMapper;
 
   private Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
-  public SimpleWebSocketHandler(ObjectMapper objectMapper) {
+  public JsonTextWebSocketHandler(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
   }
 
@@ -48,10 +48,11 @@ class SimpleWebSocketHandler extends TextWebSocketHandler implements Loggable {
   private void removeSession(WebSocketSession session) {
     synchronized (sessions) {
       if (sessions.remove(session.getId()) != null) {
-        logger().info("REMOVED {}", session);
+        logger().info("Removed {}", session);
       }
+      int before = sessions.size();
       if (sessions.entrySet().removeIf(entry -> !entry.getValue().isOpen())) {
-        logger().info("REMOVED!!");
+        logger().info("Removed {} WebSocket sessions.", before - sessions.size());
       }
     }
   }
@@ -76,7 +77,7 @@ class SimpleWebSocketHandler extends TextWebSocketHandler implements Loggable {
   private Optional<WebSocketSession> sendToSession(
       WebSocketMessage<?> message, WebSocketSession session) {
     try {
-      logger().info("Sending {} to {}", message, session);
+      logger().debug("Sending {} to {}", message, session);
       session.sendMessage(message);
       return Optional.empty();
     } catch (IOException ex) {
@@ -87,12 +88,12 @@ class SimpleWebSocketHandler extends TextWebSocketHandler implements Loggable {
 
   @Override
   protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-    logger().info("Received {} from {}", message, session);
+    logger().warn("Received {} from {}", message, session);
   }
 
   @Override
   protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
-    logger().info("Received {} from {}", message, session);
+    logger().debug("Received {} from {}", message, session);
   }
 
   @EventListener

@@ -12,10 +12,23 @@ export function useApi() {
     }
   }
 
-  async function postJSON(url, value) {
+  async function postJsonRequest(url, value) {
     try {
       const response = await fetch(url, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(value),
+      });
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async function putJsonRequest(url, value) {
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(value),
       });
@@ -37,9 +50,10 @@ export function useApi() {
   }
 
   const brokers = {
-    create: async (broker) => postJSON("/api/v0/brokers", broker),
-    fetchAll: async () => fetchJSON("/api/v0/brokers"),
+    create: async (broker) => postJsonRequest("/api/v0/brokers", broker),
+    update: async (id, broker) => putJsonRequest(`/api/v0/brokers/${id}`, broker),
     delete: async (broker) => deleteRequest(`/api/v0/brokers/${broker.id}`),
+    fetchAll: async () => fetchJSON("/api/v0/brokers"),
   };
 
   return { brokers };
