@@ -12,10 +12,10 @@ class CreateEntityIdTest {
 
   @ParameterizedTest
   @CsvSource({
-    "pwd,   false,  pwd,  false",
-    "pwd,   true,   pwd,  false",
-    "pwd,   true,   pwd,  true",
-    "pwd,   false,  pwd,  true",
+    "pwd1,   false,  pwd1,  false",
+    "pwd2,   true,   pwd1,  false",
+    "pwd3,   true,   pwd3,  true",
+    "pwd4,   false,  pwd4,  true",
   })
   void ensureEqualsForSameHostnamePortAndUsername(
       String passwordA, boolean sslA, String passwordB, boolean sslB) {

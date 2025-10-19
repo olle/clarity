@@ -1,6 +1,7 @@
 package clarity.brokers;
 
 import clarity.brokers.BrokerController.BrokerDto;
+import clarity.brokers.BrokersConfigurationProperty.ConfiguredBroker;
 import clarity.infrastructure.utils.Loggable;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,12 @@ class BrokerRepository implements Loggable {
     save(BrokerEntity.from(dto).withId(id));
   }
 
-  public void save(BrokerDto dto) {
-    save(BrokerEntity.from(dto));
+  public void save(BrokerDto brokerDto) {
+    save(BrokerEntity.from(brokerDto));
+  }
+
+  public void save(ConfiguredBroker configuredBroker) {
+    save(BrokerEntity.from(configuredBroker));
   }
 
   private void save(BrokerEntity entity) {
@@ -59,9 +64,24 @@ class BrokerRepository implements Loggable {
       this(other.id, other.host, other.port, other.username, other.password, other.ssl);
     }
 
-    public static BrokerEntity from(BrokerDto dto) {
+    public static BrokerEntity from(BrokerDto brokerDto) {
       return new BrokerEntity(
-          createId(dto), dto.host(), dto.port(), dto.username(), dto.password(), dto.ssl());
+          createId(brokerDto),
+          brokerDto.host(),
+          brokerDto.port(),
+          brokerDto.username(),
+          brokerDto.password(),
+          brokerDto.ssl());
+    }
+
+    public static BrokerEntity from(ConfiguredBroker configuredBroker) {
+      return new BrokerEntity(
+          createId(configuredBroker),
+          configuredBroker.getHost(),
+          configuredBroker.getPort(),
+          configuredBroker.getUsername(),
+          configuredBroker.getPassword(),
+          configuredBroker.isSsl());
     }
 
     public BrokerEntity withId(UUID id) {
@@ -69,8 +89,16 @@ class BrokerRepository implements Loggable {
     }
 
     static UUID createId(BrokerDto dto) {
-      return UUID.nameUUIDFromBytes(
-          "%s@%s:%d".formatted(dto.username(), dto.host(), dto.port()).getBytes());
+      return createUuidFrom(dto.username(), dto.host(), dto.port());
+    }
+
+    static UUID createId(ConfiguredBroker configuredBroker) {
+      return createUuidFrom(
+          configuredBroker.getUsername(), configuredBroker.getHost(), configuredBroker.getPort());
+    }
+
+    private static UUID createUuidFrom(String username, String host, Integer port) {
+      return UUID.nameUUIDFromBytes("%s@%s:%d".formatted(username, host, port).getBytes());
     }
 
     public Broker toModel() {
