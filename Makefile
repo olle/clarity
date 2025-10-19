@@ -16,6 +16,11 @@ frontend fe: ${NPM}
 	${NPM} -C frontend outdated
 	${NPM} -C frontend run build
 
+.PHONY: clean c
+clean c:
+	${MVN} clean
+	rm -rf src/main/resources/static/*
+
 .PHONY: run
 run:
 	${MAKE} -j2 run-backend run-frontend

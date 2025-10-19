@@ -2,9 +2,22 @@
   <div class="wrapper">
     <nav>
       <ul class="nav">
-        <RouterLink to="/"><IconHome /></RouterLink>
-        <RouterLink to="/brokers"><IconDatabase /></RouterLink>
-        <RouterLink to="/help"><IconHelpHexagon /></RouterLink>
+        <li>
+          <RouterLink to="/"><IconHome /></RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/brokers">
+            <OverlayBadge :value="store.count" size="small">
+              <IconDatabase />
+            </OverlayBadge>
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/help"><IconHelpHexagon /></RouterLink>
+        </li>
+        <li class="mt-auto">
+          <OnlineStatus />
+        </li>
       </ul>
     </nav>
     <RouterView />
@@ -12,8 +25,18 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 import { IconHome, IconDatabase, IconHelpHexagon } from "@tabler/icons-vue";
+import { useBrokerStore } from "./composables/useBrokerStore";
+import OverlayBadge from "primevue/overlaybadge";
+import OnlineStatus from "./components/OnlineStatus.vue";
+
+const store = useBrokerStore();
+
+onMounted(() => {
+  store.reload();
+});
 </script>
 
 <style scoped>
@@ -41,6 +64,8 @@ nav {
   align-items: center;
   gap: 20px;
   padding-top: 20px;
+  padding-bottom: 20px;
+  height: 100%;
 }
 
 .nav a {
@@ -52,5 +77,9 @@ nav {
 }
 .nav a.router-link-active {
   color: var(--color-green-dark);
+}
+
+.mt-auto {
+  margin-top: auto;
 }
 </style>

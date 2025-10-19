@@ -7,6 +7,14 @@ export default defineConfig({
   build: {
     outDir: "../src/main/resources/static",
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "tabler-icons": ["@tabler/icons-vue"],
+          primevue: ["primevue"],
+        },
+      },
+    },
   },
   server: {
     proxy: {

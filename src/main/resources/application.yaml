@@ -3,3 +3,9 @@ spring.application.name: Clarity
 logging:
   level:
     clarity.ws: WARN
+
+clarity:
+  brokers:
+    - host: localhost
+    - host: 127.0.0.1
+      username: other

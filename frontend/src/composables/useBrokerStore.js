@@ -1,4 +1,4 @@
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { defineStore } from "pinia";
 import { useApi } from "./useApi";
 import { useEvents } from "./useEvents";
@@ -8,6 +8,7 @@ export const useBrokerStore = defineStore("brokers", () => {
   const { brokers: brokersApi } = useApi();
 
   const brokers = ref({});
+  const count = computed(() => Object.keys(brokers.value).length);
 
   const addBroker = async (values) => {
     await brokersApi.create(values);
@@ -41,5 +42,5 @@ export const useBrokerStore = defineStore("brokers", () => {
     }
   });
 
-  return { brokers, addBroker, removeBroker, updateBroker, reload };
+  return { brokers, count, addBroker, removeBroker, updateBroker, reload };
 });

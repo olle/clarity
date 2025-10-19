@@ -3,6 +3,7 @@ import { createPinia } from "pinia";
 import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
 import ToastService from "primevue/toastservice";
+import Tooltip from "primevue/tooltip";
 
 import "./style.css";
 import router from "./router";
@@ -20,4 +21,5 @@ createApp(App)
     },
   })
   .use(ToastService)
+  .directive("tooltip", Tooltip)
   .mount("#app");
