@@ -26,4 +26,8 @@ public class Broker {
     this.properties = mutator.apply(this.properties);
     return this;
   }
+
+  public String getBeanName() {
+	return "amqp://%s@%s:%d".formatted(properties.username(), properties.host(), properties.port());
+  }
 }
