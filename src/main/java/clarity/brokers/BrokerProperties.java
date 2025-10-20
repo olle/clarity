@@ -1,6 +1,6 @@
 package clarity.brokers;
 
-record BrokerProperties(String host, Integer port, String username, String password, boolean ssl) {
+public record BrokerProperties(String host, Integer port, String username, String password, boolean ssl) {
 
   public static BrokerProperties empty() {
     return new BrokerProperties(null, null, null, null, false);
