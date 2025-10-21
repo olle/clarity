@@ -24,18 +24,6 @@ public class Connections implements Loggable {
   }
 
   @EventListener
-  public void on(BrokerRemovedEvent event) {
-
-    Broker broker = event.removed();
-    RabbitMqConnectionFactory removed = factories.remove(broker.id);
-
-    if (removed != null) {
-      context.removeBeanDefinition(createConnectionFactoryName(broker));
-      context.removeBeanDefinition(createRabbitTemplateName(broker));
-    }
-  }
-
-  @EventListener
   public void on(BrokerAddedEvent event) {
 
     Broker broker = event.broker();
@@ -52,6 +40,18 @@ public class Connections implements Loggable {
     RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
     context.registerBean(
         createRabbitTemplateName(broker), RabbitTemplate.class, () -> rabbitTemplate);
+  }
+
+  @EventListener
+  public void on(BrokerRemovedEvent event) {
+
+    Broker broker = event.removed();
+    RabbitMqConnectionFactory removed = factories.remove(broker.id);
+
+    if (removed != null) {
+      context.removeBeanDefinition(createConnectionFactoryName(broker));
+      context.removeBeanDefinition(createRabbitTemplateName(broker));
+    }
   }
 
   private String createRabbitTemplateName(Broker broker) {
