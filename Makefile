@@ -15,8 +15,8 @@ frontend fe: ${NPM}
 	${NPM} -C frontend audit
 	${NPM} -C frontend run build
 
-.PHONY: outdated
-outdated:
+.PHONY: outdated o
+outdated o:
 	${NPM} -C frontend outdated
 	${MVN} com.giovds:outdated-maven-plugin:check
 
