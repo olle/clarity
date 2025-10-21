@@ -2,6 +2,7 @@ package clarity.connections;
 
 import clarity.brokers.Broker;
 import clarity.brokers.BrokerAddedEvent;
+import clarity.brokers.BrokerRemovedEvent;
 import clarity.infrastructure.utils.Loggable;
 import java.util.Map;
 import java.util.UUID;
@@ -23,6 +24,18 @@ public class Connections implements Loggable {
   }
 
   @EventListener
+  public void on(BrokerRemovedEvent event) {
+
+    Broker broker = event.removed();
+    RabbitMqConnectionFactory removed = factories.remove(broker.id);
+
+    if (removed != null) {
+      context.removeBeanDefinition(createConnectionFactoryName(broker));
+      context.removeBeanDefinition(createRabbitTemplateName(broker));
+    }
+  }
+
+  @EventListener
   public void on(BrokerAddedEvent event) {
 
     Broker broker = event.broker();
@@ -32,13 +45,21 @@ public class Connections implements Loggable {
     factories.putIfAbsent(broker.id, connectionFactory);
 
     context.registerBean(
-        "connectionFactory" + broker.getBeanName(),
+        createConnectionFactoryName(broker),
         RabbitMqConnectionFactory.class,
         () -> connectionFactory);
 
     RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
     context.registerBean(
-        "rabbitTemplate" + broker.getBeanName(), RabbitTemplate.class, () -> rabbitTemplate);
+        createRabbitTemplateName(broker), RabbitTemplate.class, () -> rabbitTemplate);
+  }
+
+  private String createRabbitTemplateName(Broker broker) {
+    return "rabbitTemplate" + broker.getBeanName();
+  }
+
+  private String createConnectionFactoryName(Broker broker) {
+    return "connectionFactory" + broker.getBeanName();
   }
 
   public RabbitMqConnectionFactory rabbitMqConnectionFactory(Broker broker) {
