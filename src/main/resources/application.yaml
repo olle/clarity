@@ -2,7 +2,9 @@ spring.application.name: Clarity
 
 management:
   server.port: 9090
-  endpoints.web.exposure.include: health,info,prometheus,beans,loggers
+  endpoints:
+    web.exposure.include: "*"
+    jmx.exposure.include: "*"
 
 logging:
   level:

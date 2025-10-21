@@ -3,7 +3,7 @@ MVN:=./mvnw
 NPM:=./node/npm
 
 .PHONY: verify v
-verify v: backend frontend
+verify v: backend frontend outdated
 
 .PHONY: backend be
 backend be: ${MVN}
@@ -13,8 +13,12 @@ backend be: ${MVN}
 frontend fe: ${NPM}
 	${NPM} -C frontend install
 	${NPM} -C frontend audit
-	${NPM} -C frontend outdated
 	${NPM} -C frontend run build
+
+.PHONY: outdated
+outdated:
+	${NPM} -C frontend outdated
+	${MVN} com.giovds:outdated-maven-plugin:check
 
 .PHONY: clean c
 clean c:
