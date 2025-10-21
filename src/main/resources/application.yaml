@@ -1,5 +1,11 @@
 spring.application.name: Clarity
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,beans,loggers
+
 logging:
   level:
     clarity.ws: WARN

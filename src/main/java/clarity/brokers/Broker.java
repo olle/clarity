@@ -28,6 +28,6 @@ public class Broker {
   }
 
   public String getBeanName() {
-	return "amqp://%s@%s:%d".formatted(properties.username(), properties.host(), properties.port());
+    return "amqp://%s@%s:%d".formatted(properties.username(), properties.host(), properties.port());
   }
 }

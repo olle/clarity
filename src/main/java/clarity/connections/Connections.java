@@ -6,7 +6,7 @@ import clarity.infrastructure.utils.Loggable;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,15 +26,19 @@ public class Connections implements Loggable {
   public void on(BrokerAddedEvent event) {
 
     Broker broker = event.broker();
-	RabbitMqConnectionFactory rabbitMqConnectionFactory = rabbitMqConnectionFactory(broker);
-    logger().info("Created {} from {}", rabbitMqConnectionFactory, event);
-    factories.putIfAbsent(broker.id, rabbitMqConnectionFactory);
-    
+    RabbitMqConnectionFactory connectionFactory = rabbitMqConnectionFactory(broker);
+
+    logger().info("Created {} from {}", connectionFactory, event);
+    factories.putIfAbsent(broker.id, connectionFactory);
+
     context.registerBean(
-        broker.getBeanName(),
+        "connectionFactory" + broker.getBeanName(),
         RabbitMqConnectionFactory.class,
-        () -> rabbitMqConnectionFactory,
-        def -> def.setScope(BeanDefinition.SCOPE_PROTOTYPE));
+        () -> connectionFactory);
+
+    RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+    context.registerBean(
+        "rabbitTemplate" + broker.getBeanName(), RabbitTemplate.class, () -> rabbitTemplate);
   }
 
   public RabbitMqConnectionFactory rabbitMqConnectionFactory(Broker broker) {
@@ -44,8 +48,5 @@ public class Connections implements Loggable {
   @Scheduled(fixedDelayString = "PT10S")
   public void scheduled() {
     logger().info("HOLDING {}", factories);
-    Map<String, RabbitMqConnectionFactory> beans =
-        context.getBeansOfType(RabbitMqConnectionFactory.class);
-    logger().info("BEANS {}", beans);
   }
 }
