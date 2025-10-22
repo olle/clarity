@@ -29,6 +29,7 @@ public class BrokersConfigurationProperty {
     private String username = "guest";
     private String password = "guest";
     private boolean ssl = false;
+    private int httpPort = 15672;
 
     @Override
     public String toString() {
@@ -42,6 +43,8 @@ public class BrokersConfigurationProperty {
           + password
           + ", ssl="
           + ssl
+          + ", httpPort="
+          + httpPort
           + "]";
     }
 
@@ -83,6 +86,14 @@ public class BrokersConfigurationProperty {
 
     public void setSsl(boolean ssl) {
       this.ssl = ssl;
+    }
+
+    public int getHttpPort() {
+      return httpPort;
+    }
+
+    public void setHttpPort(int httpPort) {
+      this.httpPort = httpPort;
     }
 
     public Broker toModel() {
