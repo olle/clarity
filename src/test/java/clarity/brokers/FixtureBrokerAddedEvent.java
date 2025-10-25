@@ -1,5 +1,6 @@
 package clarity.brokers;
 
+import clarity.brokers.event.BrokerAddedEvent;
 import java.time.Instant;
 import java.util.UUID;
 

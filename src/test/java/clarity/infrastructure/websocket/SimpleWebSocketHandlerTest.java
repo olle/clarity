@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import clarity.brokers.BrokerAddedEvent;
 import clarity.brokers.FixtureBrokerAddedEvent;
+import clarity.brokers.event.BrokerAddedEvent;
 import clarity.configuration.ObjectMapperConfig;
 import clarity.infrastructure.websocket.JsonTextWebSocketHandler.DomainEventMessage;
 import java.util.UUID;

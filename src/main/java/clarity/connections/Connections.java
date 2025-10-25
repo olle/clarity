@@ -1,8 +1,8 @@
 package clarity.connections;
 
-import clarity.brokers.BrokerAddedEvent;
-import clarity.brokers.BrokerRemovedEvent;
 import clarity.brokers.RabbitMqBroker;
+import clarity.brokers.event.BrokerAddedEvent;
+import clarity.brokers.event.BrokerRemovedEvent;
 import clarity.infrastructure.utils.Loggable;
 import java.util.HashSet;
 import java.util.Map;

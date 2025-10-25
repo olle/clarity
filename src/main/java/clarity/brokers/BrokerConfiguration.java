@@ -1,6 +1,7 @@
 package clarity.brokers;
 
 import clarity.brokers.BrokersConfigurationProperty.ConfiguredBroker;
+import clarity.brokers.event.ConfiguredBrokerFoundEvent;
 import clarity.infrastructure.utils.Loggable;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEventPublisher;

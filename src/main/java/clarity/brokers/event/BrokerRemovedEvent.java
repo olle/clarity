@@ -1,5 +1,6 @@
-package clarity.brokers;
+package clarity.brokers.event;
 
+import clarity.brokers.RabbitMqBroker;
 import clarity.infrastructure.DomainEvent;
 import com.github.f4b6a3.uuid.UuidCreator;
 import java.time.Instant;
