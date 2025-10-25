@@ -14,29 +14,22 @@
       </div>
     </div>
 
-    <ul class="broker-list">
-      <li v-for="broker in store.brokers" :key="broker.id">
-        {{ broker }}
+    <Panel :header="formLabel" class="add-broker-panel" v-if="showForm">
+      <template #icons>
         <Button
-          :disabled="broker.type === 'CONFIGURED'"
-          label="Edit"
-          severity="secondary"
-          size="small"
-          variant="outlined"
-          @click="editBroker(broker)"
-        />
-        <Button
-          :disabled="broker.type === 'CONFIGURED'"
-          label="Delete"
           severity="danger"
-          size="small"
+          rounded
+          aria-label="Close"
           variant="outlined"
-          @click="removeBroker(broker)"
-        />
-      </li>
-    </ul>
-
-    <Panel header="Add new broker" class="add-broker-panel" v-if="showForm">
+          size="small"
+          class="ms-auto"
+          @click="closeForm()"
+        >
+          <template #icon>
+            <IconX />
+          </template>
+        </Button>
+      </template>
       <Form
         v-slot="$form"
         :key="formResetKey"
@@ -113,6 +106,41 @@
         />
       </Form>
     </Panel>
+
+    <ul class="broker-list">
+      <li v-for="broker in store.brokers" :key="broker.id">
+        <dl>
+          <dt>Host:</dt>
+          <dd>{{ broker.host }}</dd>
+          <dt>Port:</dt>
+          <dd>{{ broker.port }}</dd>
+          <dt>Type:</dt>
+          <dd>{{ broker.type }}</dd>
+          <dt>URL:</dt>
+          <dd>
+            amqp://{{ broker.username }}:*******@{{ broker.host }}:{{
+              broker.port
+            }}
+          </dd>
+        </dl>
+        <Button
+          :disabled="broker.type === 'CONFIGURED'"
+          label="Edit"
+          severity="secondary"
+          size="small"
+          variant="outlined"
+          @click="editBroker(broker)"
+        />
+        <Button
+          :disabled="broker.type === 'CONFIGURED'"
+          label="Delete"
+          severity="danger"
+          size="small"
+          variant="outlined"
+          @click="removeBroker(broker)"
+        />
+      </li>
+    </ul>
   </article>
 </template>
 
@@ -133,7 +161,7 @@ import { valibotResolver } from "@primevue/forms/resolvers/valibot";
 import * as v from "valibot";
 import { useBrokerStore } from "../composables/useBrokerStore";
 import { useToast } from "primevue/usetoast";
-import { IconPlus } from "@tabler/icons-vue";
+import { IconPlus, IconX } from "@tabler/icons-vue";
 
 const toast = useToast();
 const store = useBrokerStore();
@@ -152,6 +180,7 @@ const initial = {
   ssl: false,
 };
 
+const formLabel = ref("Add new broker");
 const showForm = ref(false);
 const initialValues = ref(null);
 
@@ -187,12 +216,18 @@ const onFormSubmit = ({ valid, values, reset }) => {
   }
 };
 
+function closeForm() {
+  resetForm();
+  showForm.value = false;
+}
+
 function resetForm() {
   formResetKey.value++;
   initialValues.value = { ...initial };
 }
 
 function addNewBroker() {
+  formLabel.value = "Add new broker";
   formResetKey.value++;
   editBrokerId.value = null;
   initialValues.value = { ...initial };
@@ -204,6 +239,7 @@ function editBroker(broker) {
   formResetKey.value++;
   editBrokerId.value = broker.id;
   initialValues.value = broker;
+  formLabel.value = "Edit broker";
   showForm.value = true;
 }
 
