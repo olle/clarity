@@ -47,6 +47,7 @@ ${MVN}:
 .PHONY: tidy spotless pretty format f
 tidy spotless pretty format f:
 	${MVN} spotless:apply
+	${MVN} com.github.ekryd.sortpom:sortpom-maven-plugin:sort
 
 .PHONY: up
 up:
