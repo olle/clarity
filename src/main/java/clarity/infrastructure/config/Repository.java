@@ -1,4 +1,4 @@
-package clarity.configuration;
+package clarity.infrastructure.config;
 
 import clarity.brokers.BrokerRepository;
 import clarity.infrastructure.repository.InMemoryBrokerRepository;

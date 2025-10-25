@@ -1,4 +1,4 @@
-package clarity.configuration;
+package clarity.infrastructure.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 

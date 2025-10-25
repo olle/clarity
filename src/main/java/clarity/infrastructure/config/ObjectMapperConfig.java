@@ -1,4 +1,4 @@
-package clarity.configuration;
+package clarity.infrastructure.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

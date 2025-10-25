@@ -1,4 +1,4 @@
-package clarity.configuration;
+package clarity.infrastructure.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
