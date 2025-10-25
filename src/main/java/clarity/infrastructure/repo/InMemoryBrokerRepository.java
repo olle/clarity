@@ -12,10 +12,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Repository;
 
-@Repository
-class InMemoryBrokerRepository implements Loggable, BrokerRepository {
+public class InMemoryBrokerRepository implements Loggable, BrokerRepository {
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
