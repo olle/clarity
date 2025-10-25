@@ -1,4 +1,4 @@
-package clarity.infrastructure.repo;
+package clarity.infrastructure.repository;
 
 import clarity.brokers.BrokerRepository;
 import clarity.brokers.BrokerType;

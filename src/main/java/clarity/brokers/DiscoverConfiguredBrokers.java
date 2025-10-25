@@ -2,6 +2,7 @@ package clarity.brokers;
 
 import clarity.brokers.BrokersConfigurationProperty.ConfiguredBroker;
 import clarity.brokers.event.ConfiguredBrokerFoundEvent;
+import clarity.infrastructure.UseCase;
 import clarity.infrastructure.utils.Loggable;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEventPublisher;
@@ -10,13 +11,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @EnableConfigurationProperties(BrokersConfigurationProperty.class)
-public class BrokerConfiguration implements Loggable {
+public class DiscoverConfiguredBrokers implements Loggable, UseCase {
 
   private final BrokerRepository repo;
   private final BrokersConfigurationProperty configured;
   private final ApplicationEventPublisher applicationEventPublisher;
 
-  public BrokerConfiguration(
+  public DiscoverConfiguredBrokers(
       BrokersConfigurationProperty configured,
       ApplicationEventPublisher applicationEventPublisher,
       BrokerRepository repo) {

@@ -1,7 +1,7 @@
 package clarity.configuration;
 
 import clarity.brokers.BrokerRepository;
-import clarity.infrastructure.repo.InMemoryBrokerRepository;
+import clarity.infrastructure.repository.InMemoryBrokerRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
