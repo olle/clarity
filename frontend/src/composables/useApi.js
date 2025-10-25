@@ -51,7 +51,8 @@ export function useApi() {
 
   const brokers = {
     create: async (broker) => postJsonRequest("/api/v0/brokers", broker),
-    update: async (id, broker) => putJsonRequest(`/api/v0/brokers/${id}`, broker),
+    update: async (id, updated) =>
+      putJsonRequest(`/api/v0/brokers/${id}`, updated),
     delete: async (broker) => deleteRequest(`/api/v0/brokers/${broker.id}`),
     fetchAll: async () => fetchJSON("/api/v0/brokers"),
   };

@@ -19,7 +19,7 @@
             <IconHelpHexagon />
           </RouterLink>
         </li>
-        <li>
+        <li class="disabled" disabled>
           <IconSettings />
         </li>
         <li>
@@ -35,13 +35,12 @@
 import { onMounted } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 import IconRabbitMq from "./components/IconRabbitMq.vue";
-import { IconHome, IconDatabase, IconHelpHexagon, IconSettings } from "@tabler/icons-vue";
+import { IconHome, IconHelpHexagon, IconSettings } from "@tabler/icons-vue";
 import { useBrokerStore } from "./composables/useBrokerStore";
 import OverlayBadge from "primevue/overlaybadge";
 import OnlineStatus from "./components/OnlineStatus.vue";
 
 const store = useBrokerStore();
-
 onMounted(() => {
   store.reload();
 });
@@ -89,5 +88,10 @@ nav {
 
 .mt-auto {
   margin-top: auto;
+}
+
+.disabled {
+  opacity: 0.3;
+  pointer-events: none;
 }
 </style>

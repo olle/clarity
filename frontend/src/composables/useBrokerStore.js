@@ -15,7 +15,8 @@ export const useBrokerStore = defineStore("brokers", () => {
   };
 
   const updateBroker = async (id, values) => {
-    await brokersApi.update(id, values);
+    const current = brokers.value[id];
+    await brokersApi.update(id, { ...current, ...values });
   };
 
   async function reload() {
@@ -43,5 +44,12 @@ export const useBrokerStore = defineStore("brokers", () => {
     }
   });
 
-  return { brokers, count, addBroker, removeBroker, updateBroker, reload };
+  return {
+    brokers,
+    count,
+    addBroker,
+    removeBroker,
+    updateBroker,
+    reload,
+  };
 });

@@ -1,12 +1,24 @@
 <template>
-  <article>
+  <article class="clarity--content-page">
     <Toast />
-    <h2>RabbitMQ Brokers</h2>
+    <div class="header">
+      <div class="col">
+        <h1>RabbitMQ Brokers</h1>
+      </div>
+      <div class="col ms-auto">
+        <Button label="Add RabbitMQ broker" @click="addNewBroker()">
+          <template #icon>
+            <IconPlus />
+          </template>
+        </Button>
+      </div>
+    </div>
 
-    <ul>
-      <li v-for="broker in store.brokers">
+    <ul class="broker-list">
+      <li v-for="broker in store.brokers" :key="broker.id">
         {{ broker }}
         <Button
+          :disabled="broker.type === 'CONFIGURED'"
           label="Edit"
           severity="secondary"
           size="small"
@@ -14,6 +26,7 @@
           @click="editBroker(broker)"
         />
         <Button
+          :disabled="broker.type === 'CONFIGURED'"
           label="Delete"
           severity="danger"
           size="small"
@@ -23,7 +36,7 @@
       </li>
     </ul>
 
-    <Panel header="Add new broker" class="add-broker-panel">
+    <Panel header="Add new broker" class="add-broker-panel" v-if="showForm">
       <Form
         v-slot="$form"
         :key="formResetKey"
@@ -115,10 +128,12 @@ import InputNumber from "primevue/inputnumber";
 import Password from "primevue/password";
 import Checkbox from "primevue/checkbox";
 import Toast from "primevue/toast";
+
 import { valibotResolver } from "@primevue/forms/resolvers/valibot";
 import * as v from "valibot";
 import { useBrokerStore } from "../composables/useBrokerStore";
 import { useToast } from "primevue/usetoast";
+import { IconPlus } from "@tabler/icons-vue";
 
 const toast = useToast();
 const store = useBrokerStore();
@@ -137,7 +152,8 @@ const initial = {
   ssl: false,
 };
 
-const initialValues = ref({ ...initial });
+const showForm = ref(false);
+const initialValues = ref(null);
 
 const resolver = valibotResolver(
   v.object({
@@ -167,6 +183,7 @@ const onFormSubmit = ({ valid, values, reset }) => {
 
     nextTick();
     resetForm();
+    showForm.value = false;
   }
 };
 
@@ -175,25 +192,55 @@ function resetForm() {
   initialValues.value = { ...initial };
 }
 
+function addNewBroker() {
+  formResetKey.value++;
+  editBrokerId.value = null;
+  initialValues.value = { ...initial };
+  showForm.value = true;
+}
+
 const editBrokerId = ref(null);
 function editBroker(broker) {
   formResetKey.value++;
   editBrokerId.value = broker.id;
   initialValues.value = broker;
+  showForm.value = true;
 }
 
 function removeBroker(broker) {
   store.removeBroker(broker);
+  resetForm();
+  showForm.value = false;
 }
 </script>
 
 <style scoped>
-article {
-  padding: 0 1rem 1rem 1rem;
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.header h1 {
+  padding: 0;
+  margin: 0;
 }
 
 label:not(.checkbox-label) {
   display: block;
+}
+
+.broker-list {
+  list-style: none;
+  padding: 0;
+}
+.broker-list li {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .add-broker-panel {
@@ -204,5 +251,9 @@ label:not(.checkbox-label) {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr 1fr;
+}
+
+.ms-auto {
+  margin-left: auto;
 }
 </style>

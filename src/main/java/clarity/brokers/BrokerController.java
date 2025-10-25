@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class BrokerController implements Loggable {
+class BrokerController implements Loggable {
 
   private final BrokerRepository repo;
 
@@ -83,7 +83,7 @@ public class BrokerController implements Loggable {
     }
 
     public RabbitMqBroker toRabbitMqBroker(BrokerType type) {
-      return new RabbitMqBroker(null, type)
+      return new RabbitMqBroker(id, type)
           .withProperties(
               mapper ->
                   mapper
