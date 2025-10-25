@@ -1,4 +1,4 @@
-JAVA_HOME=$(shell unset JAVA_HOME; /usr/libexec/java_home -v 21)
+JAVA_HOME=$(shell unset JAVA_HOME; /usr/libexec/java_home -v 25)
 MVN:=./mvnw
 NPM:=./node/npm
 
