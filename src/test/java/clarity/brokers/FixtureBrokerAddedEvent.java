@@ -13,7 +13,10 @@ public class FixtureBrokerAddedEvent {
 
   public static FixtureBrokerAddedEvent random() {
     return new FixtureBrokerAddedEvent(
-        new BrokerAddedEvent(new Broker(UUID.randomUUID()), UUID.randomUUID(), Instant.now()));
+        new BrokerAddedEvent(
+            new RabbitMqBroker(UUID.randomUUID(), BrokerType.MANAGED),
+            UUID.randomUUID(),
+            Instant.now()));
   }
 
   public BrokerAddedEvent get() {

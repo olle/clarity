@@ -1,7 +1,7 @@
 <template>
   <article>
     <Toast />
-    <h2>Brokers</h2>
+    <h2>RabbitMQ Brokers</h2>
 
     <ul>
       <li v-for="broker in store.brokers">

@@ -10,11 +10,11 @@ import java.util.UUID;
  * Emitted after the fact that a configured broker was resolved or found, this means that a broker
  * configuration was provided, in which case such a pre-configuration was just detected.
  */
-public record ConfiguredBrokerFoundEvent(Broker broker, UUID uuid, Instant timestamp)
+public record ConfiguredBrokerFoundEvent(RabbitMqBroker broker, UUID uuid, Instant timestamp)
     implements DomainEvent {
 
   public static ConfiguredBrokerFoundEvent from(ConfiguredBroker configuredBroker) {
     return new ConfiguredBrokerFoundEvent(
-        configuredBroker.toModel(), UuidCreator.getTimeOrderedEpoch(), Instant.now());
+        configuredBroker.toRabbitMqBroker(), UuidCreator.getTimeOrderedEpoch(), Instant.now());
   }
 }

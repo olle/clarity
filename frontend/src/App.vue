@@ -3,19 +3,26 @@
     <nav>
       <ul class="nav">
         <li>
-          <RouterLink to="/"><IconHome /></RouterLink>
+          <RouterLink to="/">
+            <IconHome />
+          </RouterLink>
         </li>
         <li>
           <RouterLink to="/brokers">
             <OverlayBadge :value="store.count" size="small">
-              <IconDatabase />
+              <IconRabbitMq />
             </OverlayBadge>
           </RouterLink>
         </li>
-        <li>
-          <RouterLink to="/help"><IconHelpHexagon /></RouterLink>
-        </li>
         <li class="mt-auto">
+          <RouterLink to="/help">
+            <IconHelpHexagon />
+          </RouterLink>
+        </li>
+        <li>
+          <IconSettings />
+        </li>
+        <li>
           <OnlineStatus />
         </li>
       </ul>
@@ -27,7 +34,8 @@
 <script setup>
 import { onMounted } from "vue";
 import { RouterLink, RouterView } from "vue-router";
-import { IconHome, IconDatabase, IconHelpHexagon } from "@tabler/icons-vue";
+import IconRabbitMq from "./components/IconRabbitMq.vue";
+import { IconHome, IconDatabase, IconHelpHexagon, IconSettings } from "@tabler/icons-vue";
 import { useBrokerStore } from "./composables/useBrokerStore";
 import OverlayBadge from "primevue/overlaybadge";
 import OnlineStatus from "./components/OnlineStatus.vue";
@@ -43,7 +51,7 @@ onMounted(() => {
 .wrapper {
   border-top: 1px solid #eee;
   height: 100%;
-  --width: 61px;
+  --width: 65px;
   display: grid;
   grid-template-columns: var(--width) calc(100vw - var(--width));
   background: #fcfcfb;

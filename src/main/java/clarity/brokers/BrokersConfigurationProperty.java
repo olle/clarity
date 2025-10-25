@@ -1,6 +1,5 @@
 package clarity.brokers;
 
-import clarity.brokers.BrokerRepository.BrokerEntity;
 import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -96,8 +95,17 @@ public class BrokersConfigurationProperty {
       this.httpPort = httpPort;
     }
 
-    public Broker toModel() {
-      return BrokerEntity.from(this).toModel();
+    public RabbitMqBroker toRabbitMqBroker() {
+      return new RabbitMqBroker(null, BrokerType.CONFIGURED)
+          .withProperties(
+              props ->
+                  props
+                      .withHost(host)
+                      .withPort(port)
+                      .withUsername(username)
+                      .withPassword(password)
+                      .withSSL(ssl)
+                      .withHttpPort(httpPort));
     }
   }
 }

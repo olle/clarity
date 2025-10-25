@@ -24,11 +24,11 @@ public class BrokerConfiguration implements Loggable {
     this.applicationEventPublisher = applicationEventPublisher;
   }
 
-  @Scheduled(initialDelayString = "10s", fixedDelayString = "PT24H")
+  @Scheduled(initialDelayString = "3s", fixedDelayString = "PT24H")
   public void onReady() {
-    for (ConfiguredBroker broker : configured.getBrokers()) {
-      applicationEventPublisher.publishEvent(ConfiguredBrokerFoundEvent.from(broker));
-      repo.save(broker);
+    for (ConfiguredBroker configuredBroker : configured.getBrokers()) {
+      applicationEventPublisher.publishEvent(ConfiguredBrokerFoundEvent.from(configuredBroker));
+      repo.save(configuredBroker.toRabbitMqBroker());
     }
   }
 }

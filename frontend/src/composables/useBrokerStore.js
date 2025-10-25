@@ -28,8 +28,9 @@ export const useBrokerStore = defineStore("brokers", () => {
   }
 
   async function removeBroker(broker) {
-    await brokersApi.delete(broker);
-    delete brokers.value[broker.id];
+    if (await brokersApi.delete(broker)) {
+      delete brokers.value[broker.id];
+    }
   }
 
   watch(events, async (message) => {

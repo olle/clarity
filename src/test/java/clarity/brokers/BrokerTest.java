@@ -10,7 +10,7 @@ class BrokerTest {
   @Test
   void ensureMutatesProperties() {
 
-    var broker = new Broker(UUID.randomUUID());
+    var broker = new RabbitMqBroker(UUID.randomUUID(), BrokerType.MANAGED);
 
     assertThat(broker).hasFieldOrPropertyWithValue("properties.host", null);
     assertThat(broker).hasFieldOrPropertyWithValue("properties.port", null);
