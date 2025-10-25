@@ -109,7 +109,7 @@
 
     <ul class="broker-list">
       <li v-for="broker in store.brokers" :key="broker.id">
-        <dl>
+        <dl class="broker-details">
           <dt>Host:</dt>
           <dd>{{ broker.host }}</dd>
           <dt>Port:</dt>
@@ -123,22 +123,24 @@
             }}
           </dd>
         </dl>
-        <Button
-          :disabled="broker.type === 'CONFIGURED'"
-          label="Edit"
-          severity="secondary"
-          size="small"
-          variant="outlined"
-          @click="editBroker(broker)"
-        />
-        <Button
-          :disabled="broker.type === 'CONFIGURED'"
-          label="Delete"
-          severity="danger"
-          size="small"
-          variant="outlined"
-          @click="removeBroker(broker)"
-        />
+        <div>
+          <Button
+            :disabled="broker.type === 'CONFIGURED'"
+            label="Edit"
+            severity="secondary"
+            size="small"
+            variant="outlined"
+            @click="editBroker(broker)"
+          />
+          <Button
+            :disabled="broker.type === 'CONFIGURED'"
+            label="Delete"
+            severity="danger"
+            size="small"
+            variant="outlined"
+            @click="removeBroker(broker)"
+          />
+        </div>
       </li>
     </ul>
   </article>
@@ -276,7 +278,26 @@ label:not(.checkbox-label) {
   border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  justify-items: baseline;
   gap: 1rem;
+}
+
+.broker-list li > * {
+  margin-top: auto;
+}
+
+.broker-details {
+  display: grid;
+  grid-template-columns: max-content auto;
+  gap: 0.5rem;
+  align-items: first baseline;
+}
+.broker-details dt {
+  font-weight: 600;
+}
+.broker-details dd {
+  margin: 0;
 }
 
 .add-broker-panel {
