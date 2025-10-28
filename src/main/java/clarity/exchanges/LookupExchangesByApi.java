@@ -26,24 +26,24 @@ public class LookupExchangesByApi implements UseCase, Loggable {
   public void on(BrokerAddedEvent event) {
 
     BrokerProperties props = event.broker().properties();
-    String uri = "http://%s:%d/api/exchanges".formatted(props.host(), props.httpPort());
-    String basicAuth = encodeBasic(props.username(), props.password());
-
-    logger().info("REQUESTING: {} with {}", uri, basicAuth);
 
     Collection<ExchangeDto> response =
-        restClient
-            .get()
-            .uri(uri)
-            .header("Authorization", basicAuth)
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .body(
-                new ParameterizedTypeReference<Collection<ExchangeDto>>() {
-                  // OK
-                });
-
+        fetch(props, "exchanges", new ParameterizedTypeReference<Collection<ExchangeDto>>() {});
     response.forEach(exchange -> logger().info("Resolved: {}", exchange));
+
+    OverviewDto overview =
+        fetch(props, "overview", new ParameterizedTypeReference<OverviewDto>() {});
+    logger().info("Resolved {}", overview);
+  }
+
+  private <T> T fetch(BrokerProperties props, String endpoint, ParameterizedTypeReference<T> type) {
+    return restClient
+        .get()
+        .uri("http://%s:%d/api/%s".formatted(props.host(), props.httpPort(), endpoint))
+        .header("Authorization", encodeBasic(props.username(), props.password()))
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .body(type);
   }
 
   private String encodeBasic(String username, String password) {
@@ -58,4 +58,18 @@ public class LookupExchangesByApi implements UseCase, Loggable {
       boolean durable,
       boolean internal,
       Map<String, Object> arguments) {}
+
+  record OverviewDto(
+      String product_name,
+      String product_version,
+      String rabbitmq_version,
+      String management_version,
+      String cluster_name,
+      String node,
+      String erlang_version,
+      String erlang_full_version,
+      boolean disable_stats,
+      String default_queue_type,
+      boolean is_op_policy_updating_enabled,
+      boolean enable_queue_totals) {}
 }
