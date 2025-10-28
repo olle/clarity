@@ -6,10 +6,25 @@ import clarity.brokers.RabbitMqBroker;
 import java.util.UUID;
 
 record BrokerEntity(
-    UUID id, String type, String host, int port, String username, String password, boolean ssl) {
+    UUID id,
+    String type,
+    String host,
+    Integer port,
+    String username,
+    String password,
+    Boolean ssl,
+    Boolean active) {
 
   public BrokerEntity(BrokerEntity other) {
-    this(other.id, other.type, other.host, other.port, other.username, other.password, other.ssl);
+    this(
+        other.id,
+        other.type,
+        other.host,
+        other.port,
+        other.username,
+        other.password,
+        other.ssl,
+        other.active);
   }
 
   public static BrokerEntity from(RabbitMqBroker rabbitMqBroker) {
@@ -23,7 +38,8 @@ record BrokerEntity(
         rabbitMqBroker.properties().port(),
         rabbitMqBroker.properties().username(),
         rabbitMqBroker.properties().password(),
-        rabbitMqBroker.properties().ssl());
+        rabbitMqBroker.properties().ssl(),
+        rabbitMqBroker.active());
   }
 
   public static BrokerEntity from(ConfiguredBroker configuredBroker) {
@@ -35,12 +51,13 @@ record BrokerEntity(
         configuredBroker.getPort(),
         configuredBroker.getUsername(),
         configuredBroker.getPassword(),
-        configuredBroker.isSsl());
+        configuredBroker.isSsl(),
+        false);
   }
 
   public BrokerEntity withId(UUID id) {
     return new BrokerEntity(
-        id, this.type, this.host, this.port, this.username, this.password, this.ssl);
+        id, this.type, this.host, this.port, this.username, this.password, this.ssl, this.active);
   }
 
   private static UUID createUuidFrom(String username, String host, Integer port) {
@@ -48,7 +65,7 @@ record BrokerEntity(
   }
 
   public RabbitMqBroker toModel() {
-    return new RabbitMqBroker(this.id, BrokerType.valueOf(this.type))
+    return new RabbitMqBroker(this.id, BrokerType.valueOf(this.type), this.active)
         .withProperties(
             properties ->
                 properties

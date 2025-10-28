@@ -24,7 +24,7 @@ public record BrokerProperties(
         host, this.port, this.username, this.password, this.ssl, this.httpPort);
   }
 
-  public BrokerProperties withPort(int port) {
+  public BrokerProperties withPort(Integer port) {
     return new BrokerProperties(
         this.host, port, this.username, this.password, this.ssl, this.httpPort);
   }
@@ -43,7 +43,7 @@ public record BrokerProperties(
     return new BrokerProperties(this.host, this.port, this.username, password, ssl, this.httpPort);
   }
 
-  public BrokerProperties withHttpPort(int httpPort) {
+  public BrokerProperties withHttpPort(Integer httpPort) {
     return new BrokerProperties(this.host, this.port, this.username, password, this.ssl, httpPort);
   }
 }

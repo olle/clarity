@@ -2,6 +2,7 @@ package clarity.brokers;
 
 import java.util.UUID;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ManageBrokers {
@@ -24,7 +25,10 @@ public class ManageBrokers {
     repo.deleteById(id);
   }
 
+  @Transactional
   public void activate(RabbitMqBroker broker) {
-    // TODO Auto-generated method stub
+
+    var activated = broker.activate();
+    repo.save(activated);
   }
 }

@@ -1,5 +1,6 @@
 package clarity.brokers;
 
+import clarity.infrastructure.utils.Technical;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 
@@ -16,6 +17,13 @@ public class RabbitMqBroker implements Broker {
     this.id = id;
     this.type = type;
     this.active = false;
+  }
+
+  @Technical
+  public RabbitMqBroker(UUID id, BrokerType type, boolean active) {
+    this.id = id;
+    this.type = type;
+    this.active = active;
   }
 
   @Override
@@ -49,5 +57,10 @@ public class RabbitMqBroker implements Broker {
 
   public String getBeanName() {
     return "amqp://%s@%s:%d".formatted(properties.username(), properties.host(), properties.port());
+  }
+
+  public RabbitMqBroker activate() {
+    this.active = true;
+    return this;
   }
 }
