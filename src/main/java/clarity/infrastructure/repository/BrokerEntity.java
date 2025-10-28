@@ -13,7 +13,8 @@ record BrokerEntity(
     String username,
     String password,
     Boolean ssl,
-    Boolean active) {
+    Boolean active,
+    Integer httpPort) {
 
   public BrokerEntity(BrokerEntity other) {
     this(
@@ -24,7 +25,8 @@ record BrokerEntity(
         other.username,
         other.password,
         other.ssl,
-        other.active);
+        other.active,
+        other.httpPort);
   }
 
   public static BrokerEntity from(RabbitMqBroker rabbitMqBroker) {
@@ -39,7 +41,8 @@ record BrokerEntity(
         rabbitMqBroker.properties().username(),
         rabbitMqBroker.properties().password(),
         rabbitMqBroker.properties().ssl(),
-        rabbitMqBroker.active());
+        rabbitMqBroker.active(),
+        rabbitMqBroker.properties().httpPort());
   }
 
   public static BrokerEntity from(ConfiguredBroker configuredBroker) {
@@ -52,12 +55,21 @@ record BrokerEntity(
         configuredBroker.getUsername(),
         configuredBroker.getPassword(),
         configuredBroker.isSsl(),
-        false);
+        false,
+        configuredBroker.getHttpPort());
   }
 
   public BrokerEntity withId(UUID id) {
     return new BrokerEntity(
-        id, this.type, this.host, this.port, this.username, this.password, this.ssl, this.active);
+        id,
+        this.type,
+        this.host,
+        this.port,
+        this.username,
+        this.password,
+        this.ssl,
+        this.active,
+        this.httpPort);
   }
 
   private static UUID createUuidFrom(String username, String host, Integer port) {
@@ -73,6 +85,7 @@ record BrokerEntity(
                     .withPort(port)
                     .withUsername(username)
                     .withPassword(password)
-                    .withSSL(ssl));
+                    .withSSL(ssl)
+                    .withHttpPort(httpPort));
   }
 }
