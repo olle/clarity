@@ -154,15 +154,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>com.giovds</groupId>
-        <artifactId>outdated-maven-plugin</artifactId>
-        <version>1.4.0</version>
-        <configuration>
-          <includePlugins>false</includePlugins>
-        </configuration>
-      </plugin>
-
     </plugins>
   </build>
 

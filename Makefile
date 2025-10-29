@@ -18,7 +18,6 @@ frontend fe: ${NPM}
 .PHONY: outdated o
 outdated o:
 	${NPM} -C frontend outdated
-	${MVN} com.giovds:outdated-maven-plugin:check
 
 .PHONY: clean c
 clean c:
