@@ -1,15 +1,19 @@
 package clarity.exchanges;
 
 import clarity.brokers.BrokerProperties;
+import clarity.brokers.RabbitMqBroker;
 import clarity.brokers.event.BrokerAddedEvent;
+import clarity.exchanges.event.ExchangeResolveEvent;
 import clarity.infrastructure.UseCase;
 import clarity.infrastructure.utils.Loggable;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Map;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -17,23 +21,33 @@ import org.springframework.web.client.RestClient;
 public class LookupExchangesByApi implements UseCase, Loggable {
 
   private final RestClient restClient;
+  private final ApplicationEventPublisher publisher;
 
-  public LookupExchangesByApi(RestClient restClient) {
+  public LookupExchangesByApi(RestClient restClient, ApplicationEventPublisher publisher) {
     this.restClient = restClient;
+    this.publisher = publisher;
   }
 
+  @Async
   @EventListener
   public void on(BrokerAddedEvent event) {
 
-    BrokerProperties props = event.broker().properties();
+    RabbitMqBroker broker = event.broker();
 
-    Collection<ExchangeDto> response =
-        fetch(props, "exchanges", new ParameterizedTypeReference<Collection<ExchangeDto>>() {});
-    response.forEach(exchange -> logger().info("Resolved: {}", exchange));
+    fetch(
+            broker.properties(),
+            "exchanges",
+            new ParameterizedTypeReference<Collection<ExchangeDto>>() {})
+        .stream()
+        .map(ExchangeDto::toRabbitMqExchange)
+        .map(exchange -> ExchangeResolveEvent.from(exchange, event.broker()))
+        .forEach(publisher::publishEvent);
 
-    OverviewDto overview =
-        fetch(props, "overview", new ParameterizedTypeReference<OverviewDto>() {});
-    logger().info("Resolved {}", overview);
+    logger()
+        .info(
+            "Resolved {}",
+            fetch(
+                broker.properties(), "overview", new ParameterizedTypeReference<OverviewDto>() {}));
   }
 
   private <T> T fetch(BrokerProperties props, String endpoint, ParameterizedTypeReference<T> type) {
@@ -57,7 +71,12 @@ public class LookupExchangesByApi implements UseCase, Loggable {
       boolean auto_delete,
       boolean durable,
       boolean internal,
-      Map<String, Object> arguments) {}
+      Map<String, Object> arguments) {
+
+    public RabbitMqExchange toRabbitMqExchange() {
+      return new RabbitMqExchange(null, name);
+    }
+  }
 
   record OverviewDto(
       String product_name,
