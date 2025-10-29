@@ -3,7 +3,7 @@ package clarity.exchanges;
 import clarity.brokers.BrokerProperties;
 import clarity.brokers.RabbitMqBroker;
 import clarity.brokers.event.BrokerAddedEvent;
-import clarity.exchanges.event.ExchangeResolveEvent;
+import clarity.exchanges.event.ExchangeResolvedEvent;
 import clarity.infrastructure.UseCase;
 import clarity.infrastructure.utils.Loggable;
 import java.util.Base64;
@@ -34,13 +34,15 @@ public class LookupExchangesByApi implements UseCase, Loggable {
 
     RabbitMqBroker broker = event.broker();
 
-    fetch(
+    Collection<ExchangeDto> exchanges =
+        fetch(
             broker.properties(),
             "exchanges",
-            new ParameterizedTypeReference<Collection<ExchangeDto>>() {})
-        .stream()
+            new ParameterizedTypeReference<Collection<ExchangeDto>>() {});
+
+    exchanges.stream()
         .map(ExchangeDto::toRabbitMqExchange)
-        .map(exchange -> ExchangeResolveEvent.from(exchange, event.broker()))
+        .map(exchange -> ExchangeResolvedEvent.from(exchange, event.broker()))
         .forEach(publisher::publishEvent);
 
     logger()

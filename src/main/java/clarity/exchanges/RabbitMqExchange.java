@@ -13,6 +13,11 @@ public class RabbitMqExchange implements Exchange {
   }
 
   @Override
+  public String toString() {
+    return "RabbitMqExchange [id=" + id + ", name=" + name + "]";
+  }
+
+  @Override
   public UUID id() {
     return this.id;
   }

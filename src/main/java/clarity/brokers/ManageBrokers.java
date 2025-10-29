@@ -1,11 +1,15 @@
 package clarity.brokers;
 
+import clarity.exchanges.event.ExchangeResolvedEvent;
+import clarity.infrastructure.utils.Loggable;
 import java.util.UUID;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ManageBrokers {
+public class ManageBrokers implements Loggable {
 
   private final BrokerRepository repo;
 
@@ -30,5 +34,11 @@ public class ManageBrokers {
 
     var activated = broker.activate();
     repo.save(activated);
+  }
+
+  @Async
+  @EventListener
+  public void on(ExchangeResolvedEvent event) {
+    logger().warn("NOT YET HANDLING {}", event);
   }
 }

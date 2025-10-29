@@ -11,12 +11,12 @@ import java.util.UUID;
  * Emitted after the fact that an exchange for some broker was resolved, after being looked up via a
  * remote API call or _sniffing_.
  */
-public record ExchangeResolveEvent(
+public record ExchangeResolvedEvent(
     RabbitMqExchange exchange, RabbitMqBroker broker, UUID uuid, Instant timestamp)
     implements DomainEvent {
 
   public static Object from(RabbitMqExchange exchange, RabbitMqBroker broker) {
-    return new ExchangeResolveEvent(
+    return new ExchangeResolvedEvent(
         exchange, broker, UuidCreator.getTimeOrderedEpoch(), Instant.now());
   }
 }
