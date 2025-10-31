@@ -9,6 +9,7 @@ import clarity.infrastructure.utils.Loggable;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,10 +22,13 @@ import org.springframework.web.client.RestClient;
 public class LookupExchangesByApi implements UseCase, Loggable {
 
   private final RestClient restClient;
+  private final ExchangeRepository repo;
   private final ApplicationEventPublisher publisher;
 
-  public LookupExchangesByApi(RestClient restClient, ApplicationEventPublisher publisher) {
+  public LookupExchangesByApi(
+      RestClient restClient, ApplicationEventPublisher publisher, ExchangeRepository repo) {
     this.restClient = restClient;
+    this.repo = repo;
     this.publisher = publisher;
   }
 
@@ -40,8 +44,12 @@ public class LookupExchangesByApi implements UseCase, Loggable {
             "exchanges",
             new ParameterizedTypeReference<Collection<ExchangeDto>>() {});
 
-    exchanges.stream()
-        .map(ExchangeDto::toRabbitMqExchange)
+    Stream<RabbitMqExchange> rabbitMqExchanges =
+        exchanges.stream().map(ExchangeDto::toRabbitMqExchange);
+
+    rabbitMqExchanges.forEach(repo::save);
+
+    rabbitMqExchanges
         .map(exchange -> ExchangeResolvedEvent.from(exchange, event.broker()))
         .forEach(publisher::publishEvent);
 
