@@ -1,15 +1,10 @@
-package clarity.exchanges;
+package clarity.brokers;
 
-import clarity.brokers.BrokerProperties;
-import clarity.brokers.RabbitMqBroker;
 import clarity.brokers.event.BrokerAddedEvent;
-import clarity.exchanges.event.ExchangeResolvedEvent;
-import clarity.infrastructure.UseCase;
+import clarity.brokers.event.RabbitMqBrokerResolvedEvent;
+import clarity.exchanges.ExchangeRepository;
 import clarity.infrastructure.utils.Loggable;
 import java.util.Base64;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,16 +14,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-public class LookupExchangesByApi implements UseCase, Loggable {
+public class LookupRabbitMqBrokerByApi implements Loggable {
 
   private final RestClient restClient;
-  private final ExchangeRepository repo;
   private final ApplicationEventPublisher publisher;
 
-  public LookupExchangesByApi(
-      RestClient restClient, ApplicationEventPublisher publisher, ExchangeRepository repo) {
+  public LookupRabbitMqBrokerByApi(
+      RestClient restClient, ExchangeRepository repo, ApplicationEventPublisher publisher) {
     this.restClient = restClient;
-    this.repo = repo;
     this.publisher = publisher;
   }
 
@@ -38,20 +31,15 @@ public class LookupExchangesByApi implements UseCase, Loggable {
 
     RabbitMqBroker broker = event.broker();
 
-    List<RabbitMqExchange> rabbitMqExchanges =
-        fetch(
-                broker.properties(),
-                "exchanges",
-                new ParameterizedTypeReference<Collection<ExchangeDto>>() {})
-            .stream()
-            .map(ExchangeDto::toRabbitMqExchange)
-            .toList();
+    OverviewDto overview =
+        fetch(broker.properties(), "overview", new ParameterizedTypeReference<OverviewDto>() {});
 
-    rabbitMqExchanges.forEach(repo::save);
+    logger().info("Resolved {}", overview);
 
-    rabbitMqExchanges.stream()
-        .map(exchange -> ExchangeResolvedEvent.from(exchange, event.broker()))
-        .forEach(publisher::publishEvent);
+    publisher.publishEvent(
+        RabbitMqBrokerResolvedEvent.from(
+            broker.withProperties(
+                mapper -> mapper.withRabbitMqVersion(overview.rabbitmq_version()))));
   }
 
   private <T> T fetch(BrokerProperties props, String endpoint, ParameterizedTypeReference<T> type) {
@@ -69,16 +57,17 @@ public class LookupExchangesByApi implements UseCase, Loggable {
         .formatted(Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
   }
 
-  record ExchangeDto(
-      String name,
-      String type,
-      boolean auto_delete,
-      boolean durable,
-      boolean internal,
-      Map<String, Object> arguments) {
-
-    public RabbitMqExchange toRabbitMqExchange() {
-      return new RabbitMqExchange(null, name);
-    }
-  }
+  record OverviewDto(
+      String product_name,
+      String product_version,
+      String rabbitmq_version,
+      String management_version,
+      String cluster_name,
+      String node,
+      String erlang_version,
+      String erlang_full_version,
+      boolean disable_stats,
+      String default_queue_type,
+      boolean is_op_policy_updating_enabled,
+      boolean enable_queue_totals) {}
 }
