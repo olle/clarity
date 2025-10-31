@@ -26,7 +26,6 @@ const $icon = ref(null);
 const { events } = useEvents();
 watch(events, (message) => {
   if (message.event.startsWith("now")) {
-    console.log("HERE", message);
     $icon.value.classList.add("thump");
     setTimeout(() => {
       $icon.value.classList.remove("thump");
