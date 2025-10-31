@@ -1,6 +1,6 @@
 package clarity.brokers;
 
-import clarity.exchanges.event.ExchangeResolvedEvent;
+import clarity.brokers.event.RabbitMqBrokerResolvedEvent;
 import clarity.infrastructure.utils.Loggable;
 import java.util.UUID;
 import org.springframework.context.event.EventListener;
@@ -38,7 +38,7 @@ public class ManageBrokers implements Loggable {
 
   @Async
   @EventListener
-  public void on(ExchangeResolvedEvent event) {
-    logger().warn("NOT YET HANDLING {}", event);
+  public void on(RabbitMqBrokerResolvedEvent event) {
+    repo.save(event.broker());
   }
 }

@@ -12,7 +12,8 @@ record BrokerDto(
     Integer port,
     String username,
     String password,
-    boolean ssl) {
+    boolean ssl,
+    String rabbitMqVersion) {
 
   public static BrokerDto from(RabbitMqBroker broker) {
     return new BrokerDto(
@@ -22,7 +23,8 @@ record BrokerDto(
         broker.properties().port(),
         broker.properties().username(),
         broker.properties().password(),
-        broker.properties().ssl());
+        broker.properties().ssl(),
+        broker.properties().rabbitMqVersion());
   }
 
   public RabbitMqBroker toRabbitMqBroker() {
