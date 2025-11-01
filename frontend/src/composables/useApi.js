@@ -57,5 +57,9 @@ export function useApi() {
     fetchAll: async () => fetchJSON("/api/v0/brokers"),
   };
 
-  return { brokers };
+  const exchanges = {
+    fetchAll: async () => fetchJSON("/api/v0/exchanges"),
+  };
+
+  return { brokers, exchanges };
 }

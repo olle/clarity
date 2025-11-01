@@ -2,6 +2,7 @@ import { ref, watch, computed } from "vue";
 import { defineStore } from "pinia";
 import { useApi } from "./useApi";
 import { useEvents } from "./useEvents";
+import { useDebounceFn } from "@vueuse/core";
 
 export const useBrokerStore = defineStore("brokers", () => {
   const { events } = useEvents();
@@ -50,6 +51,6 @@ export const useBrokerStore = defineStore("brokers", () => {
     addBroker,
     removeBroker,
     updateBroker,
-    reload,
+    reload: useDebounceFn(reload, 123),
   };
 });

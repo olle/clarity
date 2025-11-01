@@ -34,7 +34,7 @@ public class LookupExchangesByApi implements UseCase, Loggable {
 
   @Async
   @EventListener
-  public void on(BrokerAddedEvent event) {
+  public void on(BrokerAddedEvent event) throws InterruptedException {
 
     RabbitMqBroker broker = event.broker();
 

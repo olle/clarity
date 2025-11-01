@@ -1,14 +1,21 @@
 <template>
   <li>
     <RouterLink to="/exchanges">
-      <IconReplace />
+      <OverlayBadge :value="store.count" size="small">
+        <IconReplace />
+      </OverlayBadge>
     </RouterLink>
   </li>
 </template>
 
 <script setup>
 import { IconReplace } from "@tabler/icons-vue";
-</script>
+import { useExchangeStore } from "../composables/useExchangeStore";
+import OverlayBadge from "primevue/overlaybadge";
+import { onMounted } from "vue";
 
-<style scoped>
-</style>
+const store = useExchangeStore();
+onMounted(() => {
+  store.reload();
+});
+</script>

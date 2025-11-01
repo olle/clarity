@@ -6,3 +6,12 @@
     </ul>
   </article>
 </template>
+
+<script setup>
+import { onMounted } from "vue";
+import { useExchangeStore } from "../composables/useExchangeStore";
+const store = useExchangeStore();
+onMounted(() => {
+  store.reload();
+});
+</script>
