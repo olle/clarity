@@ -7,13 +7,7 @@
             <IconHome />
           </RouterLink>
         </li>
-        <li>
-          <RouterLink to="/brokers">
-            <OverlayBadge :value="store.count" size="small">
-              <IconRabbitMq />
-            </OverlayBadge>
-          </RouterLink>
-        </li>
+        <NavItemBrokers />
         <li class="mt-auto">
           <RouterLink to="/help">
             <IconHelpHexagon />
@@ -30,18 +24,10 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
 import { RouterLink, RouterView } from "vue-router";
-import IconRabbitMq from "./components/IconRabbitMq.vue";
 import { IconHome, IconHelpHexagon, IconSettings } from "@tabler/icons-vue";
-import { useBrokerStore } from "./composables/useBrokerStore";
-import OverlayBadge from "primevue/overlaybadge";
+import NavItemBrokers from "./components/NavItemBrokers.vue";
 import NavItemOnlineStatus from "./components/NavItemOnlineStatus.vue";
-
-const store = useBrokerStore();
-onMounted(() => {
-  store.reload();
-});
 </script>
 
 <style scoped>

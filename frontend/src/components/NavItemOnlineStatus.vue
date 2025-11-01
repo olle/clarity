@@ -22,6 +22,7 @@ const tooltip = computed(() =>
 
 const $icon = ref(null);
 const { events } = useEvents();
+
 watch(events, (message) => {
   if (message.event.startsWith("now")) {
     $icon.value.classList.add("thump");

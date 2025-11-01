@@ -26,7 +26,7 @@ public class DiscoverConfiguredBrokers implements Loggable, UseCase {
     this.applicationEventPublisher = applicationEventPublisher;
   }
 
-  @Scheduled(initialDelayString = "1s", fixedDelayString = "PT24H")
+  @Scheduled(initialDelayString = "11s", fixedDelayString = "PT24H")
   public void onReady() {
     for (ConfiguredBroker configuredBroker : configured.getBrokers()) {
       applicationEventPublisher.publishEvent(ConfiguredBrokerFoundEvent.from(configuredBroker));
