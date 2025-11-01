@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ManageBrokers implements Loggable {
@@ -16,8 +17,11 @@ public class ManageBrokers implements Loggable {
     this.repo = repo;
   }
 
+  @Transactional
   public void create(RabbitMqBroker broker) {
-    repo.save(broker);
+    if (!repo.exists(broker)) {
+      repo.save(broker);
+    }
   }
 
   public void update(RabbitMqBroker broker) {

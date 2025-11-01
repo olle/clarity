@@ -5,7 +5,9 @@ import java.util.UUID;
 
 public interface BrokerRepository {
 
-  void save(RabbitMqBroker rabbitMqBroker);
+  boolean exists(RabbitMqBroker broker);
+
+  void save(RabbitMqBroker broker);
 
   void deleteById(UUID id);
 

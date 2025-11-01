@@ -29,20 +29,4 @@ record BrokerDto(
         broker.properties().ssl(),
         broker.properties().rabbitMqVersion());
   }
-
-  public RabbitMqBroker toRabbitMqBroker() {
-    return toRabbitMqBroker(BrokerType.valueOf(type));
-  }
-
-  public RabbitMqBroker toRabbitMqBroker(BrokerType type) {
-    return new RabbitMqBroker(id, type)
-        .withProperties(
-            mapper ->
-                mapper
-                    .withHost(host)
-                    .withPort(port)
-                    .withUsername(username)
-                    .withPassword(password)
-                    .withSSL(ssl));
-  }
 }

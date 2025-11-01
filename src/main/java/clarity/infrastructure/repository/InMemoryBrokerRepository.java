@@ -31,6 +31,16 @@ public class InMemoryBrokerRepository implements Loggable, BrokerRepository {
   }
 
   @Override
+  public boolean exists(RabbitMqBroker broker) {
+
+    if (broker.id() == null) {
+      return entities.containsKey(BrokerEntity.from(broker).id());
+    } else {
+      return entities.containsKey(broker.id());
+    }
+  }
+
+  @Override
   public void save(RabbitMqBroker rabbitMqBroker) {
 
     if (rabbitMqBroker.id() == null) {
