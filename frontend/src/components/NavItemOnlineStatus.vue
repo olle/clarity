@@ -1,26 +1,24 @@
 <template>
-  <IconBroadcastOff
-    v-if="store.offline"
-    class="icon offline"
-    v-tooltip.right="
-      'Failed to reconnect after several attempts. Please refresh the page to try again.'
-    "
-  />
-  <IconBroadcast
-    v-else
-    class="icon"
-    ref="$icon"
-    :class="[store.status, tictoc]"
-    v-tooltip.right="'Current connection status: ' + store.status"
-  />
+  <li v-tooltip="tooltip">
+    <IconBroadcastOff v-if="store.offline" class="icon offline" />
+    <IconBroadcast v-else class="icon" ref="$icon" :class="store.status" />
+  </li>
 </template>
 
 <script setup>
-import { watch, ref, onMounted } from "vue";
+import { watch, ref, computed } from "vue";
 import { IconBroadcast, IconBroadcastOff } from "@tabler/icons-vue";
 import { useOfflineStore } from "../composables/useOfflineStore";
 import { useEvents } from "../composables/useEvents";
+import { $dt } from "@primeuix/themes";
+
 const store = useOfflineStore();
+
+const tooltip = computed(() =>
+  store.offline
+    ? "Failed to reconnect after several attempts. Please refresh the page to try again."
+    : "Current connection status: " + store.status
+);
 
 const $icon = ref(null);
 const { events } = useEvents();
@@ -32,6 +30,8 @@ watch(events, (message) => {
     }, 1234);
   }
 });
+
+const thumpColor = $dt("blue.500").value + "B2";
 </script>
 
 <style scoped>
@@ -55,7 +55,7 @@ watch(events, (message) => {
 @keyframes pulse {
   0% {
     transform: scale(0.8);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 0 0 v-bind(thumpColor);
   }
 
   70% {
