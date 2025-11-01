@@ -33,17 +33,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-a {
-  color: var(--primary);
-}
-a:active,
-a:hover {
-  color: var(--color-green);
-}
-a.router-link-active {
-  color: var(--color-green-dark);
-}
-
 .shake {
   animation: wiggle 200ms 3;
 }

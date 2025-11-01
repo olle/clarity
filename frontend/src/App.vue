@@ -8,6 +8,7 @@
           </RouterLink>
         </li>
         <NavItemBrokers />
+        <NavItemExchanges />
         <li class="mt-auto">
           <RouterLink to="/help">
             <IconHelpHexagon />
@@ -28,7 +29,21 @@ import { RouterLink, RouterView } from "vue-router";
 import { IconHome, IconHelpHexagon, IconSettings } from "@tabler/icons-vue";
 import NavItemBrokers from "./components/NavItemBrokers.vue";
 import NavItemOnlineStatus from "./components/NavItemOnlineStatus.vue";
+import NavItemExchanges from "./components/NavItemExchanges.vue";
 </script>
+
+<style>
+.nav a {
+  color: #000;
+}
+.nav a:active,
+.nav a:hover {
+  color: var(--color-green);
+}
+.nav a.router-link-active {
+  color: var(--color-green-dark);
+}
+</style>
 
 <style scoped>
 .wrapper {
@@ -57,17 +72,6 @@ nav {
   padding-top: 20px;
   padding-bottom: 20px;
   height: 100%;
-}
-
-.nav a {
-  color: #000;
-}
-.nav a:active,
-.nav a:hover {
-  color: var(--color-green);
-}
-.nav a.router-link-active {
-  color: var(--color-green-dark);
 }
 
 .mt-auto {
