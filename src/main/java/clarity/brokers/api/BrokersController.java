@@ -3,7 +3,9 @@ package clarity.brokers.api;
 import clarity.brokers.BrokerRepository;
 import clarity.brokers.BrokerType;
 import clarity.brokers.ManageBrokers;
+import clarity.brokers.RabbitMqBroker;
 import clarity.infrastructure.utils.Loggable;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,9 +27,12 @@ class BrokersController implements Loggable {
     this.manageBrokers = manageBrokers;
   }
 
+  record FetchAllBrokersResponse(int count, List<RabbitMqBroker> elements) {}
+
   @GetMapping(path = "/api/v0/brokers")
-  public BrokersDto fetch() {
-    return BrokersDto.from(repo.findAll());
+  public FetchAllBrokersResponse fetch() {
+    List<RabbitMqBroker> brokers = repo.findAll();
+    return new FetchAllBrokersResponse(brokers.size(), brokers);
   }
 
   @PostMapping(path = "/api/v0/brokers")
@@ -42,13 +47,6 @@ class BrokersController implements Loggable {
     assertId(id);
     assertSameId(id, updateBrokerRequest);
     manageBrokers.update(updateBrokerRequest.toRabbitMqBroker());
-  }
-
-  @PostMapping(path = "/api/v0/brokers/{id}/active")
-  public void activate(@PathVariable(name = "id") UUID id, BrokerDto activateBrokerRequest) {
-    assertId(id);
-    assertSameId(id, activateBrokerRequest);
-    manageBrokers.activate(activateBrokerRequest.toRabbitMqBroker());
   }
 
   @DeleteMapping(path = "/api/v0/brokers/{id}")

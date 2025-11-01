@@ -13,7 +13,6 @@ record BrokerEntity(
     String username,
     String password,
     Boolean ssl,
-    Boolean active,
     Integer httpPort,
     String rabbitMqVersion) {
 
@@ -26,7 +25,6 @@ record BrokerEntity(
         other.username,
         other.password,
         other.ssl,
-        other.active,
         other.httpPort,
         other.rabbitMqVersion);
   }
@@ -43,7 +41,6 @@ record BrokerEntity(
         rabbitMqBroker.properties().username(),
         rabbitMqBroker.properties().password(),
         rabbitMqBroker.properties().ssl(),
-        rabbitMqBroker.active(),
         rabbitMqBroker.properties().httpPort(),
         rabbitMqBroker.properties().rabbitMqVersion());
   }
@@ -58,7 +55,6 @@ record BrokerEntity(
         configuredBroker.getUsername(),
         configuredBroker.getPassword(),
         configuredBroker.isSsl(),
-        false,
         configuredBroker.getHttpPort(),
         null);
   }
@@ -72,7 +68,6 @@ record BrokerEntity(
         this.username,
         this.password,
         this.ssl,
-        this.active,
         this.httpPort,
         this.rabbitMqVersion);
   }
@@ -82,7 +77,7 @@ record BrokerEntity(
   }
 
   public RabbitMqBroker toModel() {
-    return new RabbitMqBroker(this.id, BrokerType.valueOf(this.type), this.active)
+    return new RabbitMqBroker(this.id, BrokerType.valueOf(this.type))
         .withProperties(
             properties ->
                 properties

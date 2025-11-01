@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ManageBrokers implements Loggable {
@@ -27,13 +26,6 @@ public class ManageBrokers implements Loggable {
 
   public void delete(UUID id) {
     repo.deleteById(id);
-  }
-
-  @Transactional
-  public void activate(RabbitMqBroker broker) {
-
-    var activated = broker.activate();
-    repo.save(activated);
   }
 
   @Async

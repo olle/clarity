@@ -7,6 +7,4 @@ public interface Broker {
   UUID id();
 
   BrokerType type();
-
-  boolean active();
 }
