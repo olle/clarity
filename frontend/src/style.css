@@ -56,3 +56,22 @@ body {
   padding: 0 1rem 1rem 2rem;
   max-width: 65rem;
 }
+
+.animation-shake {
+  animation: wiggle 200ms 3;
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

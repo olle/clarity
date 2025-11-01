@@ -21,9 +21,9 @@ const $root = ref(null);
 
 const { count } = storeToRefs(store);
 watch(count, () => {
-  $root.value?.classList.add("shake");
+  $root.value?.classList.add("animation-shake");
   setTimeout(() => {
-    $root.value?.classList.remove("shake");
+    $root.value?.classList.remove("animation-shake");
   }, 345);
 });
 
@@ -31,24 +31,3 @@ onMounted(() => {
   store.reload();
 });
 </script>
-
-<style scoped>
-.shake {
-  animation: wiggle 200ms 3;
-}
-
-@keyframes wiggle {
-  0% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(5deg);
-  }
-  75% {
-    transform: rotate(-5deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
-</style>
