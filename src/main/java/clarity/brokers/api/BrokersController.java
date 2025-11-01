@@ -29,7 +29,7 @@ class BrokersController implements Loggable {
   public FetchAllBrokersResponse fetch() {
     List<RabbitMqBroker> brokers = repo.findAll();
     return new FetchAllBrokersResponse(
-        brokers.size(), brokers.stream().map(BrokerDto::from).toList());
+        brokers.size(), brokers.stream().map(BrokerDto::from).toList(), repo.findAllRemoved());
   }
 
   @PostMapping(path = "/api/v0/brokers")

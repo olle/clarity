@@ -58,7 +58,7 @@ body {
 }
 
 .animation-shake {
-  animation: wiggle 200ms 3;
+  animation: wiggle 150ms 4;
 }
 
 @keyframes wiggle {

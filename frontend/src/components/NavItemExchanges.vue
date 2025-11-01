@@ -23,7 +23,7 @@ watch(count, () => {
   $root.value?.classList.add("animation-shake");
   setTimeout(() => {
     $root.value?.classList.remove("animation-shake");
-  }, 345);
+  }, 1234);
 });
 onMounted(() => {
   store.reload();

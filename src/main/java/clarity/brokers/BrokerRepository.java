@@ -12,4 +12,6 @@ public interface BrokerRepository {
   void deleteById(UUID id);
 
   List<RabbitMqBroker> findAll();
+
+  List<UUID> findAllRemoved();
 }

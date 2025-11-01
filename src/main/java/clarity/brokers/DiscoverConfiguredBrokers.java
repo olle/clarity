@@ -30,7 +30,10 @@ public class DiscoverConfiguredBrokers implements Loggable, UseCase {
   public void onReady() {
     for (ConfiguredBroker configuredBroker : configured.getBrokers()) {
       applicationEventPublisher.publishEvent(ConfiguredBrokerFoundEvent.from(configuredBroker));
-      repo.save(configuredBroker.toRabbitMqBroker());
+      RabbitMqBroker broker = configuredBroker.toRabbitMqBroker();
+      if (!repo.exists(broker)) {
+        repo.save(broker);
+      }
     }
   }
 }

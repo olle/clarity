@@ -26,6 +26,9 @@ export const useBrokerStore = defineStore("brokers", () => {
       results.elements.forEach(
         (element) => (brokers.value[element.id] = element)
       );
+      results.removed.forEach((id) => {
+        delete brokers.value[id];
+      });
     }
   }
 

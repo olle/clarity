@@ -2,7 +2,7 @@
   <article class="clarity--content-page">
     <h1>Exchanges</h1>
     <ul>
-      <li>...</li>
+      <li v-for="exchange in store.exchanges">{{ exchange }}</li>
     </ul>
   </article>
 </template>

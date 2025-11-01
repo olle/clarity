@@ -7,10 +7,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -27,7 +30,7 @@ class JsonTextWebSocketHandler extends TextWebSocketHandler implements Loggable 
 
   private final ObjectMapper objectMapper;
 
-  private Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+  private Map<String, Set<WebSocketSession>> sessions = new ConcurrentHashMap<>();
 
   public JsonTextWebSocketHandler(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
@@ -36,7 +39,7 @@ class JsonTextWebSocketHandler extends TextWebSocketHandler implements Loggable 
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
     synchronized (sessions) {
-      sessions.put(session.getId(), session);
+      sessions.computeIfAbsent(session.getId(), _ -> new HashSet<>()).add(session);
     }
   }
 
@@ -47,13 +50,27 @@ class JsonTextWebSocketHandler extends TextWebSocketHandler implements Loggable 
 
   private void removeSession(WebSocketSession session) {
     synchronized (sessions) {
-      if (sessions.remove(session.getId()) != null) {
-        logger().info("Removed {}", session);
+      String id = session.getId();
+
+      Set<WebSocketSession> curr =
+          sessions.computeIfPresent(
+              id,
+              (_, prev) -> {
+                if (prev.remove(session)) {
+                  logger().info("Removed {}", session);
+                }
+                return prev;
+              });
+
+      if (curr.isEmpty()) {
+        sessions.remove(id);
       }
-      int before = sessions.size();
-      if (sessions.entrySet().removeIf(entry -> !entry.getValue().isOpen())) {
-        logger().info("Removed {} WebSocket sessions.", before - sessions.size());
-      }
+
+      sessions.values().stream()
+          .forEach(
+              socketSessions -> socketSessions.removeIf(Predicate.not(WebSocketSession::isOpen)));
+
+      sessions.entrySet().removeIf(socketSessions -> socketSessions.getValue().isEmpty());
     }
   }
 
@@ -70,8 +87,8 @@ class JsonTextWebSocketHandler extends TextWebSocketHandler implements Loggable 
 
   private void sendToAllSessions(WebSocketMessage<?> message) {
     sessions.values().stream()
-        .flatMap(session -> sendToSession(message, session).stream())
-        .forEach(this::removeSession);
+        .flatMap(set -> set.stream())
+        .forEach(session -> sendToSession(message, session));
   }
 
   private Optional<WebSocketSession> sendToSession(
