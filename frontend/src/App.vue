@@ -22,9 +22,7 @@
         <li class="disabled" disabled>
           <IconSettings />
         </li>
-        <li>
-          <OnlineStatus />
-        </li>
+        <NavItemOnlineStatus />
       </ul>
     </nav>
     <RouterView />
@@ -38,7 +36,7 @@ import IconRabbitMq from "./components/IconRabbitMq.vue";
 import { IconHome, IconHelpHexagon, IconSettings } from "@tabler/icons-vue";
 import { useBrokerStore } from "./composables/useBrokerStore";
 import OverlayBadge from "primevue/overlaybadge";
-import OnlineStatus from "./components/OnlineStatus.vue";
+import NavItemOnlineStatus from "./components/NavItemOnlineStatus.vue";
 
 const store = useBrokerStore();
 onMounted(() => {
