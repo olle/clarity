@@ -6,7 +6,7 @@ import { useSettingsStore } from "../stores/useSettingsStore";
 
 const volumes = {
   low: 0.3,
-  medium: 0.7,
+  medium: 0.6,
   high: 1.0,
 };
 
@@ -23,13 +23,14 @@ export function useSounds() {
     interrupt: true,
   });
 
-  const bells = () => {
-    store.settings.sound && playBells();
+  const maybePlay = (soundFunc) => {
+    if (store.settings.sound) {
+      soundFunc();
+    }
   };
 
-  const toc = () => {
-    store.settings.sound && playToc();
-  };
+  const bells = () => maybePlay(playBells);
+  const toc = () => maybePlay(playToc);
 
   return { bells, toc };
 }

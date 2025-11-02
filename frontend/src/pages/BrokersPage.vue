@@ -109,7 +109,7 @@
     <ul class="broker-list">
       <li v-for="broker in store.brokers" :key="broker.id">
         <div class="activation--container">
-          <ToggleSwitch @click="toc()" />
+          <ToggleSwitch v-model="broker.active" @change="toc()" />
           <p>Active <span>Clarity!</span></p>
         </div>
 
@@ -172,7 +172,6 @@ import { useSounds } from "../composables/useSounds";
 const { toc } = useSounds();
 
 const store = useBrokerStore();
-
 onMounted(() => {
   store.reload();
 });
@@ -300,7 +299,6 @@ label:not(.checkbox-label) {
 }
 .activation--container .p-toggleswitch-checked + p {
   font-weight: bold;
-  opacity: 1;
 }
 .activation--container .p-toggleswitch-checked + p > span {
   color: var(--color-green-dark);
