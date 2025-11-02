@@ -1,6 +1,8 @@
 package clarity.exchanges.api;
 
 import clarity.exchanges.ExchangeRepository;
+import clarity.exchanges.RabbitMqExchange;
+import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +16,9 @@ public class ExchangesController {
   }
 
   @GetMapping(path = "/api/v0/exchanges")
-  public ExchangesDto fetch() {
-    return ExchangesDto.from(repo.findAll());
+  public FetchAllExchangeResponse fetch() {
+    List<RabbitMqExchange> exchanges = repo.findAll();
+    return new FetchAllExchangeResponse(
+        exchanges.size(), exchanges.stream().map(ExchangeDto::from).toList());
   }
 }

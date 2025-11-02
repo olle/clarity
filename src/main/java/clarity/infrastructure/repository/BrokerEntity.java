@@ -31,10 +31,7 @@ record BrokerEntity(
 
   public static BrokerEntity from(RabbitMqBroker rabbitMqBroker) {
     return new BrokerEntity(
-        createUuidFrom(
-            rabbitMqBroker.properties().username(),
-            rabbitMqBroker.properties().host(),
-            rabbitMqBroker.properties().port()),
+        createUuidFrom(rabbitMqBroker.name()),
         rabbitMqBroker.type().name(),
         rabbitMqBroker.properties().host(),
         rabbitMqBroker.properties().port(),
@@ -73,7 +70,11 @@ record BrokerEntity(
   }
 
   private static UUID createUuidFrom(String username, String host, Integer port) {
-    return UUID.nameUUIDFromBytes("%s@%s:%d".formatted(username, host, port).getBytes());
+    return createUuidFrom("%s@%s:%d".formatted(username, host, port));
+  }
+
+  private static UUID createUuidFrom(String name) {
+    return UUID.nameUUIDFromBytes(name.getBytes());
   }
 
   public RabbitMqBroker toModel() {

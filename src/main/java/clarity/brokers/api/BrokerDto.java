@@ -5,12 +5,11 @@ import clarity.brokers.RabbitMqBroker;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.UUID;
-import org.springframework.lang.Nullable;
 
 @JsonInclude(Include.NON_EMPTY)
 record BrokerDto(
-    @Nullable UUID id,
-    @Nullable String type,
+    UUID id,
+    String type,
     String host,
     Integer port,
     String username,

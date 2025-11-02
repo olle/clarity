@@ -46,7 +46,7 @@ public class LookupExchangesByApi implements UseCase, Loggable {
                 "exchanges",
                 new ParameterizedTypeReference<Collection<ExchangeDto>>() {})
             .stream()
-            .map(ExchangeDto::toRabbitMqExchange)
+            .map(dto -> dto.toRabbitMqExchange(broker))
             .toList();
 
     rabbitMqExchanges.forEach(repo::save);
@@ -79,8 +79,16 @@ public class LookupExchangesByApi implements UseCase, Loggable {
       boolean internal,
       Map<String, Object> arguments) {
 
-    public RabbitMqExchange toRabbitMqExchange() {
-      return new RabbitMqExchange(null, name);
+    public RabbitMqExchange toRabbitMqExchange(RabbitMqBroker rabbitMqBroker) {
+      return new RabbitMqExchange(null, name)
+          .withBrokerId(rabbitMqBroker.id())
+          .withProperties(
+              props ->
+                  props
+                      .withType(type)
+                      .withAutoDelete(auto_delete)
+                      .withDurable(durable)
+                      .withInternal(internal));
     }
   }
 }

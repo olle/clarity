@@ -7,4 +7,6 @@ public interface Broker {
   UUID id();
 
   BrokerType type();
+
+  String name();
 }

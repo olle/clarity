@@ -25,6 +25,11 @@ public class RabbitMqBroker implements Broker {
   }
 
   @Override
+  public String name() {
+    return getBeanName();
+  }
+
+  @Override
   public String toString() {
     return "RabbitMqBroker [id=" + id + ", type=" + type + "]";
   }
