@@ -109,6 +109,11 @@
 
     <ul class="broker-list">
       <li v-for="broker in store.brokers" :key="broker.id">
+        <div class="activation--container">
+          <ToggleSwitch />
+          <p>Active <span>Clarity!</span></p>
+        </div>
+
         <dl class="broker-details">
           <dt>Host:</dt>
           <dd>{{ broker.host }}</dd>
@@ -152,6 +157,7 @@ import { ref, onMounted, nextTick } from "vue";
 import Panel from "primevue/panel";
 import { Form } from "@primevue/forms";
 import InputText from "primevue/inputtext";
+import ToggleSwitch from "primevue/toggleswitch";
 import Button from "primevue/button";
 import Message from "primevue/message";
 import InputNumber from "primevue/inputnumber";
@@ -277,7 +283,6 @@ label:not(.checkbox-label) {
   padding: 0.5rem;
   border-bottom: 1px solid #eee;
   display: flex;
-  align-items: center;
   justify-content: space-between;
   justify-items: baseline;
   gap: 1rem;
@@ -287,10 +292,36 @@ label:not(.checkbox-label) {
   margin-top: auto;
 }
 
+.activation--container {
+  min-width: 10rem;
+  border-radius: var(--p-border-radius-md);
+  margin-top: initial !important;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+}
+.activation--container p {
+  margin: 0;
+  padding: 0;
+}
+.activation--container .p-toggleswitch-checked + p {
+  font-weight: bold;
+  opacity: 1;
+}
+.activation--container .p-toggleswitch-checked + p > span {
+  color: var(--color-green-dark);
+}
+.activation--container:has(> .p-toggleswitch-checked) {
+  background: var(--p-green-50);
+}
+
 .broker-details {
+  flex: 1;
   display: grid;
   grid-template-columns: max-content auto;
-  gap: 0.5rem;
+  gap: 0.2rem;
   align-items: first baseline;
 }
 .broker-details dt {
