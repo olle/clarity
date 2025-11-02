@@ -14,8 +14,17 @@
             <IconHelpHexagon />
           </RouterLink>
         </li>
-        <li class="disabled" disabled>
-          <IconSettings />
+        <li>
+          <IconSettings @click="showSettingsDialog()" />
+          <Dialog
+            v-model:visible="settingsVisible"
+            modal
+            header="Settings"
+            position="bottomleft"
+            draggable="false"
+          >
+            <p>...</p>
+          </Dialog>
         </li>
         <NavItemOnlineStatus />
       </ul>
@@ -30,6 +39,13 @@ import { IconHome, IconHelpHexagon, IconSettings } from "@tabler/icons-vue";
 import NavItemBrokers from "./components/NavItemBrokers.vue";
 import NavItemOnlineStatus from "./components/NavItemOnlineStatus.vue";
 import NavItemExchanges from "./components/NavItemExchanges.vue";
+import Dialog from "primevue/dialog";
+import { ref } from "vue";
+
+const settingsVisible = ref(false);
+const showSettingsDialog = () => {
+  settingsVisible.value = true;
+};
 </script>
 
 <style>
