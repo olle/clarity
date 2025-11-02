@@ -1,5 +1,6 @@
 package clarity.brokers;
 
+import clarity.brokers.domain.RabbitMqBroker;
 import java.util.List;
 import java.util.UUID;
 

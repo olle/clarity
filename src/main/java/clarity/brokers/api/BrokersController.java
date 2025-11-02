@@ -1,8 +1,8 @@
 package clarity.brokers.api;
 
 import clarity.brokers.BrokerRepository;
-import clarity.brokers.ManageBrokers;
-import clarity.brokers.RabbitMqBroker;
+import clarity.brokers.BrokerService;
+import clarity.brokers.domain.RabbitMqBroker;
 import clarity.infrastructure.utils.Loggable;
 import java.util.List;
 import java.util.UUID;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 class BrokersController implements Loggable {
 
   private final BrokerRepository repo;
-  private final ManageBrokers manageBrokers;
+  private final BrokerService manageBrokers;
 
-  public BrokersController(BrokerRepository repo, ManageBrokers manageBrokers) {
+  public BrokersController(BrokerRepository repo, BrokerService manageBrokers) {
     this.repo = repo;
     this.manageBrokers = manageBrokers;
   }

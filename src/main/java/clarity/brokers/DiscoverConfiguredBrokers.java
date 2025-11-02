@@ -1,8 +1,10 @@
 package clarity.brokers;
 
-import clarity.brokers.BrokersConfigurationProperty.ConfiguredBroker;
+import clarity.brokers.domain.RabbitMqBroker;
 import clarity.brokers.event.ConfiguredBrokerFoundEvent;
 import clarity.infrastructure.UseCase;
+import clarity.infrastructure.config.BrokersConfigurationProperty;
+import clarity.infrastructure.config.BrokersConfigurationProperty.ConfiguredBroker;
 import clarity.infrastructure.utils.Loggable;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEventPublisher;

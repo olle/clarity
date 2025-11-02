@@ -2,6 +2,8 @@ package clarity.brokers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import clarity.brokers.domain.BrokerType;
+import clarity.brokers.domain.RabbitMqBroker;
 import clarity.infrastructure.repository.InMemoryBrokerRepository;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,7 @@ class ManageBrokersTest {
     RabbitMqBroker b2 = brokerFixture();
     assertThat(b1).isNotSameAs(b2);
 
-    var sut = new ManageBrokers(repo);
+    var sut = new BrokerService(repo);
     assertThat(events).isEmpty();
 
     sut.create(b1);

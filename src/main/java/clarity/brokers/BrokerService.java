@@ -1,5 +1,6 @@
 package clarity.brokers;
 
+import clarity.brokers.domain.RabbitMqBroker;
 import clarity.brokers.event.RabbitMqBrokerResolvedEvent;
 import clarity.infrastructure.utils.Loggable;
 import java.util.UUID;
@@ -9,11 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ManageBrokers implements Loggable {
+public class BrokerService implements Loggable {
 
   private final BrokerRepository repo;
 
-  public ManageBrokers(BrokerRepository repo) {
+  public BrokerService(BrokerRepository repo) {
     this.repo = repo;
   }
 

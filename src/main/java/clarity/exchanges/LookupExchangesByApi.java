@@ -1,7 +1,7 @@
 package clarity.exchanges;
 
-import clarity.brokers.BrokerProperties;
-import clarity.brokers.RabbitMqBroker;
+import clarity.brokers.domain.BrokerProperties;
+import clarity.brokers.domain.RabbitMqBroker;
 import clarity.brokers.event.BrokerAddedEvent;
 import clarity.exchanges.event.ExchangeResolvedEvent;
 import clarity.infrastructure.UseCase;

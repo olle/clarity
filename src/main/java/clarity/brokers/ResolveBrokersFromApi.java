@@ -1,8 +1,11 @@
 package clarity.brokers;
 
+import clarity.brokers.domain.BrokerProperties;
+import clarity.brokers.domain.RabbitMqBroker;
 import clarity.brokers.event.BrokerAddedEvent;
 import clarity.brokers.event.RabbitMqBrokerResolvedEvent;
 import clarity.exchanges.ExchangeRepository;
+import clarity.infrastructure.UseCase;
 import clarity.infrastructure.utils.Loggable;
 import java.util.Base64;
 import org.springframework.context.ApplicationEventPublisher;
@@ -14,12 +17,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-public class LookupRabbitMqBrokerByApi implements Loggable {
+class ResolveBrokersFromApi implements Loggable, UseCase {
 
   private final RestClient restClient;
   private final ApplicationEventPublisher publisher;
 
-  public LookupRabbitMqBrokerByApi(
+  public ResolveBrokersFromApi(
       RestClient restClient, ExchangeRepository repo, ApplicationEventPublisher publisher) {
     this.restClient = restClient;
     this.publisher = publisher;

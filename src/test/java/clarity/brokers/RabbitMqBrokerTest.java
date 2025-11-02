@@ -1,5 +1,7 @@
 package clarity.brokers;
 
+import clarity.brokers.domain.BrokerType;
+import clarity.brokers.domain.RabbitMqBroker;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package clarity.connections;
 
-import clarity.brokers.RabbitMqBroker;
+import clarity.brokers.domain.RabbitMqBroker;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 
 public class RabbitMqConnectionFactory extends CachingConnectionFactory {

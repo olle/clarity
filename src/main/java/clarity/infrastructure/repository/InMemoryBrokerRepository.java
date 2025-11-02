@@ -1,9 +1,9 @@
 package clarity.infrastructure.repository;
 
-import clarity.brokers.Broker;
 import clarity.brokers.BrokerRepository;
-import clarity.brokers.BrokerType;
-import clarity.brokers.RabbitMqBroker;
+import clarity.brokers.domain.Broker;
+import clarity.brokers.domain.BrokerType;
+import clarity.brokers.domain.RabbitMqBroker;
 import clarity.brokers.event.BrokerAddedEvent;
 import clarity.brokers.event.BrokerMarkedRemovedEvent;
 import clarity.brokers.event.BrokerRemovedEvent;

@@ -1,4 +1,4 @@
-package clarity.brokers;
+package clarity.brokers.domain;
 
 import java.util.UUID;
 import java.util.function.UnaryOperator;

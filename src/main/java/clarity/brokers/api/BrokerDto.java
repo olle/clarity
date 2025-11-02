@@ -1,7 +1,7 @@
 package clarity.brokers.api;
 
-import clarity.brokers.BrokerType;
-import clarity.brokers.RabbitMqBroker;
+import clarity.brokers.domain.BrokerType;
+import clarity.brokers.domain.RabbitMqBroker;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.UUID;

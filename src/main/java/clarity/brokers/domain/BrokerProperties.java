@@ -1,4 +1,4 @@
-package clarity.brokers;
+package clarity.brokers.domain;
 
 import org.springframework.lang.Nullable;
 

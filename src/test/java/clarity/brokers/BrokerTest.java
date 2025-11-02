@@ -2,6 +2,8 @@ package clarity.brokers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import clarity.brokers.domain.BrokerType;
+import clarity.brokers.domain.RabbitMqBroker;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 

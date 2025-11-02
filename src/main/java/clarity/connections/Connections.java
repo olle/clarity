@@ -1,6 +1,6 @@
 package clarity.connections;
 
-import clarity.brokers.RabbitMqBroker;
+import clarity.brokers.domain.RabbitMqBroker;
 import clarity.brokers.event.BrokerAddedEvent;
 import clarity.brokers.event.BrokerRemovedEvent;
 import clarity.infrastructure.utils.Loggable;

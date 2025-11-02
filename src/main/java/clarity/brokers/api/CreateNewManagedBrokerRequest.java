@@ -1,7 +1,7 @@
 package clarity.brokers.api;
 
-import clarity.brokers.BrokerType;
-import clarity.brokers.RabbitMqBroker;
+import clarity.brokers.domain.BrokerType;
+import clarity.brokers.domain.RabbitMqBroker;
 
 record CreateNewManagedBrokerRequest(
     String host, Integer port, String username, String password, Boolean ssl) {
