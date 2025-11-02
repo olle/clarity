@@ -1,6 +1,5 @@
 <template>
   <article class="clarity--content-page">
-    <Toast />
     <div class="header">
       <div class="col">
         <h1>RabbitMQ Brokers</h1>
@@ -163,15 +162,12 @@ import Message from "primevue/message";
 import InputNumber from "primevue/inputnumber";
 import Password from "primevue/password";
 import Checkbox from "primevue/checkbox";
-import Toast from "primevue/toast";
 
 import { valibotResolver } from "@primevue/forms/resolvers/valibot";
 import * as v from "valibot";
 import { useBrokerStore } from "../composables/useBrokerStore";
-import { useToast } from "primevue/usetoast";
 import { IconPlus, IconX } from "@tabler/icons-vue";
 
-const toast = useToast();
 const store = useBrokerStore();
 
 onMounted(() => {
@@ -202,14 +198,8 @@ const resolver = valibotResolver(
   })
 );
 
-const onFormSubmit = ({ valid, values, reset }) => {
+const onFormSubmit = ({ valid, values }) => {
   if (valid) {
-    toast.add({
-      severity: "success",
-      summary: "Form is submitted.",
-      life: 3000,
-    });
-
     if (editBrokerId.value !== null) {
       const id = editBrokerId.value;
       editBrokerId.value = null;
@@ -217,7 +207,6 @@ const onFormSubmit = ({ valid, values, reset }) => {
     } else {
       store.addBroker(values);
     }
-
     nextTick();
     resetForm();
     showForm.value = false;
