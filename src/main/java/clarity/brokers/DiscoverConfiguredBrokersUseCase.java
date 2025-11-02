@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @EnableConfigurationProperties(BrokersConfigurationProperty.class)
-public class DiscoverConfiguredBrokers implements Loggable, UseCase {
+class DiscoverConfiguredBrokersUseCase implements Loggable, UseCase {
 
   private final BrokerRepository repo;
   private final BrokersConfigurationProperty configured;
   private final ApplicationEventPublisher applicationEventPublisher;
 
-  public DiscoverConfiguredBrokers(
+  public DiscoverConfiguredBrokersUseCase(
       BrokersConfigurationProperty configured,
       ApplicationEventPublisher applicationEventPublisher,
       BrokerRepository repo) {

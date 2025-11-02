@@ -1,5 +1,6 @@
 package clarity.brokers;
 
+import clarity.brokers.api.ManageUseCase;
 import clarity.brokers.domain.RabbitMqBroker;
 import clarity.brokers.event.RabbitMqBrokerResolvedEvent;
 import clarity.infrastructure.utils.Loggable;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class BrokerService implements Loggable {
+class BrokerService implements ManageUseCase, Loggable {
 
   private final BrokerRepository repo;
 
@@ -18,6 +19,7 @@ public class BrokerService implements Loggable {
     this.repo = repo;
   }
 
+  @Override
   @Transactional
   public void create(RabbitMqBroker broker) {
     if (!repo.exists(broker)) {
@@ -25,10 +27,12 @@ public class BrokerService implements Loggable {
     }
   }
 
+  @Override
   public void update(RabbitMqBroker broker) {
     repo.save(broker);
   }
 
+  @Override
   public void delete(UUID id) {
     repo.deleteById(id);
   }

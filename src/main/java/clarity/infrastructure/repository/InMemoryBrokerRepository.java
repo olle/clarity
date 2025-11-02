@@ -1,7 +1,6 @@
 package clarity.infrastructure.repository;
 
 import clarity.brokers.BrokerRepository;
-import clarity.brokers.domain.Broker;
 import clarity.brokers.domain.BrokerType;
 import clarity.brokers.domain.RabbitMqBroker;
 import clarity.brokers.event.BrokerAddedEvent;
@@ -12,7 +11,6 @@ import clarity.infrastructure.utils.Loggable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -99,9 +97,5 @@ public class InMemoryBrokerRepository implements Loggable, BrokerRepository {
 
       applicationEventPublisher.publishEvent(BrokerRemovedEvent.from(removed.toModel()));
     }
-  }
-
-  public Optional<Broker> findById(UUID id) {
-    return Optional.ofNullable(entities.get(id)).map(BrokerEntity::toModel);
   }
 }

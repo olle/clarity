@@ -1,10 +1,11 @@
 package clarity.brokers;
 
+import clarity.brokers.api.AccessUseCase;
 import clarity.brokers.domain.RabbitMqBroker;
 import java.util.List;
 import java.util.UUID;
 
-public interface BrokerRepository {
+public interface BrokerRepository extends AccessUseCase {
 
   boolean exists(RabbitMqBroker broker);
 
