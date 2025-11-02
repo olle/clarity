@@ -165,7 +165,7 @@ import Checkbox from "primevue/checkbox";
 
 import { valibotResolver } from "@primevue/forms/resolvers/valibot";
 import * as v from "valibot";
-import { useBrokerStore } from "../composables/useBrokerStore";
+import { useBrokerStore } from "../stores/useBrokerStore";
 import { IconPlus, IconX } from "@tabler/icons-vue";
 
 const store = useBrokerStore();

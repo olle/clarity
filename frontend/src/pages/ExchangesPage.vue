@@ -9,7 +9,7 @@
 
 <script setup>
 import { onMounted } from "vue";
-import { useExchangeStore } from "../composables/useExchangeStore";
+import { useExchangeStore } from "../stores/useExchangeStore";
 const store = useExchangeStore();
 onMounted(() => {
   store.reload();

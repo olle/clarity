@@ -1,7 +1,7 @@
 import { ref, watch, computed } from "vue";
 import { defineStore } from "pinia";
-import { useApi } from "./useApi";
-import { useEvents } from "./useEvents";
+import { useApi } from "../composables/useApi";
+import { useEvents } from "../composables/useEvents";
 
 export const useExchangeStore = defineStore("exchanges", () => {
   const { events } = useEvents();

@@ -1,7 +1,7 @@
 import { ref, watch, computed } from "vue";
 import { defineStore } from "pinia";
-import { useApi } from "./useApi";
-import { useEvents } from "./useEvents";
+import { useApi } from "../composables/useApi";
+import { useEvents } from "../composables/useEvents";
 import { useDebounceFn } from "@vueuse/core";
 
 export const useBrokerStore = defineStore("brokers", () => {

@@ -8,7 +8,7 @@
 <script setup>
 import { watch, ref, computed } from "vue";
 import { IconBroadcast, IconBroadcastOff } from "@tabler/icons-vue";
-import { useOfflineStore } from "../composables/useOfflineStore";
+import { useOfflineStore } from "../stores/useOfflineStore";
 import { useEvents } from "../composables/useEvents";
 import { $dt } from "@primeuix/themes";
 

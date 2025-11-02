@@ -12,7 +12,7 @@
 import { watch, ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { IconReplace } from "@tabler/icons-vue";
-import { useExchangeStore } from "../composables/useExchangeStore";
+import { useExchangeStore } from "../stores/useExchangeStore";
 import OverlayBadge from "primevue/overlaybadge";
 
 const store = useExchangeStore();

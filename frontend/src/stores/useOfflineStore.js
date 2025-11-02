@@ -1,6 +1,6 @@
 import { ref, watch } from "vue";
 import { defineStore } from "pinia";
-import { useEvents } from "./useEvents";
+import { useEvents } from "../composables/useEvents";
 
 export const useOfflineStore = defineStore("offline", () => {
 
