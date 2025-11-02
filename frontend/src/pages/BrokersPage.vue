@@ -109,7 +109,7 @@
     <ul class="broker-list">
       <li v-for="broker in store.brokers" :key="broker.id">
         <div class="activation--container">
-          <ToggleSwitch />
+          <ToggleSwitch @click="toc()" />
           <p>Active <span>Clarity!</span></p>
         </div>
 
@@ -167,6 +167,9 @@ import { valibotResolver } from "@primevue/forms/resolvers/valibot";
 import * as v from "valibot";
 import { useBrokerStore } from "../stores/useBrokerStore";
 import { IconPlus, IconX } from "@tabler/icons-vue";
+
+import { useSounds } from "../composables/useSounds";
+const { toc } = useSounds();
 
 const store = useBrokerStore();
 

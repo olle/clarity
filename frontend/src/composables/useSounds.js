@@ -1,4 +1,5 @@
-import ting from "../assets/sounds/ting.mp3";
+import tingelingelingSound from "../assets/sounds/ting.mp3";
+import tocSound from "../assets/sounds/toc.mp3";
 
 import { useSound } from "@vueuse/sound";
 import { useSettingsStore } from "../stores/useSettingsStore";
@@ -10,11 +11,15 @@ const volumes = {
 };
 
 export function useSounds() {
-
   const store = useSettingsStore();
 
-  const { play: playBells } = useSound(ting, {
+  const { play: playBells } = useSound(tingelingelingSound, {
     volume: volumes.low,
+    interrupt: true,
+  });
+
+  const { play: playToc } = useSound(tocSound, {
+    volume: volumes.medium,
     interrupt: true,
   });
 
@@ -22,5 +27,9 @@ export function useSounds() {
     store.settings.sound && playBells();
   };
 
-  return { bells };
+  const toc = () => {
+    store.settings.sound && playToc();
+  };
+
+  return { bells, toc };
 }
