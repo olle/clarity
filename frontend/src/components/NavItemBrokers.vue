@@ -15,9 +15,9 @@ import { storeToRefs } from "pinia";
 import IconRabbitMq from "./IconRabbitMq.vue";
 import { useBrokerStore } from "../stores/useBrokerStore";
 import OverlayBadge from "primevue/overlaybadge";
-import ting from "../assets/sounds/ting.mp3";
-import { useSound } from "@vueuse/sound";
-const { play } = useSound(ting, { volume: 0.3, interrupt: true });
+
+import { useSounds } from "../composables/useSounds";
+const { bells } = useSounds();
 
 const store = useBrokerStore();
 const $root = ref(null);
@@ -25,7 +25,7 @@ const $root = ref(null);
 const { count } = storeToRefs(store);
 watch(count, () => {
   $root.value?.classList.add("animation-shake");
-  play();
+  bells();
   setTimeout(() => {
     $root.value?.classList.remove("animation-shake");
   }, 1234);
