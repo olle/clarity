@@ -6,6 +6,7 @@ import Aura from "@primeuix/themes/aura";
 import Tooltip from "primevue/tooltip";
 
 import "./style.css";
+import "./assets/fonts/SourceSans3-VariableFont_wght.ttf";
 import router from "./router";
 import App from "./App.vue";
 
