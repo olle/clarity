@@ -1,7 +1,7 @@
 package clarity.exchanges.event;
 
 import clarity.brokers.domain.RabbitMqBroker;
-import clarity.exchanges.RabbitMqExchange;
+import clarity.exchanges.domain.RabbitMqExchange;
 import clarity.infrastructure.DomainEvent;
 import com.github.f4b6a3.uuid.UuidCreator;
 import java.time.Instant;

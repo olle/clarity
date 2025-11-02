@@ -3,6 +3,7 @@ package clarity.exchanges;
 import clarity.brokers.domain.BrokerProperties;
 import clarity.brokers.domain.RabbitMqBroker;
 import clarity.brokers.event.BrokerAddedEvent;
+import clarity.exchanges.domain.RabbitMqExchange;
 import clarity.exchanges.event.ExchangeResolvedEvent;
 import clarity.infrastructure.UseCase;
 import clarity.infrastructure.utils.Loggable;
@@ -19,13 +20,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-public class LookupExchangesByApi implements UseCase, Loggable {
+class ResolveExchangesFromApi implements UseCase, Loggable {
 
   private final RestClient restClient;
   private final ExchangeRepository repo;
   private final ApplicationEventPublisher publisher;
 
-  public LookupExchangesByApi(
+  public ResolveExchangesFromApi(
       RestClient restClient, ApplicationEventPublisher publisher, ExchangeRepository repo) {
     this.restClient = restClient;
     this.repo = repo;

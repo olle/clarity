@@ -1,4 +1,4 @@
-package clarity.exchanges;
+package clarity.exchanges.domain;
 
 public record ExchangeProperties(
     String type, Boolean autoDelete, Boolean durable, Boolean internal) {

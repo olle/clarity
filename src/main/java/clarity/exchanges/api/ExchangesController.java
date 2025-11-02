@@ -1,7 +1,7 @@
 package clarity.exchanges.api;
 
 import clarity.exchanges.ExchangeRepository;
-import clarity.exchanges.RabbitMqExchange;
+import clarity.exchanges.domain.RabbitMqExchange;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,5 +1,6 @@
 package clarity.exchanges;
 
+import clarity.exchanges.domain.RabbitMqExchange;
 import java.util.List;
 
 public interface ExchangeRepository {

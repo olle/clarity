@@ -1,7 +1,7 @@
 package clarity.infrastructure.repository;
 
 import clarity.exchanges.ExchangeRepository;
-import clarity.exchanges.RabbitMqExchange;
+import clarity.exchanges.domain.RabbitMqExchange;
 import clarity.exchanges.event.ExchangeAddedEvent;
 import clarity.exchanges.event.ExchangeUpdatedEvent;
 import java.util.List;

@@ -1,6 +1,6 @@
 package clarity.exchanges.api;
 
-import clarity.exchanges.RabbitMqExchange;
+import clarity.exchanges.domain.RabbitMqExchange;
 import java.util.List;
 
 public record ExchangesDto(int count, List<?> elements) {

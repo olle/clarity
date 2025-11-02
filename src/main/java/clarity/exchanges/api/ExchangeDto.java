@@ -1,6 +1,6 @@
 package clarity.exchanges.api;
 
-import clarity.exchanges.RabbitMqExchange;
+import clarity.exchanges.domain.RabbitMqExchange;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.UUID;

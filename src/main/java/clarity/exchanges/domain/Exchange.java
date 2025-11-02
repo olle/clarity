@@ -1,4 +1,4 @@
-package clarity.exchanges;
+package clarity.exchanges.domain;
 
 import java.util.UUID;
 

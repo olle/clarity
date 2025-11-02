@@ -1,6 +1,6 @@
 package clarity.infrastructure.repository;
 
-import clarity.exchanges.RabbitMqExchange;
+import clarity.exchanges.domain.RabbitMqExchange;
 import java.util.UUID;
 
 public record ExchangeEntity(UUID id, String name, String type, UUID brokerId) {
