@@ -5,7 +5,7 @@ import clarity.infrastructure.UseCase;
 import java.util.List;
 import java.util.UUID;
 
-public interface AccessUseCase extends UseCase {
+public interface AccessBrokers extends UseCase {
 
   List<RabbitMqBroker> findAll();
 

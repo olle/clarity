@@ -17,14 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class BrokersController implements Loggable {
 
-  private final AccessUseCase access;
-  private final ManageUseCase manage;
-  private final ActivateUseCase activate;
+  private final AccessBrokers access;
+  private final ManageBrokers manage;
 
-  public BrokersController(AccessUseCase access, ManageUseCase manage, ActivateUseCase activate) {
+  public BrokersController(AccessBrokers access, ManageBrokers manage) {
     this.access = access;
     this.manage = manage;
-    this.activate = activate;
   }
 
   @GetMapping(path = "/api/v0/brokers")
@@ -53,9 +51,19 @@ class BrokersController implements Loggable {
 
   @PostMapping(path = "/api/v0/brokers/{id}/activate")
   public void activate(
-      @PathVariable(name = "id") UUID id, @RequestBody ActivateBrokerRequest request) {
+      @PathVariable(name = "id") UUID id, @RequestBody ActivateAndDeactivateBrokerRequest request) {
     try {
-      activate.execute(request.validate(id).id());
+      manage.activate(request.validate(id).id());
+    } catch (BrokerNotFoundException ex) {
+      throw new NotFoundException(ex);
+    }
+  }
+
+  @PostMapping(path = "/api/v0/brokers/{id}/deactivate")
+  public void deactivate(
+      @PathVariable(name = "id") UUID id, @RequestBody ActivateAndDeactivateBrokerRequest request) {
+    try {
+      manage.deactivate(request.validate(id).id());
     } catch (BrokerNotFoundException ex) {
       throw new NotFoundException(ex);
     }

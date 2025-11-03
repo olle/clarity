@@ -57,6 +57,8 @@ export function useApi() {
     fetchAll: async () => fetchJSON("/api/v0/brokers"),
     activate: async (broker) =>
       postJsonRequest(`/api/v0/brokers/${broker.id}/activate`, broker),
+    deactivate: async (broker) =>
+      postJsonRequest(`/api/v0/brokers/${broker.id}/deactivate`, broker),
   };
 
   const exchanges = {

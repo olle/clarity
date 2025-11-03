@@ -20,7 +20,7 @@ class ManageBrokersTest {
     RabbitMqBroker b2 = brokerFixture();
     assertThat(b1).isNotSameAs(b2);
 
-    var sut = new ManageBrokersUseCase(repo);
+    var sut = new BrokerService(repo, null);
     assertThat(events).isEmpty();
 
     sut.create(b1);

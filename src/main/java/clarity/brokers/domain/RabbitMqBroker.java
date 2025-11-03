@@ -50,4 +50,8 @@ public class RabbitMqBroker implements Broker {
   public void activate() {
     withProperties(props -> props.withActive(true));
   }
+
+  public void deactivate() {
+    withProperties(props -> props.withActive(false));
+  }
 }

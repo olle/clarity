@@ -42,7 +42,11 @@ export const useBrokerStore = defineStore("brokers", () => {
     await brokersApi.activate(broker);
   }
 
-  const debouncedReload = useDebounceFn(reload, 1234);
+  async function deactivateBroker(broker) {
+    await brokersApi.deactivate(broker);
+  }
+
+  const debouncedReload = useDebounceFn(reload, 789);
 
   watch(events, async (message) => {
     if (
@@ -63,5 +67,6 @@ export const useBrokerStore = defineStore("brokers", () => {
     updateBroker,
     reload: useDebounceFn(reload, 123),
     activateBroker,
+    deactivateBroker,
   };
 });

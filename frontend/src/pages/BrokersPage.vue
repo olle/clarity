@@ -250,7 +250,11 @@ function removeBroker(broker) {
 
 function onChange(broker) {
   toc();
-  store.activateBroker(broker);
+  if (broker.active) {
+    store.activateBroker(broker);
+  } else {
+    store.deactivateBroker(broker);
+  }
 }
 </script>
 
