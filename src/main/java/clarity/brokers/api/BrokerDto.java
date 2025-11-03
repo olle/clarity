@@ -5,6 +5,7 @@ import clarity.brokers.domain.RabbitMqBroker;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.UUID;
+import org.springframework.lang.Nullable;
 
 @JsonInclude(Include.NON_EMPTY)
 record BrokerDto(
@@ -15,7 +16,8 @@ record BrokerDto(
     String username,
     String password,
     boolean ssl,
-    String rabbitMqVersion) {
+    @Nullable String rabbitMqVersion,
+    Boolean active) {
 
   public static BrokerDto from(RabbitMqBroker broker) {
     return new BrokerDto(
@@ -26,6 +28,7 @@ record BrokerDto(
         broker.type() == BrokerType.MANAGED ? broker.properties().username() : null,
         broker.type() == BrokerType.MANAGED ? broker.properties().password() : null,
         broker.properties().ssl(),
-        broker.properties().rabbitMqVersion());
+        broker.properties().rabbitMqVersion(),
+        broker.properties().active());
   }
 }

@@ -9,10 +9,11 @@ public record BrokerProperties(
     String password,
     boolean ssl,
     @Nullable Integer httpPort,
-    String rabbitMqVersion) {
+    String rabbitMqVersion,
+    Boolean active) {
 
   public static BrokerProperties empty() {
-    return new BrokerProperties(null, null, null, null, false, null, null);
+    return new BrokerProperties(null, null, null, null, false, null, null, null);
   }
 
   public BrokerProperties withHost(String host) {
@@ -23,7 +24,8 @@ public record BrokerProperties(
         this.password,
         this.ssl,
         this.httpPort,
-        this.rabbitMqVersion);
+        this.rabbitMqVersion,
+        this.active);
   }
 
   public BrokerProperties withPort(Integer port) {
@@ -34,7 +36,8 @@ public record BrokerProperties(
         this.password,
         this.ssl,
         this.httpPort,
-        this.rabbitMqVersion);
+        this.rabbitMqVersion,
+        this.active);
   }
 
   public BrokerProperties withUsername(String username) {
@@ -45,7 +48,8 @@ public record BrokerProperties(
         this.password,
         this.ssl,
         this.httpPort,
-        this.rabbitMqVersion);
+        this.rabbitMqVersion,
+        this.active);
   }
 
   public BrokerProperties withPassword(String password) {
@@ -56,17 +60,32 @@ public record BrokerProperties(
         password,
         this.ssl,
         this.httpPort,
-        this.rabbitMqVersion);
+        this.rabbitMqVersion,
+        this.active);
   }
 
   public BrokerProperties withSSL(boolean ssl) {
     return new BrokerProperties(
-        this.host, this.port, this.username, password, ssl, this.httpPort, this.rabbitMqVersion);
+        this.host,
+        this.port,
+        this.username,
+        password,
+        ssl,
+        this.httpPort,
+        this.rabbitMqVersion,
+        this.active);
   }
 
   public BrokerProperties withHttpPort(Integer httpPort) {
     return new BrokerProperties(
-        this.host, this.port, this.username, password, this.ssl, httpPort, this.rabbitMqVersion);
+        this.host,
+        this.port,
+        this.username,
+        password,
+        this.ssl,
+        httpPort,
+        this.rabbitMqVersion,
+        this.active);
   }
 
   public BrokerProperties withRabbitMqVersion(String rabbitMqVersion) {
@@ -77,7 +96,20 @@ public record BrokerProperties(
         this.password,
         this.ssl,
         this.httpPort,
-        rabbitMqVersion);
+        rabbitMqVersion,
+        this.active);
+  }
+
+  public BrokerProperties withActive(Boolean active) {
+    return new BrokerProperties(
+        this.host,
+        this.port,
+        this.username,
+        this.password,
+        this.ssl,
+        this.httpPort,
+        this.rabbitMqVersion,
+        active);
   }
 
   protected BrokerProperties copy() {
@@ -88,11 +120,7 @@ public record BrokerProperties(
         this.password,
         this.ssl,
         this.httpPort,
-        this.rabbitMqVersion);
+        this.rabbitMqVersion,
+        this.active);
   }
-
-  public BrokerProperties withActive(Boolean active) {
-	// TODO Auto-generated method stub
-	return null;
-}
 }
