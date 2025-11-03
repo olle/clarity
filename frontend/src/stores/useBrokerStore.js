@@ -10,6 +10,10 @@ export const useBrokerStore = defineStore("brokers", () => {
 
   const brokers = ref({});
   const count = computed(() => Object.keys(brokers.value).length);
+  const activeCount = computed(
+    () =>
+      Object.values(brokers.value).filter((broker) => broker.active).length
+  );
 
   const addBroker = async (values) => {
     await brokersApi.create(values);
@@ -62,6 +66,7 @@ export const useBrokerStore = defineStore("brokers", () => {
   return {
     brokers,
     count,
+    activeCount,
     addBroker,
     removeBroker,
     updateBroker,

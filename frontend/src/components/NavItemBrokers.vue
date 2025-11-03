@@ -1,9 +1,14 @@
 <template>
   <li ref="$root">
     <RouterLink to="/brokers">
-      <OverlayBadge :value="store.count" size="small">
+      <OverlayBadge
+        v-if="store.activeCount > 0"
+        :value="store.activeCount"
+        size="small"
+      >
         <IconRabbitMq />
       </OverlayBadge>
+      <IconRabbitMq v-else />
     </RouterLink>
   </li>
 </template>
