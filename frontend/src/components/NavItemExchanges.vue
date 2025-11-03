@@ -1,9 +1,7 @@
 <template>
   <li ref="$root">
     <RouterLink to="/exchanges">
-      <OverlayBadge :value="store.count" size="small">
-        <IconReplace />
-      </OverlayBadge>
+      <IconReplace />
     </RouterLink>
   </li>
 </template>
@@ -13,7 +11,6 @@ import { watch, ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { IconReplace } from "@tabler/icons-vue";
 import { useExchangeStore } from "../stores/useExchangeStore";
-import OverlayBadge from "primevue/overlaybadge";
 
 const store = useExchangeStore();
 
@@ -25,6 +22,7 @@ watch(count, () => {
     $root.value?.classList.remove("animation-shake");
   }, 1234);
 });
+
 onMounted(() => {
   store.reload();
 });

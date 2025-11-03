@@ -98,9 +98,9 @@ nav {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  gap: 15px;
+  padding-top: 22px;
+  padding-bottom: 25px;
   height: 100%;
 }
 
