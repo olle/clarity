@@ -5,8 +5,10 @@ import { definePreset } from "@primeuix/themes";
 import Aura from "@primeuix/themes/aura";
 import Tooltip from "primevue/tooltip";
 
-import "./style.css";
 import "./assets/fonts/SourceSans3-VariableFont_wght.ttf";
+import "./assets/fonts/SourceSans3-Italic-VariableFont_wght.ttf";
+
+import "./style.css";
 import router from "./router";
 import App from "./App.vue";
 
