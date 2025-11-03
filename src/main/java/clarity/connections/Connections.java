@@ -1,8 +1,6 @@
 package clarity.connections;
 
 import clarity.brokers.domain.RabbitMqBroker;
-import clarity.brokers.event.BrokerAddedEvent;
-import clarity.brokers.event.BrokerRemovedEvent;
 import clarity.infrastructure.utils.Loggable;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,28 +9,26 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.context.event.EventListener;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-public class Connections implements Loggable {
+@Component
+class Connections implements Loggable {
 
   private final GenericApplicationContext context;
   private final Map<UUID, RabbitMqConnectionFactory> factories = new ConcurrentHashMap<>();
-
   private final Set<String> templateNames = new HashSet<>();
 
   public Connections(GenericApplicationContext context) {
     this.context = context;
   }
 
-  @EventListener
-  public void on(BrokerAddedEvent event) {
+  public void connect(RabbitMqBroker broker) {
 
-    RabbitMqBroker broker = event.broker();
     RabbitMqConnectionFactory connectionFactory = rabbitMqConnectionFactory(broker);
 
-    logger().info("Created {} from {}", connectionFactory, event);
+    logger().info("Created {} from {}", connectionFactory, broker);
     factories.putIfAbsent(broker.id(), connectionFactory);
 
     context.registerBean(
@@ -46,11 +42,10 @@ public class Connections implements Loggable {
     context.registerBean(rabbitTemplateName, RabbitTemplate.class, () -> rabbitTemplate);
   }
 
-  @EventListener
-  public void on(BrokerRemovedEvent event) {
+  public void disconnect(RabbitMqBroker broker) {
 
-    RabbitMqBroker broker = event.removed();
     RabbitMqConnectionFactory removed = factories.remove(broker.id());
+    logger().info("Disconnected {} for {}", removed, broker);
 
     if (removed != null) {
       context.removeBeanDefinition(createConnectionFactoryName(broker));
@@ -61,21 +56,21 @@ public class Connections implements Loggable {
   }
 
   private String createRabbitTemplateName(RabbitMqBroker broker) {
-    return "rabbitTemplate" + broker.getBeanName();
+    return "rabbitTemplate<%s>".formatted(broker.name());
   }
 
   private String createConnectionFactoryName(RabbitMqBroker broker) {
-    return "connectionFactory" + broker.getBeanName();
+    return "connectionFactory<%s>".formatted(broker.name());
   }
 
   public RabbitMqConnectionFactory rabbitMqConnectionFactory(RabbitMqBroker broker) {
     return new RabbitMqConnectionFactory(broker);
   }
 
-  @Scheduled(fixedDelayString = "PT10S")
+  @Scheduled(fixedDelayString = "PT20S")
   public void scheduled() {
-    logger().info("HOLDING {}", factories);
 
+    logger().info("HOLDING {}", factories);
     for (String rabbitTemplateName : templateNames) {
       RabbitTemplate template = context.getBean(rabbitTemplateName, RabbitTemplate.class);
       template.send(MessageBuilder.withBody("Hello world!".getBytes()).build());

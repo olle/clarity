@@ -42,7 +42,7 @@ public class RabbitMqBroker implements Broker {
 
   @Override
   public String name() {
-    return getBeanName();
+    return "amqp://%s@%s:%d".formatted(properties.username(), properties.host(), properties.port());
   }
 
   @Override
@@ -57,10 +57,6 @@ public class RabbitMqBroker implements Broker {
   public RabbitMqBroker withProperties(UnaryOperator<BrokerProperties> mapper) {
     this.properties = mapper.apply(this.properties);
     return this;
-  }
-
-  public String getBeanName() {
-    return "amqp://%s@%s:%d".formatted(properties.username(), properties.host(), properties.port());
   }
 
   public void activate() {
