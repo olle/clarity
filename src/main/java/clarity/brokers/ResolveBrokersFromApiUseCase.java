@@ -17,12 +17,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-class ResolveBrokersFromApi implements Loggable, UseCase {
+class ResolveBrokersFromApiUseCase implements Loggable, UseCase {
 
   private final RestClient restClient;
   private final ApplicationEventPublisher publisher;
 
-  public ResolveBrokersFromApi(
+  public ResolveBrokersFromApiUseCase(
       RestClient restClient, ExchangeRepository repo, ApplicationEventPublisher publisher) {
     this.restClient = restClient;
     this.publisher = publisher;

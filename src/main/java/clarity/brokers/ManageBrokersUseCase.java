@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-class BrokerService implements ManageUseCase, Loggable {
+class ManageBrokersUseCase implements ManageUseCase, Loggable {
 
   private final BrokerRepository repo;
 
-  public BrokerService(BrokerRepository repo) {
+  public ManageBrokersUseCase(BrokerRepository repo) {
     this.repo = repo;
   }
 
