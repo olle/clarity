@@ -47,5 +47,7 @@ public class RabbitMqBroker implements Broker {
     return "amqp://%s@%s:%d".formatted(properties.username(), properties.host(), properties.port());
   }
 
-  public void activate() {}
+  public void activate() {
+	  withProperties(props -> props.withActive(true));
+  }
 }

@@ -90,4 +90,9 @@ public record BrokerProperties(
         this.httpPort,
         this.rabbitMqVersion);
   }
+
+  public BrokerProperties withActive(Boolean active) {
+	// TODO Auto-generated method stub
+	return null;
+}
 }

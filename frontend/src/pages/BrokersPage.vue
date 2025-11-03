@@ -109,7 +109,7 @@
     <ul class="broker-list">
       <li v-for="broker in store.brokers" :key="broker.id">
         <div class="activation--container">
-          <ToggleSwitch v-model="broker.active" @change="toc()" />
+          <ToggleSwitch v-model="broker.active" @change="onChange(broker)" />
           <p>Active <span>Clarity!</span></p>
         </div>
 
@@ -246,6 +246,11 @@ function removeBroker(broker) {
   store.removeBroker(broker);
   resetForm();
   showForm.value = false;
+}
+
+function onChange(broker) {
+  toc();
+  store.activateBroker(broker);
 }
 </script>
 

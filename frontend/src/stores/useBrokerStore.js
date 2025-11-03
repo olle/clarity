@@ -38,13 +38,20 @@ export const useBrokerStore = defineStore("brokers", () => {
     }
   }
 
+  async function activateBroker(broker) {
+    await brokersApi.activate(broker);
+  }
+
+  const debouncedReload = useDebounceFn(reload, 1234);
+
   watch(events, async (message) => {
     if (
       message.event.startsWith("broker-updated") ||
       message.event.startsWith("broker-added") ||
-      message.event.startsWith("broker-removed")
+      message.event.startsWith("broker-removed") ||
+      message.event.startsWith("broker-activated")
     ) {
-      await reload();
+      await debouncedReload();
     }
   });
 
@@ -55,5 +62,6 @@ export const useBrokerStore = defineStore("brokers", () => {
     removeBroker,
     updateBroker,
     reload: useDebounceFn(reload, 123),
+    activateBroker,
   };
 });
