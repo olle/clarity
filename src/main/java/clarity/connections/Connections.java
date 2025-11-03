@@ -40,6 +40,8 @@ class Connections implements Loggable {
     String rabbitTemplateName = createRabbitTemplateName(broker);
     templateNames.add(rabbitTemplateName);
     context.registerBean(rabbitTemplateName, RabbitTemplate.class, () -> rabbitTemplate);
+
+    sendHelloWorld(rabbitTemplate);
   }
 
   public void disconnect(RabbitMqBroker broker) {
@@ -52,6 +54,7 @@ class Connections implements Loggable {
       String rabbitTemplateName = createRabbitTemplateName(broker);
       templateNames.remove(rabbitTemplateName);
       context.removeBeanDefinition(rabbitTemplateName);
+      removed.destroy();
     }
   }
 
@@ -72,8 +75,11 @@ class Connections implements Loggable {
 
     logger().info("HOLDING {}", factories);
     for (String rabbitTemplateName : templateNames) {
-      RabbitTemplate template = context.getBean(rabbitTemplateName, RabbitTemplate.class);
-      template.send(MessageBuilder.withBody("Hello world!".getBytes()).build());
+      sendHelloWorld(context.getBean(rabbitTemplateName, RabbitTemplate.class));
     }
+  }
+
+  private void sendHelloWorld(RabbitTemplate template) {
+    template.send(MessageBuilder.withBody("Hello world!".getBytes()).build());
   }
 }
