@@ -20,13 +20,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-class ResolveExchangesFromApi implements UseCase, Loggable {
+class ResolveExchangesFromApiUseCase implements UseCase, Loggable {
 
   private final RestClient restClient;
   private final ExchangeRepository repo;
   private final ApplicationEventPublisher publisher;
 
-  public ResolveExchangesFromApi(
+  public ResolveExchangesFromApiUseCase(
       RestClient restClient, ApplicationEventPublisher publisher, ExchangeRepository repo) {
     this.restClient = restClient;
     this.repo = repo;
