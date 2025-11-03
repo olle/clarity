@@ -1,3 +1,9 @@
+ifeq ($(shell command -v podman 2> /dev/null),)
+    CNTR := docker
+else
+    CNTR := podman
+endif
+
 JAVA_HOME=$(shell unset JAVA_HOME; /usr/libexec/java_home -v 25)
 MVN:=./mvnw
 NPM:=./node/npm
@@ -50,8 +56,8 @@ tidy spotless pretty format f:
 
 .PHONY: up
 up:
-	docker compose up -d
+	${CNTR} compose up -d
 
 .PHONY: down
 down:
-	docker compose down
+	${CNTR} compose down

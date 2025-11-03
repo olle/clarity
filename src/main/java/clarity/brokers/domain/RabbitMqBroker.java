@@ -24,6 +24,22 @@ public class RabbitMqBroker implements Broker {
     return this.type;
   }
 
+  public String host() {
+    return this.properties.host();
+  }
+
+  public Integer port() {
+    return this.properties.port();
+  }
+
+  public String username() {
+    return this.properties.username();
+  }
+
+  public String password() {
+    return this.properties.password();
+  }
+
   @Override
   public String name() {
     return getBeanName();

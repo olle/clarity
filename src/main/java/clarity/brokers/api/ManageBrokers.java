@@ -1,10 +1,10 @@
 package clarity.brokers.api;
 
 import clarity.brokers.domain.RabbitMqBroker;
-import clarity.infrastructure.UseCase;
+import clarity.infrastructure.Adapter;
 import java.util.UUID;
 
-public interface ManageBrokers extends UseCase {
+public interface ManageBrokers extends Adapter {
 
   void create(RabbitMqBroker rabbitMqBroker);
 

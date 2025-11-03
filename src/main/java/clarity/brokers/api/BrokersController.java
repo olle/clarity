@@ -3,7 +3,6 @@ package clarity.brokers.api;
 import clarity.brokers.BrokerNotFoundException;
 import clarity.brokers.domain.RabbitMqBroker;
 import clarity.infrastructure.api.NotFoundException;
-import clarity.infrastructure.utils.Loggable;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-class BrokersController implements Loggable {
+class BrokersController {
 
   private final AccessBrokers access;
   private final ManageBrokers manage;
