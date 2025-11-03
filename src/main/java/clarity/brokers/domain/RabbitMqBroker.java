@@ -46,4 +46,6 @@ public class RabbitMqBroker implements Broker {
   public String getBeanName() {
     return "amqp://%s@%s:%d".formatted(properties.username(), properties.host(), properties.port());
   }
+
+  public void activate() {}
 }

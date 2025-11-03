@@ -1,6 +1,8 @@
 package clarity.brokers.api;
 
+import clarity.brokers.BrokerNotFoundException;
 import clarity.brokers.domain.RabbitMqBroker;
+import clarity.infrastructure.api.NotFoundException;
 import clarity.infrastructure.utils.Loggable;
 import java.util.List;
 import java.util.UUID;
@@ -52,6 +54,10 @@ class BrokersController implements Loggable {
   @PostMapping(path = "/api/v0/brokers/{id}/activate")
   public void activate(
       @PathVariable(name = "id") UUID id, @RequestBody ActivateBrokerRequest request) {
-    activate.execute(request.validate(id).id());
+    try {
+      activate.execute(request.validate(id).id());
+    } catch (BrokerNotFoundException ex) {
+      throw new NotFoundException(ex);
+    }
   }
 }

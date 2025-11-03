@@ -11,6 +11,7 @@ import clarity.infrastructure.utils.Loggable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +26,11 @@ public class InMemoryBrokerRepository implements Loggable, BrokerRepository {
 
   public InMemoryBrokerRepository(ApplicationEventPublisher applicationEventPublisher) {
     this.applicationEventPublisher = applicationEventPublisher;
+  }
+
+  @Override
+  public Optional<RabbitMqBroker> findById(UUID id) {
+    return Optional.ofNullable(entities.get(id)).map(BrokerEntity::toModel);
   }
 
   @Override
