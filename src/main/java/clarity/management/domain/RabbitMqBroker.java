@@ -3,7 +3,7 @@ package clarity.management.domain;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 
-public class RabbitMqBroker implements Broker {
+public class RabbitMqBroker {
 
   private final UUID id;
   private final BrokerType type;
@@ -35,14 +35,16 @@ public class RabbitMqBroker implements Broker {
     return this;
   }
 
-  @Override
   public UUID id() {
     return this.id;
   }
 
-  @Override
   public BrokerType type() {
     return this.type;
+  }
+
+  public String name() {
+    return "amqp://%s@%s:%d".formatted(username, host, port);
   }
 
   public String host() {
@@ -59,11 +61,6 @@ public class RabbitMqBroker implements Broker {
 
   public String password() {
     return password;
-  }
-
-  @Override
-  public String name() {
-    return "amqp://%s@%s:%d".formatted(username, host, port);
   }
 
   @Override
