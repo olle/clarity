@@ -4,6 +4,7 @@ import clarity.brokers.domain.RabbitMqBroker;
 import clarity.connections.events.BrokerConnectedEvent;
 import clarity.connections.events.BrokerDisconnectedEvent;
 import clarity.infrastructure.utils.Loggable;
+import com.rabbitmq.client.ShutdownSignalException;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
@@ -45,7 +46,7 @@ public class RabbitMqConnectionFactory extends CachingConnectionFactory implemen
       public void onCreate(Connection connection) {
         if (connection.isOpen()) {
           logger().info("Connection opened {}", connection);
-          publisher.publishEvent(BrokerConnectedEvent.from(broker));
+          notifyConnected();
         }
       }
 
@@ -53,8 +54,26 @@ public class RabbitMqConnectionFactory extends CachingConnectionFactory implemen
       public void onClose(Connection connection) {
         if (!connection.isOpen()) {
           logger().info("Connection closed {}", connection);
-          publisher.publishEvent(BrokerDisconnectedEvent.from(broker));
+          notifyDisconnected();
         }
+      }
+
+      @Override
+      public void onFailed(Exception exception) {
+        notifyDisconnected();
+      }
+
+      @Override
+      public void onShutDown(ShutdownSignalException signal) {
+        notifyDisconnected();
+      }
+
+      private void notifyConnected() {
+        publisher.publishEvent(BrokerConnectedEvent.from(broker));
+      }
+
+      private void notifyDisconnected() {
+        publisher.publishEvent(BrokerDisconnectedEvent.from(broker));
       }
     };
   }

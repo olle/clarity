@@ -66,4 +66,12 @@ public class RabbitMqBroker implements Broker {
   public void deactivate() {
     withProperties(props -> props.withActive(false));
   }
+
+  public void connected() {
+    withProperties(props -> props.withConnected(true));
+  }
+
+  public void disconnected() {
+    withProperties(props -> props.withConnected(false));
+  }
 }

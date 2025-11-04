@@ -18,6 +18,7 @@ record BrokerDto(
     String password,
     boolean ssl,
     Boolean active,
+    Boolean connected,
     Map<String, Object> properties) {
 
   public static BrokerDto from(RabbitMqBroker broker) {
@@ -31,6 +32,7 @@ record BrokerDto(
         broker.type() == BrokerType.MANAGED ? broker.password() : null,
         broker.properties().ssl(),
         broker.properties().active(),
+        broker.properties().connected(),
         Map.of());
   }
 }

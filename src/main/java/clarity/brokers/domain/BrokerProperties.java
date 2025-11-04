@@ -10,10 +10,11 @@ public record BrokerProperties(
     boolean ssl,
     @Nullable Integer httpPort,
     String rabbitMqVersion,
-    Boolean active) {
+    Boolean active,
+    Boolean connected) {
 
   public static BrokerProperties empty() {
-    return new BrokerProperties(null, null, null, null, false, null, null, null);
+    return new BrokerProperties(null, null, null, null, false, null, null, null, null);
   }
 
   public BrokerProperties withHost(String host) {
@@ -25,7 +26,8 @@ public record BrokerProperties(
         this.ssl,
         this.httpPort,
         this.rabbitMqVersion,
-        this.active);
+        this.active,
+        this.connected);
   }
 
   public BrokerProperties withPort(Integer port) {
@@ -37,7 +39,8 @@ public record BrokerProperties(
         this.ssl,
         this.httpPort,
         this.rabbitMqVersion,
-        this.active);
+        this.active,
+        this.connected);
   }
 
   public BrokerProperties withUsername(String username) {
@@ -49,7 +52,8 @@ public record BrokerProperties(
         this.ssl,
         this.httpPort,
         this.rabbitMqVersion,
-        this.active);
+        this.active,
+        this.connected);
   }
 
   public BrokerProperties withPassword(String password) {
@@ -61,7 +65,8 @@ public record BrokerProperties(
         this.ssl,
         this.httpPort,
         this.rabbitMqVersion,
-        this.active);
+        this.active,
+        this.connected);
   }
 
   public BrokerProperties withSSL(boolean ssl) {
@@ -73,7 +78,8 @@ public record BrokerProperties(
         ssl,
         this.httpPort,
         this.rabbitMqVersion,
-        this.active);
+        this.active,
+        this.connected);
   }
 
   public BrokerProperties withHttpPort(Integer httpPort) {
@@ -85,7 +91,8 @@ public record BrokerProperties(
         this.ssl,
         httpPort,
         this.rabbitMqVersion,
-        this.active);
+        this.active,
+        this.connected);
   }
 
   public BrokerProperties withRabbitMqVersion(String rabbitMqVersion) {
@@ -97,7 +104,8 @@ public record BrokerProperties(
         this.ssl,
         this.httpPort,
         rabbitMqVersion,
-        this.active);
+        this.active,
+        this.connected);
   }
 
   public BrokerProperties withActive(Boolean active) {
@@ -109,7 +117,21 @@ public record BrokerProperties(
         this.ssl,
         this.httpPort,
         this.rabbitMqVersion,
-        active);
+        active,
+        this.connected);
+  }
+
+  public BrokerProperties withConnected(Boolean connected) {
+    return new BrokerProperties(
+        this.host,
+        this.port,
+        this.username,
+        this.password,
+        this.ssl,
+        this.httpPort,
+        this.rabbitMqVersion,
+        this.active,
+        connected);
   }
 
   protected BrokerProperties copy() {
@@ -121,6 +143,7 @@ public record BrokerProperties(
         this.ssl,
         this.httpPort,
         this.rabbitMqVersion,
-        this.active);
+        this.active,
+        this.connected);
   }
 }

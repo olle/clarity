@@ -16,7 +16,7 @@ class ManageConnectionsOnActivationUseCaseTest {
   void connectsOnActivation() {
 
     var connections = Mockito.mock(Connections.class);
-    var sut = new ManageConnectionsOnActivationUseCase(connections);
+    var sut = new ManageConnectionsOnActivationUseCase(connections, null);
 
     var broker = new RabbitMqBroker(UUID.randomUUID(), BrokerType.CONFIGURED);
     var event = new BrokerActivatedEvent(broker, null, null);
@@ -27,7 +27,7 @@ class ManageConnectionsOnActivationUseCaseTest {
 
   public void disconnectsOnDeactivation() {
     var connections = Mockito.mock(Connections.class);
-    var sut = new ManageConnectionsOnActivationUseCase(connections);
+    var sut = new ManageConnectionsOnActivationUseCase(connections, null);
 
     var broker = new RabbitMqBroker(UUID.randomUUID(), BrokerType.CONFIGURED);
     var event = new BrokerDeactivatedEvent(broker, null, null);
