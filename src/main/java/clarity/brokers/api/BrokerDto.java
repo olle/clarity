@@ -11,6 +11,7 @@ import java.util.UUID;
 record BrokerDto(
     UUID id,
     String type,
+    String name,
     String host,
     Integer port,
     String username,
@@ -23,6 +24,7 @@ record BrokerDto(
     return new BrokerDto(
         broker.id(),
         broker.type().toString(),
+        broker.name(),
         broker.host(),
         broker.port(),
         broker.type() == BrokerType.MANAGED ? broker.username() : null,

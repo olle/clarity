@@ -110,7 +110,7 @@
       <li v-for="broker in store.brokers" :key="broker.id">
         <div class="activation--container">
           <ToggleSwitch v-model="broker.active" @change="onChange(broker)" />
-          <p>Active <span>Clarity!</span></p>
+          <p>Connect <span>Clarity!</span></p>
         </div>
 
         <dl class="broker-details">

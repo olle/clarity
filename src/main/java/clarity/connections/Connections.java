@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -17,11 +18,14 @@ import org.springframework.stereotype.Component;
 class Connections implements Loggable {
 
   private final GenericApplicationContext context;
+  private final ApplicationEventPublisher publisher;
+
   private final Map<UUID, RabbitMqConnectionFactory> factories = new ConcurrentHashMap<>();
   private final Set<String> templateNames = new HashSet<>();
 
-  public Connections(GenericApplicationContext context) {
+  public Connections(GenericApplicationContext context, ApplicationEventPublisher publisher) {
     this.context = context;
+    this.publisher = publisher;
   }
 
   public void connect(RabbitMqBroker broker) {
@@ -67,7 +71,7 @@ class Connections implements Loggable {
   }
 
   public RabbitMqConnectionFactory rabbitMqConnectionFactory(RabbitMqBroker broker) {
-    return new RabbitMqConnectionFactory(broker);
+    return new RabbitMqConnectionFactory(broker, publisher);
   }
 
   @Scheduled(fixedDelayString = "PT20S")
