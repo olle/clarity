@@ -43,16 +43,16 @@ public class RabbitMqConnectionFactory extends CachingConnectionFactory implemen
 
       @Override
       public void onCreate(Connection connection) {
-        logger().info("Creating connection {}", connection);
         if (connection.isOpen()) {
+          logger().info("Connection opened {}", connection);
           publisher.publishEvent(BrokerConnectedEvent.from(broker));
         }
       }
 
       @Override
       public void onClose(Connection connection) {
-        logger().info("Closing connection {}", connection);
         if (!connection.isOpen()) {
+          logger().info("Connection closed {}", connection);
           publisher.publishEvent(BrokerDisconnectedEvent.from(broker));
         }
       }

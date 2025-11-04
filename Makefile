@@ -31,8 +31,10 @@ clean c:
 	rm -rf src/main/resources/static/*
 
 .PHONY: run
-run:
+run: src/main/resources/static/index.html
 	${MAKE} -j2 run-backend run-frontend
+
+src/main/resources/static/index.html: frontend
 
 .PHONY: run-backend run-be r-b
 run-backend run-be r-be:
