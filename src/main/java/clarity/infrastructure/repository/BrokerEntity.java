@@ -1,8 +1,8 @@
 package clarity.infrastructure.repository;
 
-import clarity.brokers.domain.BrokerType;
-import clarity.brokers.domain.RabbitMqBroker;
 import clarity.infrastructure.config.BrokersConfigurationProperty.ConfiguredBroker;
+import clarity.management.domain.BrokerType;
+import clarity.management.domain.RabbitMqBroker;
 import java.util.UUID;
 
 record BrokerEntity(

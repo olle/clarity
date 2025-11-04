@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import clarity.brokers.FixtureBrokerAddedEvent;
-import clarity.brokers.event.BrokerAddedEvent;
 import clarity.infrastructure.config.ObjectMapperConfig;
 import clarity.infrastructure.websocket.JsonTextWebSocketHandler.DomainEventMessage;
+import clarity.management.FixtureBrokerAddedEvent;
+import clarity.management.events.BrokerAddedEvent;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

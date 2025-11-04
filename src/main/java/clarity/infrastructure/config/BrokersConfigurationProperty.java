@@ -1,7 +1,7 @@
 package clarity.infrastructure.config;
 
-import clarity.brokers.domain.BrokerType;
-import clarity.brokers.domain.RabbitMqBroker;
+import clarity.management.domain.BrokerType;
+import clarity.management.domain.RabbitMqBroker;
 import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

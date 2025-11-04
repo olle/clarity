@@ -1,9 +1,9 @@
 package clarity.infrastructure.repository;
 
-import clarity.exchanges.ExchangeRepository;
-import clarity.exchanges.domain.RabbitMqExchange;
-import clarity.exchanges.event.ExchangeAddedEvent;
-import clarity.exchanges.event.ExchangeUpdatedEvent;
+import clarity.discovery.ExchangeRepository;
+import clarity.discovery.domain.RabbitMqExchange;
+import clarity.discovery.events.ExchangeAddedEvent;
+import clarity.discovery.events.ExchangeUpdatedEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

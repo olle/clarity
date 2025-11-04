@@ -1,13 +1,13 @@
 package clarity.infrastructure.repository;
 
-import clarity.brokers.BrokerRepository;
-import clarity.brokers.domain.BrokerType;
-import clarity.brokers.domain.RabbitMqBroker;
-import clarity.brokers.event.BrokerAddedEvent;
-import clarity.brokers.event.BrokerMarkedRemovedEvent;
-import clarity.brokers.event.BrokerRemovedEvent;
-import clarity.brokers.event.BrokerUpdatedEvent;
 import clarity.infrastructure.utils.Loggable;
+import clarity.management.BrokerRepository;
+import clarity.management.domain.BrokerType;
+import clarity.management.domain.RabbitMqBroker;
+import clarity.management.events.BrokerAddedEvent;
+import clarity.management.events.BrokerMarkedRemovedEvent;
+import clarity.management.events.BrokerRemovedEvent;
+import clarity.management.events.BrokerUpdatedEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

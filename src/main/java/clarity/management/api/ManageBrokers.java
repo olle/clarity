@@ -1,0 +1,18 @@
+package clarity.management.api;
+
+import clarity.infrastructure.Adapter;
+import clarity.management.domain.RabbitMqBroker;
+import java.util.UUID;
+
+public interface ManageBrokers extends Adapter {
+
+  void create(RabbitMqBroker rabbitMqBroker);
+
+  void update(RabbitMqBroker rabbitMqBroker);
+
+  void delete(UUID id);
+
+  void activate(UUID id);
+
+  void deactivate(UUID id);
+}
