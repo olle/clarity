@@ -16,9 +16,9 @@ public class ExchangesController {
   }
 
   @GetMapping(path = "/api/v0/exchanges")
-  public FetchAllExchangeResponse fetch() {
+  public FetchAllExchangesResponse fetch() {
     List<RabbitMqExchange> exchanges = repo.findAll();
-    return new FetchAllExchangeResponse(
+    return new FetchAllExchangesResponse(
         exchanges.size(), exchanges.stream().map(ExchangeDto::from).toList());
   }
 }
