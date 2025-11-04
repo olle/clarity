@@ -3,7 +3,6 @@ package clarity.management;
 import clarity.discovery.ExchangeRepository;
 import clarity.infrastructure.UseCase;
 import clarity.infrastructure.utils.Loggable;
-import clarity.management.domain.BrokerProperties;
 import clarity.management.domain.RabbitMqBroker;
 import clarity.management.events.BrokerAddedEvent;
 import clarity.management.events.RabbitMqBrokerResolvedEvent;
@@ -35,7 +34,7 @@ class ResolveBrokersFromApiUseCase implements Loggable, UseCase {
     RabbitMqBroker broker = event.broker();
 
     OverviewDto overview =
-        fetch(broker.properties(), "overview", new ParameterizedTypeReference<OverviewDto>() {});
+        fetch(broker, "overview", new ParameterizedTypeReference<OverviewDto>() {});
 
     logger().info("Resolved {}", overview);
 
@@ -45,11 +44,13 @@ class ResolveBrokersFromApiUseCase implements Loggable, UseCase {
                 mapper -> mapper.withRabbitMqVersion(overview.rabbitmq_version()))));
   }
 
-  private <T> T fetch(BrokerProperties props, String endpoint, ParameterizedTypeReference<T> type) {
+  private <T> T fetch(RabbitMqBroker broker, String endpoint, ParameterizedTypeReference<T> type) {
     return restClient
         .get()
-        .uri("http://%s:%d/api/%s".formatted(props.host(), props.httpPort(), endpoint))
-        .header("Authorization", encodeBasic(props.username(), props.password()))
+        .uri(
+            "http://%s:%d/api/%s"
+                .formatted(broker.host(), broker.properties().httpPort(), endpoint))
+        .header("Authorization", encodeBasic(broker.username(), broker.password()))
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
         .body(type);

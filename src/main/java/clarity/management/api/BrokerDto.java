@@ -16,7 +16,6 @@ record BrokerDto(
     Integer port,
     String username,
     String password,
-    boolean ssl,
     Boolean active,
     Boolean connected,
     Map<String, Object> properties) {
@@ -30,7 +29,6 @@ record BrokerDto(
         broker.port(),
         broker.type() == BrokerType.MANAGED ? broker.username() : null,
         broker.type() == BrokerType.MANAGED ? broker.password() : null,
-        broker.properties().ssl(),
         broker.properties().active(),
         broker.properties().connected(),
         Map.of());

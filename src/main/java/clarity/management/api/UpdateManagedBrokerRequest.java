@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 record UpdateManagedBrokerRequest(
-    UUID id, String host, Integer port, String username, String password, Boolean ssl) {
+    UUID id, String host, Integer port, String username, String password) {
 
   public UpdateManagedBrokerRequest validate(UUID pathVariable) {
     Assert.isTrue(pathVariable.equals(this.id), "Must be update for same broker.");
@@ -16,14 +16,6 @@ record UpdateManagedBrokerRequest(
   }
 
   public RabbitMqBroker toRabbitMqBroker() {
-    return new RabbitMqBroker(id, BrokerType.MANAGED)
-        .withProperties(
-            mapper ->
-                mapper
-                    .withHost(host)
-                    .withPort(port)
-                    .withUsername(username)
-                    .withPassword(password)
-                    .withSSL(ssl));
+    return new RabbitMqBroker(id, BrokerType.MANAGED).with(host, port, username, password);
   }
 }

@@ -12,7 +12,6 @@ record BrokerEntity(
     Integer port,
     String username,
     String password,
-    Boolean ssl,
     Integer httpPort,
     String rabbitMqVersion,
     Boolean active,
@@ -26,7 +25,6 @@ record BrokerEntity(
         other.port,
         other.username,
         other.password,
-        other.ssl,
         other.httpPort,
         other.rabbitMqVersion,
         other.active,
@@ -37,11 +35,10 @@ record BrokerEntity(
     return new BrokerEntity(
         createUuidFrom(rabbitMqBroker.name()),
         rabbitMqBroker.type().name(),
-        rabbitMqBroker.properties().host(),
-        rabbitMqBroker.properties().port(),
-        rabbitMqBroker.properties().username(),
-        rabbitMqBroker.properties().password(),
-        rabbitMqBroker.properties().ssl(),
+        rabbitMqBroker.host(),
+        rabbitMqBroker.port(),
+        rabbitMqBroker.username(),
+        rabbitMqBroker.password(),
         rabbitMqBroker.properties().httpPort(),
         rabbitMqBroker.properties().rabbitMqVersion(),
         rabbitMqBroker.properties().active(),
@@ -57,7 +54,6 @@ record BrokerEntity(
         configuredBroker.getPort(),
         configuredBroker.getUsername(),
         configuredBroker.getPassword(),
-        configuredBroker.isSsl(),
         configuredBroker.getHttpPort(),
         null,
         null,
@@ -72,7 +68,6 @@ record BrokerEntity(
         this.port,
         this.username,
         this.password,
-        this.ssl,
         this.httpPort,
         this.rabbitMqVersion,
         this.active,
@@ -89,14 +84,10 @@ record BrokerEntity(
 
   public RabbitMqBroker toModel() {
     return new RabbitMqBroker(this.id, BrokerType.valueOf(this.type))
+        .with(host, port, username, password)
         .withProperties(
             properties ->
                 properties
-                    .withHost(host)
-                    .withPort(port)
-                    .withUsername(username)
-                    .withPassword(password)
-                    .withSSL(ssl)
                     .withHttpPort(httpPort)
                     .withRabbitMqVersion(rabbitMqVersion)
                     .withActive(active)

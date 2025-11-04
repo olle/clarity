@@ -4,7 +4,6 @@ import clarity.discovery.domain.RabbitMqExchange;
 import clarity.discovery.events.ExchangeResolvedEvent;
 import clarity.infrastructure.UseCase;
 import clarity.infrastructure.utils.Loggable;
-import clarity.management.domain.BrokerProperties;
 import clarity.management.domain.RabbitMqBroker;
 import clarity.management.events.BrokerAddedEvent;
 import java.util.Base64;
@@ -42,10 +41,7 @@ class ResolveExchangesFromApiUseCase implements UseCase, Loggable {
     RabbitMqBroker broker = event.broker();
 
     List<RabbitMqExchange> rabbitMqExchanges =
-        fetch(
-                broker.properties(),
-                "exchanges",
-                new ParameterizedTypeReference<Collection<ExchangeDto>>() {})
+        fetch(broker, "exchanges", new ParameterizedTypeReference<Collection<ExchangeDto>>() {})
             .stream()
             .map(dto -> dto.toRabbitMqExchange(broker))
             .toList();
@@ -57,11 +53,13 @@ class ResolveExchangesFromApiUseCase implements UseCase, Loggable {
         .forEach(publisher::publishEvent);
   }
 
-  private <T> T fetch(BrokerProperties props, String endpoint, ParameterizedTypeReference<T> type) {
+  private <T> T fetch(RabbitMqBroker broker, String endpoint, ParameterizedTypeReference<T> type) {
     return restClient
         .get()
-        .uri("http://%s:%d/api/%s".formatted(props.host(), props.httpPort(), endpoint))
-        .header("Authorization", encodeBasic(props.username(), props.password()))
+        .uri(
+            "http://%s:%d/api/%s"
+                .formatted(broker.host(), broker.properties().httpPort(), endpoint))
+        .header("Authorization", encodeBasic(broker.username(), broker.password()))
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
         .body(type);

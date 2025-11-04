@@ -31,7 +31,6 @@ class ManageBrokersTest {
   }
 
   private RabbitMqBroker brokerFixture() {
-    return new RabbitMqBroker(null, BrokerType.MANAGED)
-        .withProperties(props -> props.withHost("host").withPort(1234).withUsername("user"));
+    return new RabbitMqBroker(null, BrokerType.MANAGED).with("host", 1234, "user");
   }
 }

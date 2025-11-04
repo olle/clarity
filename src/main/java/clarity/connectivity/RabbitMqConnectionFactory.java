@@ -22,14 +22,14 @@ public class RabbitMqConnectionFactory extends CachingConnectionFactory implemen
 
   public RabbitMqConnectionFactory(RabbitMqBroker broker, ApplicationEventPublisher publisher) {
 
-    super(broker.properties().host(), broker.properties().port());
+    super(broker.host(), broker.port());
 
     this.broker = broker;
     this.publisher = publisher;
 
     setConnectionNameStrategy(createNamingStrategy());
-    setUsername(broker.properties().username());
-    setPassword(broker.properties().password());
+    setUsername(broker.username());
+    setPassword(broker.password());
     addConnectionListener(createConnectionListener());
   }
 

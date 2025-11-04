@@ -7,11 +7,32 @@ public class RabbitMqBroker implements Broker {
 
   private final UUID id;
   private final BrokerType type;
+
+  private String host;
+  private Integer port;
+  private String username;
+  private String password;
+
   private BrokerProperties properties = BrokerProperties.empty();
 
   public RabbitMqBroker(UUID id, BrokerType type) {
     this.id = id;
     this.type = type;
+  }
+
+  public RabbitMqBroker with(String host, Integer port, String username) {
+    this.host = host;
+    this.port = port;
+    this.username = username;
+    return this;
+  }
+
+  public RabbitMqBroker with(String host, Integer port, String username, String password) {
+    this.host = host;
+    this.port = port;
+    this.username = username;
+    this.password = password;
+    return this;
   }
 
   @Override
@@ -25,24 +46,24 @@ public class RabbitMqBroker implements Broker {
   }
 
   public String host() {
-    return this.properties.host();
+    return host;
   }
 
   public Integer port() {
-    return this.properties.port();
+    return port;
   }
 
   public String username() {
-    return this.properties.username();
+    return username;
   }
 
   public String password() {
-    return this.properties.password();
+    return password;
   }
 
   @Override
   public String name() {
-    return "amqp://%s@%s:%d".formatted(properties.username(), properties.host(), properties.port());
+    return "amqp://%s@%s:%d".formatted(username, host, port);
   }
 
   @Override

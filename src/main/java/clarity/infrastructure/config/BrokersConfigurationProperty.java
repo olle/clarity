@@ -99,15 +99,8 @@ public class BrokersConfigurationProperty {
 
     public RabbitMqBroker toRabbitMqBroker() {
       return new RabbitMqBroker(null, BrokerType.CONFIGURED)
-          .withProperties(
-              props ->
-                  props
-                      .withHost(host)
-                      .withPort(port)
-                      .withUsername(username)
-                      .withPassword(password)
-                      .withSSL(ssl)
-                      .withHttpPort(httpPort));
+          .with(host, port, username, password)
+          .withProperties(props -> props.withHttpPort(httpPort));
     }
   }
 }
