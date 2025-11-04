@@ -127,7 +127,7 @@
             }}
           </dd>
         </dl>
-        <div>
+        <div class="broker-buttons">
           <Button
             :disabled="broker.type === 'CONFIGURED'"
             label="Edit"
@@ -328,6 +328,11 @@ label:not(.checkbox-label) {
 }
 .broker-details dd {
   margin: 0;
+}
+.broker-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
 }
 
 .add-broker-panel {
