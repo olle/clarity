@@ -3,6 +3,8 @@ package clarity.infrastructure.repository;
 import clarity.infrastructure.config.BrokersConfigurationProperty.ConfiguredBroker;
 import clarity.management.domain.BrokerType;
 import clarity.management.domain.RabbitMqBroker;
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 record BrokerEntity(
@@ -13,9 +15,9 @@ record BrokerEntity(
     String username,
     String password,
     Integer httpPort,
-    String rabbitMqVersion,
     Boolean active,
-    Boolean connected) {
+    Boolean connected,
+    Map<String, Object> attributes) {
 
   public BrokerEntity(BrokerEntity other) {
     this(
@@ -26,9 +28,9 @@ record BrokerEntity(
         other.username,
         other.password,
         other.httpPort,
-        other.rabbitMqVersion,
         other.active,
-        other.connected);
+        other.connected,
+        Collections.unmodifiableMap(other.attributes()));
   }
 
   public static BrokerEntity from(RabbitMqBroker rabbitMqBroker) {
@@ -40,9 +42,9 @@ record BrokerEntity(
         rabbitMqBroker.username(),
         rabbitMqBroker.password(),
         rabbitMqBroker.properties().httpPort(),
-        rabbitMqBroker.properties().rabbitMqVersion(),
         rabbitMqBroker.properties().active(),
-        rabbitMqBroker.properties().connected());
+        rabbitMqBroker.properties().connected(),
+        rabbitMqBroker.attributes());
   }
 
   public static BrokerEntity from(ConfiguredBroker configuredBroker) {
@@ -69,9 +71,9 @@ record BrokerEntity(
         this.username,
         this.password,
         this.httpPort,
-        this.rabbitMqVersion,
         this.active,
-        this.connected);
+        this.connected,
+        this.attributes);
   }
 
   private static UUID createUuidFrom(String username, String host, Integer port) {
@@ -87,10 +89,7 @@ record BrokerEntity(
         .with(host, port, username, password)
         .withProperties(
             properties ->
-                properties
-                    .withHttpPort(httpPort)
-                    .withRabbitMqVersion(rabbitMqVersion)
-                    .withActive(active)
-                    .withConnected(connected));
+                properties.withHttpPort(httpPort).withActive(active).withConnected(connected))
+        .withAttributes(attributes);
   }
 }

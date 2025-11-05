@@ -31,6 +31,6 @@ record BrokerDto(
         broker.type() == BrokerType.MANAGED ? broker.password() : null,
         broker.properties().active(),
         broker.properties().connected(),
-        Map.of());
+        broker.attributes());
   }
 }

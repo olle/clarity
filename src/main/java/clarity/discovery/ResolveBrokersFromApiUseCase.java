@@ -1,12 +1,12 @@
-package clarity.management;
+package clarity.discovery;
 
-import clarity.discovery.ExchangeRepository;
 import clarity.infrastructure.UseCase;
 import clarity.infrastructure.utils.Loggable;
 import clarity.management.domain.RabbitMqBroker;
 import clarity.management.events.BrokerAddedEvent;
 import clarity.management.events.RabbitMqBrokerResolvedEvent;
 import java.util.Base64;
+import java.util.Optional;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.ParameterizedTypeReference;
@@ -31,29 +31,45 @@ class ResolveBrokersFromApiUseCase implements Loggable, UseCase {
   @EventListener
   public void on(BrokerAddedEvent event) {
 
-    RabbitMqBroker broker = event.broker();
+    fetch(event.broker(), "overview", new ParameterizedTypeReference<OverviewDto>() {})
+        .ifPresent(
+            overview -> {
+              logger().info("Resolved {}", overview);
 
-    OverviewDto overview =
-        fetch(broker, "overview", new ParameterizedTypeReference<OverviewDto>() {});
+              RabbitMqBroker broker =
+                  event
+                      .broker()
+                      .withAttributes(
+                          attr ->
+                              attr.with("rabbitVersion", overview.rabbitmq_version())
+                                  .with("clusterName", overview.cluster_name())
+                                  .with("node", overview.node())
+                                  .with("erlangVersion", overview.erlang_version())
+                                  .with("erlangFullVersion", overview.erlang_full_version()));
 
-    logger().info("Resolved {}", overview);
-
-    publisher.publishEvent(
-        RabbitMqBrokerResolvedEvent.from(
-            broker.withProperties(
-                mapper -> mapper.withRabbitMqVersion(overview.rabbitmq_version()))));
+              publisher.publishEvent(RabbitMqBrokerResolvedEvent.from(broker));
+            });
   }
 
-  private <T> T fetch(RabbitMqBroker broker, String endpoint, ParameterizedTypeReference<T> type) {
-    return restClient
-        .get()
-        .uri(
-            "http://%s:%d/api/%s"
-                .formatted(broker.host(), broker.properties().httpPort(), endpoint))
-        .header("Authorization", encodeBasic(broker.username(), broker.password()))
-        .accept(MediaType.APPLICATION_JSON)
-        .retrieve()
-        .body(type);
+  private <T> Optional<T> fetch(
+      RabbitMqBroker broker, String endpoint, ParameterizedTypeReference<T> type) {
+    try {
+      return Optional.of(
+          restClient
+              .get()
+              .uri(createUri(broker, endpoint))
+              .header("Authorization", encodeBasic(broker.username(), broker.password()))
+              .accept(MediaType.APPLICATION_JSON)
+              .retrieve()
+              .body(type));
+    } catch (Exception ex) {
+      logger().debug("Failed to fetch broker", ex);
+      return Optional.empty();
+    }
+  }
+
+  private String createUri(RabbitMqBroker broker, String endpoint) {
+    return "http://%s:%d/api/%s".formatted(broker.host(), broker.properties().httpPort(), endpoint);
   }
 
   private String encodeBasic(String username, String password) {
