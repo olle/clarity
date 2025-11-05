@@ -86,9 +86,11 @@ class JsonTextWebSocketHandler extends TextWebSocketHandler implements Loggable 
   }
 
   private void sendToAllSessions(WebSocketMessage<?> message) {
-    sessions.values().stream()
-        .flatMap(set -> set.stream())
-        .forEach(session -> sendToSession(message, session));
+    synchronized (sessions) {
+      sessions.values().stream()
+          .flatMap(set -> set.stream())
+          .forEach(session -> sendToSession(message, session));
+    }
   }
 
   private Optional<WebSocketSession> sendToSession(
