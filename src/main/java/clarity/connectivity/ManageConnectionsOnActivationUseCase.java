@@ -7,6 +7,9 @@ import clarity.infrastructure.utils.Loggable;
 import clarity.management.BrokerRepository;
 import clarity.management.events.BrokerActivatedEvent;
 import clarity.management.events.BrokerDeactivatedEvent;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -18,6 +21,8 @@ public class ManageConnectionsOnActivationUseCase implements UseCase, Loggable {
   private final Connections connections;
   private final BrokerRepository brokerRepository;
 
+  public Set<UUID> activated = ConcurrentHashMap.newKeySet();
+
   public ManageConnectionsOnActivationUseCase(
       Connections connections, BrokerRepository brokerRepository) {
     this.connections = connections;
@@ -26,12 +31,16 @@ public class ManageConnectionsOnActivationUseCase implements UseCase, Loggable {
 
   @EventListener
   public void on(BrokerActivatedEvent event) {
-    connections.connect(event.broker());
+    if (activated.add(event.broker().id())) {
+      connections.connect(event.broker());
+    }
   }
 
   @EventListener
   public void on(BrokerDeactivatedEvent event) {
-    connections.disconnect(event.broker());
+    if (activated.remove(event.broker().id())) {
+      connections.disconnect(event.broker());
+    }
   }
 
   @Async
