@@ -7,7 +7,7 @@ import clarity.infrastructure.utils.Loggable;
 import clarity.management.BrokerRepository;
 import clarity.management.events.BrokerActivatedEvent;
 import clarity.management.events.BrokerDeactivatedEvent;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.context.event.EventListener;
@@ -21,7 +21,7 @@ public class ManageConnectionsOnActivationUseCase implements UseCase, Loggable {
   private final Connections connections;
   private final BrokerRepository brokerRepository;
 
-  public Set<UUID> activated = ConcurrentHashMap.newKeySet();
+  public Map<UUID, Integer> activated = new ConcurrentHashMap<>();
 
   public ManageConnectionsOnActivationUseCase(
       Connections connections, BrokerRepository brokerRepository) {
@@ -31,15 +31,27 @@ public class ManageConnectionsOnActivationUseCase implements UseCase, Loggable {
 
   @EventListener
   public void on(BrokerActivatedEvent event) {
-    if (activated.add(event.broker().id())) {
-      connections.connect(event.broker());
+    synchronized (activated) {
+      int count = activated.getOrDefault(event.broker().id(), 0);
+      if (count == 0) {
+        connections.connect(event.broker());
+      }
+      activated.put(event.broker().id(), ++count);
     }
   }
 
   @EventListener
   public void on(BrokerDeactivatedEvent event) {
-    if (activated.remove(event.broker().id())) {
-      connections.disconnect(event.broker());
+    synchronized (activated) {
+      int count = activated.getOrDefault(event.broker().id(), 0);
+      if (count == 0) {
+        return;
+      } else if (count - 1 == 0) {
+        connections.disconnect(event.broker());
+        activated.remove(event.broker().id());
+      } else {
+        activated.put(event.broker().id(), --count);
+      }
     }
   }
 

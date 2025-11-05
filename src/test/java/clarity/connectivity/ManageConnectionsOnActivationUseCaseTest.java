@@ -1,6 +1,7 @@
 package clarity.connectivity;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Mockito.verify;
 
 import clarity.management.domain.BrokerType;
@@ -38,7 +39,7 @@ class ManageConnectionsOnActivationUseCaseTest {
   }
 
   @Test
-  void activationsAreRetained() {
+  void activationsAreRetainedAndCounted() {
 
     var connections = Mockito.mock(Connections.class);
     var sut = new ManageConnectionsOnActivationUseCase(connections, null);
@@ -55,18 +56,23 @@ class ManageConnectionsOnActivationUseCaseTest {
 
     sut.on(e1);
     sut.on(e1);
-    sut.on(e2);
-    sut.on(e2);
-    sut.on(e2);
-    assertThat(sut.activated).containsExactlyInAnyOrder(id1, id2);
+
+    assertThat(sut.activated).hasSize(1).contains(entry(id1, 2));
     verify(connections).connect(e1.broker());
+
+    sut.on(e2);
+    sut.on(e2);
+    sut.on(e2);
+
+    assertThat(sut.activated).hasSize(2).contains(entry(id1, 2), entry(id2, 3));
     verify(connections).connect(e2.broker());
 
     sut.on(e3);
     sut.on(e3);
     sut.on(e3);
     sut.on(e3);
-    assertThat(sut.activated).containsExactlyInAnyOrder(id1, id2, id3);
+
+    assertThat(sut.activated).hasSize(3).contains(entry(id1, 2), entry(id2, 3), entry(id3, 4));
     verify(connections).connect(e3.broker());
   }
 
@@ -83,10 +89,14 @@ class ManageConnectionsOnActivationUseCaseTest {
     assertThat(sut.activated).isEmpty();
 
     sut.on(brokerActivatedFixture(id1));
+    sut.on(brokerActivatedFixture(id1));
     sut.on(brokerActivatedFixture(id2));
     sut.on(brokerActivatedFixture(id3));
+    sut.on(brokerActivatedFixture(id3));
+    sut.on(brokerActivatedFixture(id3));
+    sut.on(brokerActivatedFixture(id3));
 
-    assertThat(sut.activated).hasSize(3);
+    assertThat(sut.activated).hasSize(3).contains(entry(id1, 2), entry(id2, 1), entry(id3, 4));
 
     var e1 = brokerDeactivatedFixture(id1);
     var e2 = brokerDeactivatedFixture(id2);
@@ -97,14 +107,22 @@ class ManageConnectionsOnActivationUseCaseTest {
     sut.on(e2);
     sut.on(e2);
     sut.on(e2);
+
+    assertThat(sut.activated).hasSize(1).contains(entry(id3, 4));
+
     verify(connections).disconnect(e1.broker());
     verify(connections).disconnect(e2.broker());
 
     assertThat(sut.activated).hasSize(1);
 
     sut.on(e3);
-    assertThat(sut.activated).isEmpty();
+    assertThat(sut.activated).hasSize(1).contains(entry(id3, 3));
 
+    sut.on(e3);
+    sut.on(e3);
+    sut.on(e3);
+
+    assertThat(sut.activated).isEmpty();
     verify(connections).disconnect(e3.broker());
   }
 
