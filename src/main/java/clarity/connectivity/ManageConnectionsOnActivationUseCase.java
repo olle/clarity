@@ -7,6 +7,7 @@ import clarity.infrastructure.utils.Loggable;
 import clarity.management.BrokerRepository;
 import clarity.management.events.BrokerActivatedEvent;
 import clarity.management.events.BrokerDeactivatedEvent;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,6 +24,7 @@ public class ManageConnectionsOnActivationUseCase implements UseCase, Loggable {
 
   public Map<UUID, Integer> activated = new ConcurrentHashMap<>();
 
+  @SuppressFBWarnings("EI_EXPOSE_REP")
   public ManageConnectionsOnActivationUseCase(
       Connections connections, BrokerRepository brokerRepository) {
     this.connections = connections;

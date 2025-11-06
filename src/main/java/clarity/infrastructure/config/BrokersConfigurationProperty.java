@@ -2,6 +2,7 @@ package clarity.infrastructure.config;
 
 import clarity.management.domain.BrokerType;
 import clarity.management.domain.RabbitMqBroker;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -20,7 +21,7 @@ public class BrokersConfigurationProperty {
   }
 
   public void setBrokers(List<ConfiguredBroker> brokers) {
-    this.brokers = brokers;
+    this.brokers = Collections.unmodifiableList(brokers);
   }
 
   public static class ConfiguredBroker {

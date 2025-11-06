@@ -1,5 +1,6 @@
 package clarity.management.domain;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
@@ -79,8 +80,8 @@ public class RabbitMqBroker {
     return this;
   }
 
-  public BrokerAttributes attributes() {
-    return this.attributes;
+  public Map<String, Object> attributes() {
+    return Collections.unmodifiableMap(this.attributes);
   }
 
   public RabbitMqBroker withAttributes(UnaryOperator<BrokerAttributes> decorator) {
