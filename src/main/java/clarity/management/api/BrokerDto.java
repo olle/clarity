@@ -18,7 +18,7 @@ record BrokerDto(
     String password,
     Boolean active,
     Boolean connected,
-    Map<String, Object> properties) {
+    Map<String, Object> attributes) {
 
   public static BrokerDto from(RabbitMqBroker broker) {
     return new BrokerDto(
