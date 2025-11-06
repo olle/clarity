@@ -30,6 +30,7 @@ class JsonTextWebSocketHandler extends TextWebSocketHandler implements Loggable 
 
   private final ObjectMapper objectMapper;
 
+  private final Object mutex = new Object();
   private Map<String, Set<WebSocketSession>> sessions = new ConcurrentHashMap<>();
 
   public JsonTextWebSocketHandler(ObjectMapper objectMapper) {
@@ -38,7 +39,7 @@ class JsonTextWebSocketHandler extends TextWebSocketHandler implements Loggable 
 
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-    synchronized (sessions) {
+    synchronized (mutex) {
       sessions.computeIfAbsent(session.getId(), _ -> new HashSet<>()).add(session);
     }
   }
@@ -49,7 +50,7 @@ class JsonTextWebSocketHandler extends TextWebSocketHandler implements Loggable 
   }
 
   private void removeSession(WebSocketSession session) {
-    synchronized (sessions) {
+    synchronized (mutex) {
       String id = session.getId();
 
       Set<WebSocketSession> curr =
@@ -86,7 +87,7 @@ class JsonTextWebSocketHandler extends TextWebSocketHandler implements Loggable 
   }
 
   private void sendToAllSessions(WebSocketMessage<?> message) {
-    synchronized (sessions) {
+    synchronized (mutex) {
       sessions.values().stream()
           .flatMap(set -> set.stream())
           .forEach(session -> sendToSession(message, session));
