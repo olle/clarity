@@ -2,6 +2,7 @@ package clarity.discovery;
 
 import clarity.infrastructure.UseCase;
 import clarity.infrastructure.utils.Loggable;
+import clarity.infrastructure.utils.Utils;
 import clarity.management.domain.RabbitMqBroker;
 import clarity.management.events.BrokerAddedEvent;
 import clarity.management.events.RabbitMqBrokerResolvedEvent;
@@ -74,7 +75,7 @@ class ResolveBrokersFromApiUseCase implements Loggable, UseCase {
 
   private String encodeBasic(String username, String password) {
     return "Basic %s"
-        .formatted(Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
+        .formatted(Base64.getEncoder().encodeToString(Utils.toBytes(username + ":" + password)));
   }
 
   record OverviewDto(

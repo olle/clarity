@@ -4,6 +4,7 @@ import clarity.discovery.domain.RabbitMqExchange;
 import clarity.discovery.events.ExchangeResolvedEvent;
 import clarity.infrastructure.UseCase;
 import clarity.infrastructure.utils.Loggable;
+import clarity.infrastructure.utils.Utils;
 import clarity.management.domain.RabbitMqBroker;
 import clarity.management.events.BrokerAddedEvent;
 import java.util.Base64;
@@ -67,7 +68,7 @@ class ResolveExchangesFromApiUseCase implements UseCase, Loggable {
 
   private String encodeBasic(String username, String password) {
     return "Basic %s"
-        .formatted(Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
+        .formatted(Base64.getEncoder().encodeToString(Utils.toBytes(username + ":" + password)));
   }
 
   record ExchangeDto(

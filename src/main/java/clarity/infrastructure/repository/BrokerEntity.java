@@ -1,6 +1,7 @@
 package clarity.infrastructure.repository;
 
 import clarity.infrastructure.config.BrokersConfigurationProperty.ConfiguredBroker;
+import clarity.infrastructure.utils.Utils;
 import clarity.management.domain.BrokerType;
 import clarity.management.domain.RabbitMqBroker;
 import java.util.Collections;
@@ -81,7 +82,7 @@ record BrokerEntity(
   }
 
   private static UUID createUuidFrom(String name) {
-    return UUID.nameUUIDFromBytes(name.getBytes());
+    return UUID.nameUUIDFromBytes(Utils.toBytes(name));
   }
 
   public RabbitMqBroker toModel() {

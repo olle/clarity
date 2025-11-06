@@ -1,6 +1,7 @@
 package clarity.connectivity;
 
 import clarity.infrastructure.utils.Loggable;
+import clarity.infrastructure.utils.Utils;
 import clarity.management.domain.RabbitMqBroker;
 import java.util.HashSet;
 import java.util.Map;
@@ -84,6 +85,6 @@ class Connections implements Loggable {
   }
 
   private void sendHelloWorld(RabbitTemplate template) {
-    template.send(MessageBuilder.withBody("Hello world!".getBytes()).build());
+    template.send(MessageBuilder.withBody(Utils.toBytes("Hello world!")).build());
   }
 }

@@ -1,6 +1,7 @@
 package clarity.infrastructure.repository;
 
 import clarity.discovery.domain.RabbitMqExchange;
+import clarity.infrastructure.utils.Utils;
 import java.util.UUID;
 
 public record ExchangeEntity(UUID id, String name, String type, UUID brokerId) {
@@ -19,7 +20,7 @@ public record ExchangeEntity(UUID id, String name, String type, UUID brokerId) {
 
   private static UUID createUniqueUUIDFrom(UUID brokerId, String name, String type) {
     return UUID.nameUUIDFromBytes(
-        "%s[%s]@%s".formatted(name, type, brokerId.toString()).getBytes());
+        Utils.toBytes("%s[%s]@%s".formatted(name, type, brokerId.toString())));
   }
 
   public ExchangeEntity withId(UUID id) {
