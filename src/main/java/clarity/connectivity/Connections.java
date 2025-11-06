@@ -34,14 +34,14 @@ class Connections implements Loggable {
     RabbitMqConnectionFactory connectionFactory = rabbitMqConnectionFactory(broker);
 
     logger().info("Created {} from {}", connectionFactory, broker);
-    factories.putIfAbsent(broker.id(), connectionFactory);
+    var retainedConnectionFactory = factories.putIfAbsent(broker.id(), connectionFactory);
 
     context.registerBean(
         createConnectionFactoryName(broker),
         RabbitMqConnectionFactory.class,
-        () -> connectionFactory);
+        () -> retainedConnectionFactory);
 
-    RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+    RabbitTemplate rabbitTemplate = new RabbitTemplate(retainedConnectionFactory);
     String rabbitTemplateName = createRabbitTemplateName(broker);
     templateNames.add(rabbitTemplateName);
     context.registerBean(rabbitTemplateName, RabbitTemplate.class, () -> rabbitTemplate);
