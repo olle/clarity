@@ -31,28 +31,30 @@ public class ManageConnectionsOnActivationUseCase implements UseCase, Loggable {
 
   @EventListener
   public void on(BrokerActivatedEvent event) {
-    synchronized (activated) {
-      int count = activated.getOrDefault(event.broker().id(), 0);
-      if (count == 0) {
-        connections.connect(event.broker());
-      }
-      activated.put(event.broker().id(), ++count);
-    }
+    activated.compute(
+        event.broker().id(),
+        (_, val) -> {
+          if (val == null) {
+            connections.connect(event.broker());
+            return 1;
+          }
+          return ++val;
+        });
   }
 
   @EventListener
   public void on(BrokerDeactivatedEvent event) {
-    synchronized (activated) {
-      int count = activated.getOrDefault(event.broker().id(), 0);
-      if (count == 0) {
-        return;
-      } else if (count - 1 == 0) {
-        connections.disconnect(event.broker());
-        activated.remove(event.broker().id());
-      } else {
-        activated.put(event.broker().id(), --count);
-      }
-    }
+    activated.compute(
+        event.broker().id(),
+        (_, val) -> {
+          if (val == null) {
+            return null;
+          } else if (val - 1 == 0) {
+            connections.disconnect(event.broker());
+            return null;
+          }
+          return --val;
+        });
   }
 
   @Async
