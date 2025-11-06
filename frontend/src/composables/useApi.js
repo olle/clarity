@@ -1,4 +1,8 @@
+import { useCSRF } from "./useCSRF";
+
 export function useApi() {
+  const { csrfHeader } = useCSRF();
+
   async function fetchJSON(url) {
     try {
       const response = await fetch(url);
@@ -16,7 +20,7 @@ export function useApi() {
     try {
       const response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...csrfHeader.value },
         body: JSON.stringify(value),
       });
       return response.ok;
@@ -29,7 +33,7 @@ export function useApi() {
     try {
       const response = await fetch(url, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...csrfHeader.value },
         body: JSON.stringify(value),
       });
       return response.ok;
@@ -42,6 +46,7 @@ export function useApi() {
     try {
       const response = await fetch(url, {
         method: "DELETE",
+        headers: { ...csrfHeader.value },
       });
       return response.ok;
     } catch (error) {
