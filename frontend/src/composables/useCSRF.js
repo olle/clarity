@@ -1,4 +1,4 @@
-import { onMounted, ref, computed, watch } from "vue";
+import { onMounted, ref, computed } from "vue";
 
 /**
  * NOTE: This expects the CSRF token to be provided as a cookie called
@@ -17,14 +17,6 @@ export function useCSRF() {
 
   const csrfHeader = computed(() => {
     return csrfToken.value ? { "X-XSRF-TOKEN": csrfToken.value } : {};
-  });
-
-  watch(csrfToken, (newToken) => {
-    if (newToken) {
-      console.log("CSRF token set:", newToken);
-    } else {
-      console.log("CSRF token not found.");
-    }
   });
 
   return {
