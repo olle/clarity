@@ -80,28 +80,26 @@ public class InMemoryBrokerRepository implements Loggable, BrokerRepository {
   }
 
   @Override
-  public void deleteById(UUID id) {
+  public synchronized void deleteById(UUID id) {
 
-    synchronized (entities) {
-      var removed = entities.remove(id);
-      boolean markedRemoved = deleted.add(id);
+    var removed = entities.remove(id);
+    boolean markedRemoved = deleted.add(id);
 
-      if (removed == null) {
+    if (removed == null) {
 
-        if (markedRemoved) {
-          applicationEventPublisher.publishEvent(BrokerMarkedRemovedEvent.from(id));
-        }
-
-        return;
+      if (markedRemoved) {
+        applicationEventPublisher.publishEvent(BrokerMarkedRemovedEvent.from(id));
       }
 
-      if (!BrokerType.MANAGED.name().equals(removed.type())) {
-        entities.put(id, removed);
-        deleted.remove(id);
-        throw new IllegalArgumentException("Cannot delete a configured broker");
-      }
-
-      applicationEventPublisher.publishEvent(BrokerRemovedEvent.from(removed.toModel()));
+      return;
     }
+
+    if (!BrokerType.MANAGED.name().equals(removed.type())) {
+      entities.put(id, removed);
+      deleted.remove(id);
+      throw new IllegalArgumentException("Cannot delete a configured broker");
+    }
+
+    applicationEventPublisher.publishEvent(BrokerRemovedEvent.from(removed.toModel()));
   }
 }
