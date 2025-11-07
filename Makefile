@@ -36,9 +36,17 @@ run: src/main/resources/static/index.html
 
 src/main/resources/static/index.html: frontend
 
+.PHONY: demo d
+demo d: src/main/resources/static/index.html
+	${MAKE} -j2 run-demo-backend run-frontend
+
 .PHONY: run-backend run-be r-b
 run-backend run-be r-be:
 	SPRING_PROFILES_ACTIVE=dev ${MVN} spring-boot:run
+
+.PHONY: run-demo-backend
+run-demo-backend:
+	SPRING_PROFILES_ACTIVE=demo,dev ${MVN} spring-boot:run
 
 .PHONY: run-frontend run-fe r-f
 run-frontend run-fe r-fe: ${NPM}
