@@ -21,7 +21,7 @@
           label="Reset to factory defaults"
           severity="danger"
           variant="outlined"
-          @click.confirm="() => {}"
+          @click.confirm="store.reset()"
         >
           <template #icon>
             <IconReload />
@@ -44,12 +44,11 @@ import {
   IconVolumeOff,
   IconVolume,
   IconReload,
-  IconForbid,
 } from "@tabler/icons-vue";
 
 const { toc } = useSounds();
 const store = useSettingsStore();
-const settingsVisible = ref(true);
+const settingsVisible = ref(false);
 const showSettingsDialog = () => {
   settingsVisible.value = true;
 };
