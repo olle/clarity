@@ -23,14 +23,14 @@ export function useSounds() {
     interrupt: true,
   });
 
-  const maybePlay = (soundFunc) => {
-    if (store.settings.sound) {
+  const maybePlay = (soundFunc, forcePlay = false) => {
+    if (store.settings.sound || forcePlay) {
       soundFunc();
     }
   };
 
   const bells = () => maybePlay(playBells);
-  const toc = () => maybePlay(playToc);
+  const toc = (force) => maybePlay(playToc, force || false);
 
   return { bells, toc };
 }

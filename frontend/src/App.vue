@@ -14,22 +14,7 @@
             <IconHelpHexagon />
           </RouterLink>
         </li>
-        <li>
-          <IconSettings @click="showSettingsDialog()" />
-          <Dialog
-            v-model:visible="settingsVisible"
-            modal
-            header="Settings"
-            position="bottomleft"
-          >
-            <p class="setting">
-              <ToggleSwitch v-model="store.settings.sound" />
-              <IconVolume v-if="store.settings.sound" />
-              <IconVolumeOff v-else />
-              Sound and audio on/off.
-            </p>
-          </Dialog>
-        </li>
+        <NavItemSettings />
         <NavItemOnlineStatus />
       </ul>
     </nav>
@@ -39,27 +24,11 @@
 
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import {
-  IconHome,
-  IconHelpHexagon,
-  IconSettings,
-  IconVolumeOff,
-  IconVolume,
-} from "@tabler/icons-vue";
+import { IconHome, IconHelpHexagon } from "@tabler/icons-vue";
 import NavItemBrokers from "./components/NavItemBrokers.vue";
 import NavItemOnlineStatus from "./components/NavItemOnlineStatus.vue";
 import NavItemExchanges from "./components/NavItemExchanges.vue";
-import Dialog from "primevue/dialog";
-import ToggleSwitch from "primevue/toggleswitch";
-import { ref } from "vue";
-import { useSettingsStore } from "./stores/useSettingsStore";
-
-const store = useSettingsStore();
-
-const settingsVisible = ref(false);
-const showSettingsDialog = () => {
-  settingsVisible.value = true;
-};
+import NavItemSettings from "./components/NavItemSettings.vue";
 </script>
 
 <style>
@@ -111,13 +80,5 @@ nav {
 .disabled {
   opacity: 0.3;
   pointer-events: none;
-}
-
-.setting {
-  display: flex;
-  gap: 0.5rem;
-}
-.setting > :first-child {
-  margin-right: 1rem;
 }
 </style>
