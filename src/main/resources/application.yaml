@@ -1,3 +1,4 @@
+---
 spring.application.name: Clarity
 
 management:
@@ -13,3 +14,12 @@ logging:
 clarity:
   brokers:
     - host: localhost
+
+---
+spring:
+  config:
+    activate:
+      on-profile: demo
+  rabbitmq:
+    username: guest
+    password: guest
