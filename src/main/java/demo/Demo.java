@@ -1,6 +1,7 @@
 package demo;
 
 import clarity.infrastructure.utils.Utils;
+import java.time.Instant;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Declarable;
 import org.springframework.amqp.core.MessageBuilder;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Profile("demo")
 @EnableRabbit
@@ -22,26 +24,37 @@ import org.springframework.context.event.EventListener;
 @ComponentScan
 public class Demo {
 
+  private static final String DEMO_EXCHANGE = "demo";
+
   @Autowired RabbitTemplate rabbitTemplate;
 
   @EventListener
   public void on(ApplicationReadyEvent event) {
+    sendDemoMessage("demo.hello.world", "Hello World!");
+  }
+
+  @Scheduled(fixedRateString = "PT11S")
+  public void scheduled() {
+    sendDemoMessage("demo.hello.scheduled", "It's %s and all is well".formatted(Instant.now()));
+  }
+
+  private void sendDemoMessage(String routingKey, String message) {
     rabbitTemplate.send(
-        "demo", "demo.123", MessageBuilder.withBody(Utils.toBytes("Hello World!")).build());
+        DEMO_EXCHANGE, routingKey, MessageBuilder.withBody(Utils.toBytes(message)).build());
   }
 
   @Bean
   TopicExchange demoTopicExchange() {
-    return new TopicExchange("demo");
+    return new TopicExchange(DEMO_EXCHANGE);
   }
 
   @Bean
   Queue demoQueue() {
-    return new Queue("demo");
+    return new Queue(DEMO_EXCHANGE);
   }
 
   @Bean
   Declarable demoQueueBinding() {
-    return BindingBuilder.bind(demoQueue()).to(demoTopicExchange()).with("demo");
+    return BindingBuilder.bind(demoQueue()).to(demoTopicExchange()).with(DEMO_EXCHANGE);
   }
 }
