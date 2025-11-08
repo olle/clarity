@@ -6,7 +6,12 @@ import clarity.management.domain.RabbitMqBroker;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.amqp.core.Address;
+import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.support.GenericApplicationContext;
@@ -37,6 +42,10 @@ class Connections implements Loggable {
     registerRabbitTemplate(rabbitTemplateName, rabbitTemplate);
 
     sendOnePingOnly(rabbitTemplate);
+
+    declareTopicExchange(connectionFactory, broker);
+
+    sendOnePingOnly(rabbitTemplate, new Address("__clarity/clarity.ping"));
   }
 
   private RabbitMqConnectionFactory createConnectionFactory(RabbitMqBroker broker) {
@@ -78,6 +87,21 @@ class Connections implements Loggable {
     context.registerBean(rabbitTemplateName, RabbitTemplate.class, () -> rabbitTemplate);
   }
 
+  private void declareTopicExchange(
+      RabbitMqConnectionFactory connectionFactory, RabbitMqBroker broker) {
+
+    RabbitAdmin admin = new RabbitAdmin(connectionFactory);
+
+    TopicExchange exchange = new TopicExchange("__clarity", false, true);
+    admin.declareExchange(exchange);
+
+    Queue queue =
+        new Queue("__clarity", true, false, true, Map.of("x-type", "quorum", "x-expires", 44000));
+    admin.declareQueue(queue);
+
+    admin.declareBinding(BindingBuilder.bind(queue).to(exchange).with("clarity.*"));
+  }
+
   public void disconnect(RabbitMqBroker broker) {
 
     RabbitMqConnectionFactory removed = factories.remove(broker.id());
@@ -103,5 +127,12 @@ class Connections implements Loggable {
 
   private void sendOnePingOnly(RabbitTemplate template) {
     template.send(MessageBuilder.withBody(Utils.toBytes("PING")).build());
+  }
+
+  private void sendOnePingOnly(RabbitTemplate rabbitTemplate, Address address) {
+    rabbitTemplate.send(
+        address.getExchangeName(),
+        address.getRoutingKey(),
+        MessageBuilder.withBody(Utils.toBytes("PING")).build());
   }
 }
