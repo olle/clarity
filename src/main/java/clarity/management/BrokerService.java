@@ -77,7 +77,7 @@ class BrokerService implements ManageBrokers, Loggable {
     repo.findById(event.broker().id())
         .ifPresent(
             broker -> {
-              broker.connected();
+              broker.connected(event.broker());
               repo.save(broker);
             });
   }
@@ -89,7 +89,7 @@ class BrokerService implements ManageBrokers, Loggable {
     repo.findById(event.broker().id())
         .ifPresent(
             broker -> {
-              broker.disconnected();
+              broker.disconnected(event.broker());
               repo.save(broker);
             });
   }

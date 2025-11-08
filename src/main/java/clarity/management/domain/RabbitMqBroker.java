@@ -1,11 +1,12 @@
 package clarity.management.domain;
 
+import clarity.infrastructure.utils.Loggable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 
-public class RabbitMqBroker {
+public class RabbitMqBroker implements Loggable {
 
   private final UUID id;
   private final BrokerType type;
@@ -102,11 +103,13 @@ public class RabbitMqBroker {
     withProperties(props -> props.withActive(false));
   }
 
-  public void connected() {
+  public void connected(RabbitMqBroker self) {
+    withAttributes(self.attributes());
     withProperties(props -> props.withConnected(true));
   }
 
-  public void disconnected() {
+  public void disconnected(RabbitMqBroker self) {
+    withAttributes(self.attributes());
     withProperties(props -> props.withConnected(false));
   }
 }
