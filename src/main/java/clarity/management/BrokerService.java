@@ -74,10 +74,11 @@ class BrokerService implements ManageBrokers, Loggable {
   @EventListener
   @Transactional
   public void on(BrokerConnectedEvent event) {
-    repo.findById(event.broker().id())
+    var connected = event.broker();
+    repo.findById(connected.id())
         .ifPresent(
             broker -> {
-              broker.connected(event.broker());
+              broker.connected(connected);
               repo.save(broker);
             });
   }
@@ -86,10 +87,11 @@ class BrokerService implements ManageBrokers, Loggable {
   @EventListener
   @Transactional
   public void on(BrokerDisconnectedEvent event) {
-    repo.findById(event.broker().id())
+    var disconnected = event.broker();
+    repo.findById(disconnected.id())
         .ifPresent(
             broker -> {
-              broker.disconnected(event.broker());
+              broker.disconnected(disconnected);
               repo.save(broker);
             });
   }
