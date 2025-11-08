@@ -127,9 +127,7 @@ class ManageConnectionsOnActivationUseCaseTest {
   }
 
   private BrokerDeactivatedEvent brokerDeactivatedFixture(UUID id1) {
-    var broker = new RabbitMqBroker(id1, BrokerType.CONFIGURED);
-    var event = new BrokerDeactivatedEvent(broker, null, null);
-    return event;
+    return new BrokerDeactivatedEvent(new RabbitMqBroker(id1, BrokerType.CONFIGURED), null, null);
   }
 
   private BrokerActivatedEvent brokerActivatedFixture(UUID id1) {

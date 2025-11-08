@@ -1,5 +1,7 @@
 package clarity.management;
 
+import clarity.connectivity.events.BrokerConnectedEvent;
+import clarity.connectivity.events.BrokerDisconnectedEvent;
 import clarity.infrastructure.utils.Loggable;
 import clarity.management.api.ManageBrokers;
 import clarity.management.domain.RabbitMqBroker;
@@ -66,5 +68,29 @@ class BrokerService implements ManageBrokers, Loggable {
     broker.deactivate();
     repo.save(broker);
     publisher.publishEvent(BrokerDeactivatedEvent.from(broker));
+  }
+
+  @Async
+  @EventListener
+  @Transactional
+  public void on(BrokerConnectedEvent event) {
+    repo.findById(event.broker().id())
+        .ifPresent(
+            broker -> {
+              broker.connected();
+              repo.save(broker);
+            });
+  }
+
+  @Async
+  @EventListener
+  @Transactional
+  public void on(BrokerDisconnectedEvent event) {
+    repo.findById(event.broker().id())
+        .ifPresent(
+            broker -> {
+              broker.disconnected();
+              repo.save(broker);
+            });
   }
 }
