@@ -3,9 +3,7 @@ package clarity.connectivity;
 import clarity.infrastructure.utils.Loggable;
 import clarity.infrastructure.utils.Utils;
 import clarity.management.domain.RabbitMqBroker;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.amqp.core.MessageBuilder;
@@ -22,7 +20,7 @@ class Connections implements Loggable {
   private final ApplicationEventPublisher publisher;
 
   private final Map<UUID, RabbitMqConnectionFactory> factories = new ConcurrentHashMap<>();
-  private final Set<String> templateNames = new HashSet<>();
+  private final Map<String, RabbitTemplate> templates = new ConcurrentHashMap<>();
 
   public Connections(GenericApplicationContext context, ApplicationEventPublisher publisher) {
     this.context = context;
@@ -34,8 +32,9 @@ class Connections implements Loggable {
     var connectionFactory = createConnectionFactory(broker);
     registerConnectionFactory(broker, connectionFactory);
 
-    var rabbitTemplate = createRabbitTemplate(connectionFactory);
-    registerRabbitTemplate(broker, rabbitTemplate);
+    String rabbitTemplateName = createRabbitTemplateName(broker);
+    var rabbitTemplate = createRabbitTemplate(rabbitTemplateName, connectionFactory);
+    registerRabbitTemplate(rabbitTemplateName, rabbitTemplate);
 
     sendOnePingOnly(rabbitTemplate);
   }
@@ -63,18 +62,20 @@ class Connections implements Loggable {
     return "connectionFactory<%s>".formatted(broker.name());
   }
 
-  private RabbitTemplate createRabbitTemplate(RabbitMqConnectionFactory connectionFactory) {
-    return new RabbitTemplate(connectionFactory);
-  }
-
-  private void registerRabbitTemplate(RabbitMqBroker broker, RabbitTemplate rabbitTemplate) {
-    String rabbitTemplateName = createRabbitTemplateName(broker);
-    templateNames.add(rabbitTemplateName);
-    context.registerBean(rabbitTemplateName, RabbitTemplate.class, () -> rabbitTemplate);
-  }
-
   private String createRabbitTemplateName(RabbitMqBroker broker) {
     return "rabbitTemplate<%s>".formatted(broker.name());
+  }
+
+  private RabbitTemplate createRabbitTemplate(
+      String rabbitTemplateName, RabbitMqConnectionFactory connectionFactory) {
+    RabbitTemplate rabbitTemplate =
+        templates.computeIfAbsent(rabbitTemplateName, _ -> new RabbitTemplate(connectionFactory));
+    logger().info("Created {} from {}", rabbitTemplate, connectionFactory);
+    return rabbitTemplate;
+  }
+
+  private void registerRabbitTemplate(String rabbitTemplateName, RabbitTemplate rabbitTemplate) {
+    context.registerBean(rabbitTemplateName, RabbitTemplate.class, () -> rabbitTemplate);
   }
 
   public void disconnect(RabbitMqBroker broker) {
@@ -83,9 +84,10 @@ class Connections implements Loggable {
     logger().info("Disconnected {} for {}", removed, broker);
 
     if (removed != null) {
-      context.removeBeanDefinition(createConnectionFactoryName(broker));
+      String connectionFactoryName = createConnectionFactoryName(broker);
       String rabbitTemplateName = createRabbitTemplateName(broker);
-      templateNames.remove(rabbitTemplateName);
+      context.removeBeanDefinition(connectionFactoryName);
+      templates.remove(rabbitTemplateName);
       context.removeBeanDefinition(rabbitTemplateName);
       removed.destroy();
     }
@@ -93,8 +95,8 @@ class Connections implements Loggable {
 
   @Scheduled(fixedDelayString = "PT20S")
   public void scheduled() {
-    logger().info("HOLDING {}", factories);
-    for (String rabbitTemplateName : templateNames) {
+    logger().info("HOLDING {} AND {}", factories, templates);
+    for (String rabbitTemplateName : templates.keySet()) {
       sendOnePingOnly(context.getBean(rabbitTemplateName, RabbitTemplate.class));
     }
   }
