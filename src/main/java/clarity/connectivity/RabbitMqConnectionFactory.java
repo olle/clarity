@@ -5,12 +5,14 @@ import clarity.connectivity.events.BrokerDisconnectedEvent;
 import clarity.infrastructure.utils.Loggable;
 import clarity.management.domain.RabbitMqBroker;
 import com.rabbitmq.client.ShutdownSignalException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionListener;
 import org.springframework.amqp.rabbit.connection.ConnectionNameStrategy;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
 public class RabbitMqConnectionFactory extends CachingConnectionFactory implements Loggable {
@@ -46,7 +48,10 @@ public class RabbitMqConnectionFactory extends CachingConnectionFactory implemen
       public void onCreate(Connection connection) {
         if (connection.isOpen()) {
           logger().info("Connection opened {}", connection);
-          notifyConnected();
+          notifyConnected(
+              Optional.ofNullable(connection.getDelegate())
+                  .map(com.rabbitmq.client.Connection::getClientProvidedName)
+                  .orElse(null));
         }
       }
 
@@ -68,12 +73,16 @@ public class RabbitMqConnectionFactory extends CachingConnectionFactory implemen
         notifyDisconnected();
       }
 
-      private void notifyConnected() {
-        publisher.publishEvent(BrokerConnectedEvent.from(broker));
+      private void notifyConnected(@Nullable String id) {
+        publisher.publishEvent(
+            BrokerConnectedEvent.from(
+                broker.withAttributes(attr -> attr.withNullable("connection", id))));
       }
 
       private void notifyDisconnected() {
-        publisher.publishEvent(BrokerDisconnectedEvent.from(broker));
+        publisher.publishEvent(
+            BrokerDisconnectedEvent.from(
+                broker.withAttributes(attr -> attr.without("connection"))));
       }
     };
   }
