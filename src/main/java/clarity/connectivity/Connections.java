@@ -31,21 +31,50 @@ class Connections implements Loggable {
 
   public void connect(RabbitMqBroker broker) {
 
+    var connectionFactory = createConnectionFactory(broker);
+    registerConnectionFactory(broker, connectionFactory);
+
+    var rabbitTemplate = createRabbitTemplate(connectionFactory);
+    registerRabbitTemplate(broker, rabbitTemplate);
+
+    sendOnePingOnly(rabbitTemplate);
+  }
+
+  private RabbitMqConnectionFactory createConnectionFactory(RabbitMqBroker broker) {
     RabbitMqConnectionFactory connectionFactory =
         factories.computeIfAbsent(broker.id(), _ -> rabbitMqConnectionFactory(broker));
     logger().info("Created {} from {}", connectionFactory, broker);
+    return connectionFactory;
+  }
 
+  public RabbitMqConnectionFactory rabbitMqConnectionFactory(RabbitMqBroker broker) {
+    return new RabbitMqConnectionFactory(broker, publisher);
+  }
+
+  private void registerConnectionFactory(
+      RabbitMqBroker broker, RabbitMqConnectionFactory connectionFactory) {
     context.registerBean(
         createConnectionFactoryName(broker),
         RabbitMqConnectionFactory.class,
         () -> connectionFactory);
+  }
 
-    RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+  private String createConnectionFactoryName(RabbitMqBroker broker) {
+    return "connectionFactory<%s>".formatted(broker.name());
+  }
+
+  private RabbitTemplate createRabbitTemplate(RabbitMqConnectionFactory connectionFactory) {
+    return new RabbitTemplate(connectionFactory);
+  }
+
+  private void registerRabbitTemplate(RabbitMqBroker broker, RabbitTemplate rabbitTemplate) {
     String rabbitTemplateName = createRabbitTemplateName(broker);
     templateNames.add(rabbitTemplateName);
     context.registerBean(rabbitTemplateName, RabbitTemplate.class, () -> rabbitTemplate);
+  }
 
-    sendHelloWorld(rabbitTemplate);
+  private String createRabbitTemplateName(RabbitMqBroker broker) {
+    return "rabbitTemplate<%s>".formatted(broker.name());
   }
 
   public void disconnect(RabbitMqBroker broker) {
@@ -62,28 +91,15 @@ class Connections implements Loggable {
     }
   }
 
-  private String createRabbitTemplateName(RabbitMqBroker broker) {
-    return "rabbitTemplate<%s>".formatted(broker.name());
-  }
-
-  private String createConnectionFactoryName(RabbitMqBroker broker) {
-    return "connectionFactory<%s>".formatted(broker.name());
-  }
-
-  public RabbitMqConnectionFactory rabbitMqConnectionFactory(RabbitMqBroker broker) {
-    return new RabbitMqConnectionFactory(broker, publisher);
-  }
-
   @Scheduled(fixedDelayString = "PT20S")
   public void scheduled() {
-
     logger().info("HOLDING {}", factories);
     for (String rabbitTemplateName : templateNames) {
-      sendHelloWorld(context.getBean(rabbitTemplateName, RabbitTemplate.class));
+      sendOnePingOnly(context.getBean(rabbitTemplateName, RabbitTemplate.class));
     }
   }
 
-  private void sendHelloWorld(RabbitTemplate template) {
-    template.send(MessageBuilder.withBody(Utils.toBytes("Hello world!")).build());
+  private void sendOnePingOnly(RabbitTemplate template) {
+    template.send(MessageBuilder.withBody(Utils.toBytes("PING")).build());
   }
 }
