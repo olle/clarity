@@ -17,7 +17,7 @@ public class RabbitMqBroker implements Loggable {
   private String password;
 
   private BrokerProperties properties = BrokerProperties.empty();
-  private BrokerAttributes attributes = new BrokerAttributes();
+  private BrokerAttributes attributes = BrokerAttributes.empty();
 
   public RabbitMqBroker(UUID id, BrokerType type) {
     this.id = id;
@@ -91,7 +91,7 @@ public class RabbitMqBroker implements Loggable {
   }
 
   public RabbitMqBroker withAttributes(Map<String, Object> attributes) {
-    this.attributes.putAll(attributes);
+    this.attributes = this.attributes.withAll(attributes);
     return this;
   }
 
@@ -104,12 +104,12 @@ public class RabbitMqBroker implements Loggable {
   }
 
   public void connected(RabbitMqBroker self) {
-    withAttributes(self.attributes());
     withProperties(props -> props.withConnected(true));
+    withAttributes(attr -> attr.replace(self.attributes()));
   }
 
   public void disconnected(RabbitMqBroker self) {
-    withAttributes(self.attributes());
     withProperties(props -> props.withConnected(false));
+    withAttributes(attr -> attr.replace(self.attributes()));
   }
 }
