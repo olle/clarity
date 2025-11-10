@@ -42,8 +42,10 @@ const thumpColor = $dt("blue.500").value + "B2";
 .CLOSED {
   color: var(--p-zinc-400);
 }
-.CONNECTING {
-  color: var(--p-amber-300);
+.CONNECTING,
+.RECONNECTING {
+  color: var(--p-amber-500);
+  animation: blink 1s infinite;
 }
 .offline {
   color: var(--p-rose-400);
@@ -51,6 +53,20 @@ const thumpColor = $dt("blue.500").value + "B2";
 .thump {
   border-radius: 50%;
   animation: pulse 2s;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes pulse {
