@@ -1,5 +1,5 @@
 <template>
-  <li ref="$root">
+  <li ref="$root" v-tooltip="'RabbitMQ Brokers'" tooltip-position="right">
     <RouterLink to="/brokers">
       <OverlayBadge
         v-if="store.activeCount > 0"

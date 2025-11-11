@@ -2,14 +2,14 @@
   <div class="wrapper">
     <nav>
       <ul class="nav">
-        <li>
+        <li v-tooltip="'Home - Clarity!'" tooltip-position="right">
           <RouterLink to="/">
             <IconHome />
           </RouterLink>
         </li>
         <NavItemBrokers />
         <NavItemExchanges />
-        <li class="mt-auto">
+        <li class="mt-auto" v-tooltip="'Help & Documentation'" tooltip-position="right">
           <RouterLink to="/help">
             <IconHelpHexagon />
           </RouterLink>

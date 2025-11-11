@@ -1,5 +1,5 @@
 <template>
-  <li ref="$root">
+  <li ref="$root" v-tooltip="'Exchanges'" tooltip-position="right">
     <RouterLink to="/exchanges">
       <IconReplace />
     </RouterLink>

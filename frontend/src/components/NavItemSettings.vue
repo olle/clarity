@@ -1,5 +1,5 @@
 <template>
-  <li>
+  <li v-tooltip="'Settings'" tooltip-position="right">
     <IconSettings @click="showSettingsDialog()" />
     <Dialog
       v-model:visible="settingsVisible"
