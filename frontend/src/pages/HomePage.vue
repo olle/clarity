@@ -4,7 +4,7 @@
       Welcome to <em class="highlight">Clarity!</em>
     </h1>
     <aside v-if="!store.settings.intro">
-      <h1 class="highlight">Clarity!</h1>
+      <h1 class="highlight" v-tooltip="'Clarity!'">C</h1>
     </aside>
   </article>
 </template>
@@ -33,13 +33,23 @@ h1 {
   color: var(--color-green);
 }
 
-aside {
+aside > h1 {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
   margin: 0;
   padding: 0;
-  font-size: 4pt;
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  font-size: 10pt;
+  font-weight: 900;
   font-style: italic;
   position: fixed;
-  top: 5px;
-  right: 20px;
+  color: white !important;
+  background: var(--color-green);
 }
 </style>
