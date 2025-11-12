@@ -8,11 +8,15 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.amqp.core.Address;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessageListener;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.config.DirectRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.DirectMessageListenerContainer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -45,7 +49,34 @@ class Connections implements Loggable {
 
     declareTopicExchange(connectionFactory, broker);
 
+    DirectMessageListenerContainer container = createListenerContainer(connectionFactory);
+    registerListenerContainer(broker, container);
+
     sendOnePingOnly(rabbitTemplate, new Address("__clarity/clarity.ping"));
+  }
+
+  private DirectMessageListenerContainer createListenerContainer(
+      RabbitMqConnectionFactory connectionFactory) {
+
+    MessageListener messageListener =
+        new MessageListener() {
+          @Override
+          public void onMessage(Message message) {
+            logger().info("GOT MESSAGE {}", message);
+          }
+        };
+
+    context.registerBean("myMessageListener", MessageListener.class, () -> messageListener);
+
+    DirectRabbitListenerContainerFactory contFactory = new DirectRabbitListenerContainerFactory();
+    contFactory.setConnectionFactory(connectionFactory);
+
+    DirectMessageListenerContainer container = contFactory.createListenerContainer();
+    container.setQueueNames("__clarity");
+    container.setMessageListener(messageListener);
+    container.start();
+
+    return container;
   }
 
   private RabbitMqConnectionFactory createConnectionFactory(RabbitMqBroker broker) {
@@ -65,6 +96,17 @@ class Connections implements Loggable {
         createConnectionFactoryName(broker),
         RabbitMqConnectionFactory.class,
         () -> connectionFactory);
+  }
+
+  private void registerListenerContainer(
+      RabbitMqBroker broker, DirectMessageListenerContainer container) {
+
+    context.registerBean(
+        createListenerContainerName(broker), DirectMessageListenerContainer.class, () -> container);
+  }
+
+  private String createListenerContainerName(RabbitMqBroker broker) {
+    return "listenerContainer<%s>".formatted(broker.name());
   }
 
   private String createConnectionFactoryName(RabbitMqBroker broker) {
@@ -96,7 +138,7 @@ class Connections implements Loggable {
     admin.declareExchange(exchange);
 
     Queue queue =
-        new Queue("__clarity", true, false, true, Map.of("x-type", "quorum", "x-expires", 44000));
+        new Queue("__clarity", true, false, true, Map.of("x-type", "quorum", "x-expires", 444000));
     admin.declareQueue(queue);
 
     admin.declareBinding(BindingBuilder.bind(queue).to(exchange).with("clarity.*"));
