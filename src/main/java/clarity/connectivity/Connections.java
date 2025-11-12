@@ -13,10 +13,10 @@ import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.core.MessageListener;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.config.DirectRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.DirectMessageListenerContainer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -49,13 +49,13 @@ class Connections implements Loggable {
 
     declareTopicExchange(connectionFactory, broker);
 
-    SimpleMessageListenerContainer container = createListenerContainer(connectionFactory);
+    DirectMessageListenerContainer container = createListenerContainer(connectionFactory);
     registerListenerContainer(broker, container);
 
     sendOnePingOnly(rabbitTemplate, new Address("__clarity/clarity.ping"));
   }
 
-  private SimpleMessageListenerContainer createListenerContainer(
+  private DirectMessageListenerContainer createListenerContainer(
       RabbitMqConnectionFactory connectionFactory) {
 
     MessageListener messageListener =
@@ -68,19 +68,14 @@ class Connections implements Loggable {
 
     context.registerBean("myMessageListener", MessageListener.class, () -> messageListener);
 
-    SimpleRabbitListenerContainerFactory contFactory = new SimpleRabbitListenerContainerFactory();
+    DirectRabbitListenerContainerFactory contFactory = new DirectRabbitListenerContainerFactory();
     contFactory.setConnectionFactory(connectionFactory);
-    
 
-    // TODO: 
-
-    
-    SimpleMessageListenerContainer container =
-        new SimpleMessageListenerContainer(connectionFactory);
+    DirectMessageListenerContainer container = contFactory.createListenerContainer();
     container.setQueueNames("__clarity");
     container.setMessageListener(messageListener);
-    
-    
+    container.start();
+
     return container;
   }
 
@@ -104,10 +99,10 @@ class Connections implements Loggable {
   }
 
   private void registerListenerContainer(
-      RabbitMqBroker broker, SimpleMessageListenerContainer container) {
+      RabbitMqBroker broker, DirectMessageListenerContainer container) {
 
     context.registerBean(
-        createListenerContainerName(broker), SimpleMessageListenerContainer.class, () -> container);
+        createListenerContainerName(broker), DirectMessageListenerContainer.class, () -> container);
   }
 
   private String createListenerContainerName(RabbitMqBroker broker) {
