@@ -6,6 +6,7 @@ import clarity.management.domain.RabbitMqBroker;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import org.springframework.amqp.core.Address;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Message;
@@ -30,6 +31,8 @@ class Connections implements Loggable {
 
   private final Map<UUID, RabbitMqConnectionFactory> factories = new ConcurrentHashMap<>();
   private final Map<String, RabbitTemplate> templates = new ConcurrentHashMap<>();
+  private final AtomicReference<DirectMessageListenerContainer> directListenerContainer =
+      new AtomicReference<>();
 
   public Connections(GenericApplicationContext context, ApplicationEventPublisher publisher) {
     this.context = context;
@@ -52,29 +55,27 @@ class Connections implements Loggable {
     DirectMessageListenerContainer container = createListenerContainer(connectionFactory);
     registerListenerContainer(broker, container);
 
+    this.directListenerContainer.set(container);
+    container.start();
+
     sendOnePingOnly(rabbitTemplate, new Address("__clarity/clarity.ping"));
   }
 
   private DirectMessageListenerContainer createListenerContainer(
       RabbitMqConnectionFactory connectionFactory) {
 
-    MessageListener messageListener =
-        new MessageListener() {
-          @Override
-          public void onMessage(Message message) {
-            logger().info("GOT MESSAGE {}", message);
-          }
-        };
-
-    context.registerBean("myMessageListener", MessageListener.class, () -> messageListener);
-
     DirectRabbitListenerContainerFactory contFactory = new DirectRabbitListenerContainerFactory();
     contFactory.setConnectionFactory(connectionFactory);
 
     DirectMessageListenerContainer container = contFactory.createListenerContainer();
     container.setQueueNames("__clarity");
-    container.setMessageListener(messageListener);
-    container.start();
+    container.setMessageListener(
+        new MessageListener() {
+          @Override
+          public void onMessage(Message message) {
+            logger().info("GOT MESSAGE {}", message);
+          }
+        });
 
     return container;
   }
@@ -146,12 +147,16 @@ class Connections implements Loggable {
 
   public void disconnect(RabbitMqBroker broker) {
 
+    directListenerContainer.get().stop();
+
     RabbitMqConnectionFactory removed = factories.remove(broker.id());
     logger().info("Disconnected {} for {}", removed, broker);
 
     if (removed != null) {
       String connectionFactoryName = createConnectionFactoryName(broker);
       String rabbitTemplateName = createRabbitTemplateName(broker);
+      String listenerContainerName = createListenerContainerName(broker);
+      context.removeBeanDefinition(listenerContainerName);
       context.removeBeanDefinition(connectionFactoryName);
       templates.remove(rabbitTemplateName);
       context.removeBeanDefinition(rabbitTemplateName);
