@@ -28,16 +28,16 @@ outdated o:
 .PHONY: clean c
 clean c:
 	${MVN} clean
-	rm -rf src/main/resources/static/*
+	rm -rf target/classes/static/*
 
 .PHONY: run
-run: src/main/resources/static/index.html
+run: target/classes/static/index.html
 	${MAKE} -j2 run-backend run-frontend
 
-src/main/resources/static/index.html: frontend
+target/classes/static/index.html: frontend
 
 .PHONY: demo d
-demo d: src/main/resources/static/index.html
+demo d: target/classes/static/index.html
 	${MAKE} -j2 run-demo-backend run-frontend
 
 .PHONY: run-backend run-be r-b
