@@ -1,7 +1,7 @@
 package clarity.management.domain;
 
+import clarity.infrastructure.domain.Attributes;
 import clarity.infrastructure.utils.Loggable;
-import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
@@ -17,7 +17,7 @@ public class RabbitMqBroker implements Loggable {
   private String password;
 
   private BrokerProperties properties = BrokerProperties.empty();
-  private BrokerAttributes attributes = BrokerAttributes.empty();
+  private Attributes attributes = Attributes.empty();
 
   public RabbitMqBroker(UUID id, BrokerType type) {
     this.id = id;
@@ -82,10 +82,10 @@ public class RabbitMqBroker implements Loggable {
   }
 
   public Map<String, Object> attributes() {
-    return Collections.unmodifiableMap(this.attributes);
+    return this.attributes.toMap();
   }
 
-  public RabbitMqBroker withAttributes(UnaryOperator<BrokerAttributes> decorator) {
+  public RabbitMqBroker withAttributes(UnaryOperator<Attributes> decorator) {
     this.attributes = decorator.apply(this.attributes);
     return this;
   }

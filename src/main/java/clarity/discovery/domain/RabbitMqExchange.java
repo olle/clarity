@@ -1,7 +1,10 @@
 package clarity.discovery.domain;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
+
+import clarity.infrastructure.domain.Attributes;
 
 public class RabbitMqExchange implements Exchange {
 
@@ -9,6 +12,7 @@ public class RabbitMqExchange implements Exchange {
   private final String name;
   private UUID brokerId;
   private ExchangeProperties properties = ExchangeProperties.empty();
+  private Attributes attributes = Attributes.empty();
 
   public RabbitMqExchange(UUID id, String name) {
     this.id = id;
@@ -34,6 +38,10 @@ public class RabbitMqExchange implements Exchange {
     return brokerId;
   }
 
+  public Map<String, Object> attributes() {
+    return this.attributes.toMap();
+  }
+
   public RabbitMqExchange withBrokerId(UUID brokerId) {
     this.brokerId = brokerId;
     return this;
@@ -45,6 +53,16 @@ public class RabbitMqExchange implements Exchange {
 
   public RabbitMqExchange withProperties(UnaryOperator<ExchangeProperties> decorator) {
     this.properties = decorator.apply(this.properties);
+    return this;
+  }
+
+  public RabbitMqExchange withAttributes(UnaryOperator<Attributes> decorator) {
+    this.attributes = decorator.apply(this.attributes);
+    return this;
+  }
+
+  public RabbitMqExchange withAttributes(Map<String, Object> attributes) {
+    this.attributes = this.attributes.withAll(attributes);
     return this;
   }
 }

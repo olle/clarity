@@ -77,7 +77,9 @@ class ResolveExchangesFromApiUseCase implements UseCase, Loggable {
       boolean auto_delete,
       boolean durable,
       boolean internal,
-      Map<String, Object> arguments) {
+      Map<String, Object> arguments,
+      String user_who_performed_action,
+      String vhost) {
 
     public RabbitMqExchange toRabbitMqExchange(RabbitMqBroker rabbitMqBroker) {
       return new RabbitMqExchange(null, name)
@@ -88,7 +90,11 @@ class ResolveExchangesFromApiUseCase implements UseCase, Loggable {
                       .withType(type)
                       .withAutoDelete(auto_delete)
                       .withDurable(durable)
-                      .withInternal(internal));
+                      .withInternal(internal))
+          .withAttributes(
+              attr ->
+                  attr.with("userWhoPerformedAction", user_who_performed_action)
+                      .with("vhost", vhost));
     }
   }
 }
