@@ -31,6 +31,7 @@ public class BrokersConfigurationProperty {
     private String username = "guest";
     private String password = "guest";
     private boolean ssl = false;
+
     private int httpPort = 15672;
 
     @Override
@@ -101,7 +102,7 @@ public class BrokersConfigurationProperty {
     public RabbitMqBroker toRabbitMqBroker() {
       return new RabbitMqBroker(null, BrokerType.CONFIGURED)
           .with(host, port, username, password)
-          .withProperties(props -> props.withHttpPort(httpPort));
+          .withAttributes(attr -> attr.with("httpPort", httpPort));
     }
   }
 }

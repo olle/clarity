@@ -1,10 +1,9 @@
 package clarity.discovery.domain;
 
+import clarity.infrastructure.domain.Attributes;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
-
-import clarity.infrastructure.domain.Attributes;
 
 public class RabbitMqExchange implements Exchange {
 

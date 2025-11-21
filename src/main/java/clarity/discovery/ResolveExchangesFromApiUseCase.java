@@ -59,7 +59,7 @@ class ResolveExchangesFromApiUseCase implements UseCase, Loggable {
         .get()
         .uri(
             "http://%s:%d/api/%s"
-                .formatted(broker.host(), broker.properties().httpPort(), endpoint))
+                .formatted(broker.host(), broker.attributes().get("httpPort"), endpoint))
         .header("Authorization", encodeBasic(broker.username(), broker.password()))
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()

@@ -15,7 +15,6 @@ record BrokerEntity(
     Integer port,
     String username,
     String password,
-    Integer httpPort,
     Boolean active,
     Boolean connected,
     Map<String, Object> attributes) {
@@ -28,7 +27,6 @@ record BrokerEntity(
         other.port,
         other.username,
         other.password,
-        other.httpPort,
         other.active,
         other.connected,
         Collections.unmodifiableMap(other.attributes()));
@@ -42,7 +40,6 @@ record BrokerEntity(
         rabbitMqBroker.port(),
         rabbitMqBroker.username(),
         rabbitMqBroker.password(),
-        rabbitMqBroker.properties().httpPort(),
         rabbitMqBroker.properties().active(),
         rabbitMqBroker.properties().connected(),
         rabbitMqBroker.attributes());
@@ -57,7 +54,6 @@ record BrokerEntity(
         configuredBroker.getPort(),
         configuredBroker.getUsername(),
         configuredBroker.getPassword(),
-        configuredBroker.getHttpPort(),
         null,
         null,
         null);
@@ -71,7 +67,6 @@ record BrokerEntity(
         this.port,
         this.username,
         this.password,
-        this.httpPort,
         this.active,
         this.connected,
         this.attributes);
@@ -88,9 +83,7 @@ record BrokerEntity(
   public RabbitMqBroker toModel() {
     return new RabbitMqBroker(this.id, BrokerType.valueOf(this.type))
         .with(host, port, username, password)
-        .withProperties(
-            properties ->
-                properties.withHttpPort(httpPort).withActive(active).withConnected(connected))
+        .withProperties(properties -> properties.withActive(active).withConnected(connected))
         .withAttributes(attributes);
   }
 }

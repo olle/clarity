@@ -70,7 +70,8 @@ class ResolveBrokersFromApiUseCase implements Loggable, UseCase {
   }
 
   private String createUri(RabbitMqBroker broker, String endpoint) {
-    return "http://%s:%d/api/%s".formatted(broker.host(), broker.properties().httpPort(), endpoint);
+    return "http://%s:%d/api/%s"
+        .formatted(broker.host(), broker.attributes().get("httpPort"), endpoint);
   }
 
   private String encodeBasic(String username, String password) {
