@@ -82,7 +82,7 @@ public class RabbitMqBroker implements Loggable {
   }
 
   public Map<String, Object> attributes() {
-    return this.attributes.toMap();
+    return this.attributes.toUnmodifiableMap();
   }
 
   public RabbitMqBroker withAttributes(UnaryOperator<Attributes> decorator) {

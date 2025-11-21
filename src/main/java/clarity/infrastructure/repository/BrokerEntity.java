@@ -4,7 +4,6 @@ import clarity.infrastructure.config.BrokersConfigurationProperty.ConfiguredBrok
 import clarity.infrastructure.utils.Utils;
 import clarity.management.domain.BrokerType;
 import clarity.management.domain.RabbitMqBroker;
-import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,7 +28,7 @@ record BrokerEntity(
         other.password,
         other.active,
         other.connected,
-        Collections.unmodifiableMap(other.attributes()));
+        other.attributes());
   }
 
   public static BrokerEntity from(RabbitMqBroker rabbitMqBroker) {

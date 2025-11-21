@@ -38,7 +38,7 @@ public class RabbitMqExchange implements Exchange {
   }
 
   public Map<String, Object> attributes() {
-    return this.attributes.toMap();
+    return this.attributes.toUnmodifiableMap();
   }
 
   public RabbitMqExchange withBrokerId(UUID brokerId) {

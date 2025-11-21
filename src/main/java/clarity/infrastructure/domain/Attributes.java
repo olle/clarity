@@ -53,7 +53,7 @@ public class Attributes extends ConcurrentHashMap<String, Object> {
     return new Attributes(attributes);
   }
 
-  public Map<String, Object> toMap() {
+  public Map<String, Object> toUnmodifiableMap() {
     return Collections.unmodifiableMap(this);
   }
 }
