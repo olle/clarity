@@ -30,6 +30,11 @@ clean c:
 	${MVN} clean
 	rm -rf target/classes/static/*
 
+.PHONY: offline
+offline:
+	${NPM} -C frontend run build
+	${MAKE} -j2 run-backend run-frontend
+
 .PHONY: run
 run: target/classes/static/index.html
 	${MAKE} -j2 run-backend run-frontend
