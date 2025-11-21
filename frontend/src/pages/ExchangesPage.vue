@@ -3,6 +3,7 @@
     <h1>Exchanges</h1>
     <p class="inline">
       Hide internal exchanges
+      <small v-if="!!hide">({{ hidden }})</small>
       <ToggleSwitch v-model="hide" />
     </p>
     <ul>
@@ -26,6 +27,14 @@ const brokerStore = useBrokerStore();
 
 const hide = ref(true);
 
+const hidden = computed(
+  () =>
+    Object.values(exchanges.value).filter(
+      (exchange) =>
+        exchange.attributes.userWhoPerformedAction === "rmq-internal"
+    ).length
+);
+
 const decorated = computed(() =>
   Object.values(exchanges.value)
     .filter((exchange) =>
@@ -47,7 +56,11 @@ onMounted(() => {
   align-items: center;
 }
 .inline > * {
-  margin-left: .5rem;
+  margin-left: 0.5rem;
+}
+.inline > small {
+  font-weight: bold;
+  margin-left: 0.2rem;
 }
 
 ul {
