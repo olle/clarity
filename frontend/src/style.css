@@ -66,6 +66,8 @@ body {
 .clarity--content-page {
   padding: 0 1rem 1rem 2rem;
   max-width: 65rem;
+  max-height: 100vh;
+  overflow-y: scroll;
 }
 
 .animation-shake {

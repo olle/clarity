@@ -11,8 +11,7 @@ export const useBrokerStore = defineStore("brokers", () => {
   const brokers = ref({});
   const count = computed(() => Object.keys(brokers.value).length);
   const activeCount = computed(
-    () =>
-      Object.values(brokers.value).filter((broker) => broker.active).length
+    () => Object.values(brokers.value).filter((broker) => broker.active).length
   );
 
   const addBroker = async (values) => {
@@ -63,6 +62,10 @@ export const useBrokerStore = defineStore("brokers", () => {
     }
   });
 
+  function decorateExchange(exchange) {
+    return { ...exchange, broker: { ...brokers.value[exchange.brokerId]} || {} };
+  }
+
   return {
     brokers,
     count,
@@ -73,5 +76,6 @@ export const useBrokerStore = defineStore("brokers", () => {
     reload: useDebounceFn(reload, 123),
     activateBroker,
     deactivateBroker,
+    decorateExchange,
   };
 });

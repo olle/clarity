@@ -71,6 +71,7 @@ nav {
   padding-top: 22px;
   padding-bottom: 25px;
   height: 100%;
+  max-height: 100vh;
 }
 
 .mt-auto {
