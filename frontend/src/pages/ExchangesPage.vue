@@ -6,11 +6,24 @@
       <small v-if="!!hide">({{ hidden }})</small>
       <ToggleSwitch v-model="hide" />
     </p>
-    <ul>
+    <ul style="display: none">
       <li v-for="exchange in decorated">
         {{ exchange.broker.name }}/<strong>{{ exchange.name }}</strong>
       </li>
     </ul>
+    <Tree :value="nodes" :expandedKeys="{ [first]: true }">
+      <template #default="slotProps">
+        {{ slotProps.node.label }}
+      </template>
+      <template #exchange="slotProps">
+        <div>
+          <strong class="code"
+            >&quot;{{ slotProps.node.label.name }}&quot;</strong
+          >
+          <Tag :value="slotProps.node.label.type" />
+        </div>
+      </template>
+    </Tree>
   </article>
 </template>
 
@@ -20,30 +33,52 @@ import { storeToRefs } from "pinia";
 import { useExchangeStore } from "../stores/useExchangeStore";
 import { useBrokerStore } from "../stores/useBrokerStore";
 import ToggleSwitch from "primevue/toggleswitch";
+import Tree from "primevue/tree";
+import Tag from "primevue/tag";
 
 const store = useExchangeStore();
 const { exchanges } = storeToRefs(store);
 const brokerStore = useBrokerStore();
+const { brokers } = storeToRefs(brokerStore);
 
 const hide = ref(true);
 
+const filtered = computed(() =>
+  Object.values(exchanges.value).filter((exchange) =>
+    !!hide.value
+      ? exchange.attributes.userWhoPerformedAction !== "rmq-internal"
+      : true
+  )
+);
+
 const hidden = computed(
-  () =>
-    Object.values(exchanges.value).filter(
-      (exchange) =>
-        exchange.attributes.userWhoPerformedAction === "rmq-internal"
-    ).length
+  () => Object.values(exchanges.value).length - filtered.value.length
 );
 
 const decorated = computed(() =>
-  Object.values(exchanges.value)
-    .filter((exchange) =>
-      !!hide.value
-        ? exchange.attributes.userWhoPerformedAction !== "rmq-internal"
-        : true
-    )
-    .map(brokerStore.decorateExchange)
+  filtered.value.map(brokerStore.decorateExchange)
 );
+
+const nodes = computed(() => {
+  const brokerNodes = Object.values(brokers.value).map((broker) => {
+    const brokerExchanges = decorated.value.filter(
+      (exchange) => exchange.broker.id === broker.id
+    );
+    return {
+      type: "broker",
+      key: broker.id,
+      label: broker.name,
+      children: brokerExchanges.map((exchange) => ({
+        type: "exchange",
+        key: exchange.id,
+        label: exchange,
+      })),
+    };
+  });
+  return brokerNodes;
+});
+
+const first = computed(() => nodes.value.map((node) => node.key)[0]);
 
 onMounted(() => {
   store.reload();
@@ -67,5 +102,9 @@ ul {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.code {
+  font-family: monospace;
 }
 </style>
