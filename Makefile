@@ -17,7 +17,7 @@ backend be: ${MVN}
 
 .PHONY: frontend fe
 frontend fe: ${NPM}
-	${NPM} -C frontend install
+	${NPM} -C frontend ci
 	${NPM} -C frontend audit
 	${NPM} -C frontend run build
 
