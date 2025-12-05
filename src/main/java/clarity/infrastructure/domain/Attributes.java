@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class Attributes extends ConcurrentHashMap<String, Object> {
 
@@ -27,13 +27,15 @@ public class Attributes extends ConcurrentHashMap<String, Object> {
   }
 
   public Attributes with(String key, Object value) {
-    put(key, value);
-    return new Attributes(this);
+    var next = new Attributes(this);
+    next.put(key, value);
+    return next;
   }
 
   public Attributes without(String key) {
-    remove(key);
-    return new Attributes(this);
+    var next = new Attributes(this);
+    next.remove(key);
+    return next;
   }
 
   public Attributes withNullable(String key, @Nullable Object maybe) {
@@ -45,8 +47,9 @@ public class Attributes extends ConcurrentHashMap<String, Object> {
   }
 
   public Attributes withAll(Map<String, Object> attributes) {
-    putAll(attributes);
-    return new Attributes(this);
+    var next = new Attributes(this);
+    next.putAll(attributes);
+    return next;
   }
 
   public Attributes replace(Map<String, Object> attributes) {
