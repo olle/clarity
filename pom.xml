@@ -16,6 +16,8 @@
 
   <properties>
     <java.version>25</java.version>
+    <!-- NOTE: Needs to be manually updated in the parent.version property! -->
+    <spring-boot.version>4.0.0</spring-boot.version>
     <jackson-datatype-jsr310.version>2.20.1</jackson-datatype-jsr310.version>
     <uuid-creator.version>6.1.1</uuid-creator.version>
     <frontend-maven-plugin.version>1.15.4</frontend-maven-plugin.version>
@@ -26,6 +28,7 @@
     <spotbugs-maven-plugin.version>4.9.8.2</spotbugs-maven-plugin.version>
     <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
     <dependency-check-maven.version>12.1.9</dependency-check-maven.version>
+    <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -80,13 +83,6 @@
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
       <version>${spotbugs-annotations.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <scope>runtime</scope>
-      <optional>true</optional>
     </dependency>
 
     <dependency>
@@ -199,6 +195,30 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${maven-enforcer-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>enforce-versions</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>[3.6.3,)</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>[25,)</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>

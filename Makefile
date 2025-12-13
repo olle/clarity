@@ -26,6 +26,11 @@ outdated o:
 	${NPM} -C frontend outdated
 	${MVN} versions:display-property-updates
 
+.PHONY: all-outdated ao
+all-outdated ao:
+	${MVN} versions:display-dependency-updates
+	${MVN} versions:display-plugin-updates
+
 .PHONY: clean c
 clean c:
 	${MVN} clean
