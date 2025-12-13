@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,10 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-public class ApiController {
+public final class ApiController {
 
-  @Autowired ApplicationContext context;
-  @Autowired BeanFactory factory;
+  private final ApplicationContext context;
+  private final BeanFactory factory;
+
+  public ApiController(ApplicationContext context, BeanFactory factory) {
+    this.context = context;
+    this.factory = factory;
+  }
 
   @GetMapping("/api")
   public Map<String, Object> api(HttpServletRequest request) {

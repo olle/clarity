@@ -16,6 +16,16 @@
 
   <properties>
     <java.version>25</java.version>
+    <jackson-datatype-jsr310.version>2.20.1</jackson-datatype-jsr310.version>
+    <uuid-creator.version>6.1.1</uuid-creator.version>
+    <frontend-maven-plugin.version>1.15.4</frontend-maven-plugin.version>
+    <node.version>v24.12.0</node.version>
+    <sortpom-maven-plugin.version>4.0.0</sortpom-maven-plugin.version>
+    <spotless-maven-plugin.version>3.1.0</spotless-maven-plugin.version>
+    <spotbugs-annotations.version>4.9.8</spotbugs-annotations.version>
+    <spotbugs-maven-plugin.version>4.9.8.2</spotbugs-maven-plugin.version>
+    <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
+    <dependency-check-maven.version>12.1.9</dependency-check-maven.version>
   </properties>
 
   <dependencyManagement>
@@ -23,12 +33,12 @@
       <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-jsr310</artifactId>
-        <version>2.20.0</version>
+        <version>${jackson-datatype-jsr310.version}</version>
       </dependency>
       <dependency>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-annotations</artifactId>
-        <version>4.9.3</version>
+        <version>${spotbugs-annotations.version}</version>
       </dependency>
 
     </dependencies>
@@ -59,7 +69,7 @@
     <dependency>
       <groupId>com.github.f4b6a3</groupId>
       <artifactId>uuid-creator</artifactId>
-      <version>5.2.0</version>
+      <version>${uuid-creator.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -69,6 +79,7 @@
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
+      <version>${spotbugs-annotations.version}</version>
     </dependency>
 
     <dependency>
@@ -97,9 +108,9 @@
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.15.4</version>
+        <version>${frontend-maven-plugin.version}</version>
         <configuration>
-          <nodeVersion>v24.12.0</nodeVersion>
+          <nodeVersion>${node.version}</nodeVersion>
         </configuration>
         <executions>
           <execution>
@@ -115,7 +126,7 @@
       <plugin>
         <groupId>com.github.ekryd.sortpom</groupId>
         <artifactId>sortpom-maven-plugin</artifactId>
-        <version>4.0.0</version>
+        <version>${sortpom-maven-plugin.version}</version>
         <configuration>
           <createBackupFile>false</createBackupFile>
         </configuration>
@@ -132,7 +143,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>${spotless-maven-plugin.version}</version>
         <configuration>
           <java>
             <googleJavaFormat></googleJavaFormat>
@@ -153,7 +164,7 @@
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
-        <version>12.1.8</version>
+        <version>${dependency-check-maven.version}</version>
         <executions>
           <execution>
             <goals>
@@ -166,13 +177,13 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.9.8.0</version>
+        <version>${spotbugs-maven-plugin.version}</version>
         <configuration>
           <plugins>
             <plugin>
               <groupId>com.h3xstream.findsecbugs</groupId>
               <artifactId>findsecbugs-plugin</artifactId>
-              <version>1.12.0</version>
+              <version>${findsecbugs-plugin.version}</version>
             </plugin>
           </plugins>
         </configuration>
@@ -183,6 +194,11 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
       </plugin>
 
     </plugins>

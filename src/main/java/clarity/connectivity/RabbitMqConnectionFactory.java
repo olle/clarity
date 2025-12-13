@@ -7,12 +7,12 @@ import clarity.management.domain.RabbitMqBroker;
 import com.rabbitmq.client.ShutdownSignalException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.jspecify.annotations.Nullable;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionListener;
 import org.springframework.amqp.rabbit.connection.ConnectionNameStrategy;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
 public class RabbitMqConnectionFactory extends CachingConnectionFactory implements Loggable {

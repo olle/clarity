@@ -24,6 +24,7 @@ frontend fe: ${NPM}
 .PHONY: outdated o
 outdated o:
 	${NPM} -C frontend outdated
+	${MVN} versions:display-property-updates
 
 .PHONY: clean c
 clean c:
