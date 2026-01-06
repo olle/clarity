@@ -26,9 +26,11 @@ class BrokersController {
 
   @GetMapping(path = "/api/v0/brokers")
   public FetchAllBrokersResponse fetch() {
+
     List<RabbitMqBroker> brokers = access.findAll();
-    return new FetchAllBrokersResponse(
-        brokers.size(), brokers.stream().map(BrokerDto::from).toList(), access.findAllRemoved());
+    List<UUID> removed = access.findAllRemoved();
+
+    return FetchAllBrokersResponse.from(brokers, removed);
   }
 
   @PostMapping(path = "/api/v0/brokers")
